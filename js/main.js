@@ -1,38 +1,54 @@
 let myMap;
 let mapImage;
 let mySprite;
+let maisons;
+
 function preload() {
     mapImage = loadImage('img/map.png');
 }
+
 function setup() {
-    
     let canvas = createCanvas(400, 300);
     myMap = createSprite(400, 300, 800, 600);
     myMap.addImage('map', mapImage);
-    mySprite = createSprite(canvas.width/2, canvas.height/2, 20, 20);
+    
+    maisons = new Group();
+    let maison1 = createSprite(80, 80, 100, 100);
+    maison1.shapeColor = color(0,0,255);
+    maisons.add(maison1);
+    let maison2 = createSprite(400, 150, 100, 100);
+    maison2.shapeColor = color(0,0,255);
+    maisons.add(maison2);
+    let maison3 = createSprite(80, 350, 100, 100);
+    maison3.shapeColor = color(0,0,255);
+    maisons.add(maison3);
+    let maison4 = createSprite(600, 300, 100, 100);
+    maison4.shapeColor = color(0,0,255);
+    maisons.add(maison4);
+    
+    mySprite = createSprite(120, 185, 20, 20);
     mySprite.shapeColor = color(250, 0, 0, 255);
     /*tourner le sprite pour qu'il soit tourné vers le bas*/
     mySprite.rotation = -90;
+    
 }
 function draw() {
     background(220);
+    mySprite.collide(maisons);
+    
     drawSprite(myMap);
     /*faire bouger le sprite (mamie) avec les fleches*/
-      if(keyDown(LEFT_ARROW))
-      {
+      if(keyDown(LEFT_ARROW)){
           mySprite.position.x -= 1;
       }
-      if(keyDown(RIGHT_ARROW))
-      {
+      if(keyDown(RIGHT_ARROW)){
           mySprite.position.x += 1;
       }
-      if(keyDown(UP_ARROW))
-        {
+      if(keyDown(UP_ARROW)){
         mySprite.position.y -= 1 ;
         }
 
-        if(keyDown(DOWN_ARROW)) 
-        {
+        if(keyDown(DOWN_ARROW)) {
             mySprite.position.y += 1;
         }
     /*la caméra suit le sprite*/
@@ -65,5 +81,6 @@ function draw() {
         mySprite.position.y = myMap.height - mySprite.height / 2;
     
       drawSprite(mySprite);
+    drawSprites(maisons);
       camera.off();
 }
