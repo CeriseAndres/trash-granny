@@ -53,16 +53,17 @@ function draw() {
         camera.position.y = myMap.height - (canvas.height / 2);
     }
     
-      
+    /*limiter le mouvement du sprite aux limites de la map. (calcul un peu bizarre car les coordonnées de la classe sprite sont données pour son centre)*/
+    if((mySprite.position.x - (mySprite.width / 2)) < 0)
+        mySprite.position.x = 0 + mySprite.width / 2;
+    if((mySprite.position.x + (mySprite.width / 2)) > myMap.width)
+        mySprite.position.x = myMap.width - mySprite.width / 2;
+    if((mySprite.position.y - (mySprite.height / 2)) < 0)
+        mySprite.position.y = 0 + mySprite.height / 2;
+
+    if((mySprite.position.y + (mySprite.height / 2)) > myMap.height)
+        mySprite.position.y = myMap.height - mySprite.height / 2;
     
-      if(mySprite.position.x < 0)
-        mySprite.position.x = 0;
-      if(mySprite.position.y < 0)
-        mySprite.position.y = 0;
-      if(mySprite.position.x > 800)
-        mySprite.position.x = 799;
-      if(mySprite.position.y > 600)
-        mySprite.position.y = 599;
       drawSprite(mySprite);
       camera.off();
 }
