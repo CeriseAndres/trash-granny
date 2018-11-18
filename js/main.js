@@ -8,8 +8,8 @@ function preload() {
 }
 
 function setup() {
-    let canvas = createCanvas(400, 300);
-    myMap = createSprite(400, 300, 800, 600);
+    let canvas = createCanvas(800, 600);
+    myMap = createSprite(800, 600, 1600, 1200);
     myMap.addImage('map', mapImage);
     
     maisons = new Group();
@@ -39,17 +39,17 @@ function draw() {
     drawSprite(myMap);
     /*faire bouger le sprite (mamie) avec les fleches*/
       if(keyDown(LEFT_ARROW)){
-          mySprite.position.x -= 1;
+          mySprite.position.x -= 4;
       }
       if(keyDown(RIGHT_ARROW)){
-          mySprite.position.x += 1;
+          mySprite.position.x += 4;
       }
       if(keyDown(UP_ARROW)){
-        mySprite.position.y -= 1 ;
+        mySprite.position.y -= 4 ;
         }
 
         if(keyDown(DOWN_ARROW)) {
-            mySprite.position.y += 1;
+            mySprite.position.y += 4;
         }
     /*la caméra suit le sprite*/
     camera.position.x = mySprite.position.x;
