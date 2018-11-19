@@ -2,6 +2,7 @@ let myMap;
 let mapImage;
 let mySprite;
 let maisons;
+let myCat;
 
 function preload() {
     mapImage = loadImage('img/map.png');
@@ -30,6 +31,10 @@ function setup() {
     mySprite.shapeColor = color(250, 0, 0, 255);
     /*tourner le sprite pour qu'il soit tourné vers le bas*/
     mySprite.rotation = -90;
+
+    myCat = createSprite(300,200,20,20);
+    myCat.shapeColor = color(0,0,0, 255);
+    myCat.addAnimation('normal');
     
 }
 function draw() {
@@ -81,6 +86,11 @@ function draw() {
         mySprite.position.y = myMap.height - mySprite.height / 2;
     
       drawSprite(mySprite);
-    drawSprites(maisons);
+      drawSprites(maisons);
+
+      myCat.maxSpeed = 3;
+      myCat.attractionPoint(0.08, mySprite.position.x, mySprite.position.y);
+      
+      drawSprite(myCat);
       camera.off();
 }
