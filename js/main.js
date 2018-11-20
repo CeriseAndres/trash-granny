@@ -34,7 +34,7 @@ function setup() {
 
     myCat = createSprite(300,200,20,20);
     myCat.shapeColor = color(0,0,0, 255);
-    myCat.addAnimation('normal');
+    myCat.addAnimation('normal', "img/sprites_cat/cat1_walk1.png", "img/sprites_cat/cat1_walk2.png", "img/sprites_cat/cat1_walk3.png");
     
 }
 function draw() {
