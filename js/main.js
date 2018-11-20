@@ -2,10 +2,13 @@ let myMap;
 let mapImage;
 let mySprite;
 let maisons;
-let myCat;
+let myCat1;
+let myCat2;
+let myCat3;
 
 function preload() {
     mapImage = loadImage('img/map.png');
+
 }
 
 function setup() {
@@ -32,10 +35,14 @@ function setup() {
     /*tourner le sprite pour qu'il soit tourné vers le bas*/
     mySprite.rotation = -90;
 
-    myCat = createSprite(300,200,20,20);
-    myCat.shapeColor = color(0,0,0, 255);
-    myCat.addAnimation('normal', "img/sprites_cat/cat1_walk1.png", "img/sprites_cat/cat1_walk2.png", "img/sprites_cat/cat1_walk3.png");
+    myCat1 = createSprite(500,300,20,20);
+    myCat1.addAnimation('normal', "img/sprites_cat/cat1_walk1.png", "img/sprites_cat/cat1_walk2.png", "img/sprites_cat/cat1_walk3.png");
     
+    myCat2 = createSprite(100,200,20,20);
+    myCat2.addAnimation('normal', "img/sprites_cat/cat2_walk1.png", "img/sprites_cat/cat2_walk2.png", "img/sprites_cat/cat2_walk3.png");
+
+    myCat3 = createSprite(50,10,20,20);
+    myCat3.addAnimation('normal', "img/sprites_cat/cat3_walk1.png", "img/sprites_cat/cat3_walk2.png", "img/sprites_cat/cat3_walk3.png");
 }
 function draw() {
     background(220);
@@ -87,10 +94,25 @@ function draw() {
     
       drawSprite(mySprite);
       drawSprites(maisons);
+    /*function spawnCats (){
+        if (mySprite.position.y = 190) {
+            
+            myCat1.maxSpeed = 3;
+            myCat1.attractionPoint(0.08, mySprite.position.x, mySprite.position.y);
+            drawSprite(myCat1);
+        }
+    }*/
+    myCat1.maxSpeed = 3;
+    myCat1.attractionPoint(0.08, mySprite.position.x, mySprite.position.y);
+    drawSprite(myCat1);
 
-      myCat.maxSpeed = 3;
-      myCat.attractionPoint(0.08, mySprite.position.x, mySprite.position.y);
-      
-      drawSprite(myCat);
+    myCat2.maxSpeed = 3;
+    myCat2.attractionPoint(0.08, mySprite.position.x, mySprite.position.y);
+    drawSprite(myCat2);
+
+    myCat3.maxSpeed = 3;
+    myCat3.attractionPoint(0.08, mySprite.position.x, mySprite.position.y);
+    drawSprite(myCat3);
+
       camera.off();
 }
