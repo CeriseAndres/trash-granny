@@ -1,7 +1,6 @@
 let myMap; //declaration de la map et de son image
 let mapImage;
 
-
 let mami;//decl. mami et son image
 let mamImage;
 
@@ -26,6 +25,8 @@ let houseImage4;
 let houseImage1rev;
 let trashImage;
 
+
+let myCat;
 
 function preload() {
     //fond de la map
@@ -85,13 +86,15 @@ function setup() {
     houses.add(houseTrash);
     
 
-    mami = createSprite(1300, 750);
+    mami = createSprite(200, 300);
     mami.addImage('stand', mamImage);
     
     /*tourner le sprite pour qu'il soit tourné vers le bas*/
     mami.rotation = -90;
-    
-    
+
+    myCat = createSprite(300,200,20,20);
+    myCat.shapeColor = color(0,0,0, 255);
+    myCat.addAnimation('normal', "img/sprites_cat/cat1_walk1.png", "img/sprites_cat/cat1_walk2.png", "img/sprites_cat/cat1_walk3.png");
     
 }
 function draw() {
@@ -140,14 +143,21 @@ function draw() {
     if((mami.position.y + (mami.height / 2)) > myMap.height)
         mami.position.y = myMap.height - mami.height / 2;
     
+    //comportement du chat
+    myCat.maxSpeed = 3;
+    myCat.attractionPoint(0.08, mami.position.x, mami.position.y);
+    
     //collisions : 
     mami.collide(houses);
     
-    //drawSprite(maison1);
+    
     drawSprite(mami);
-    //drawSprite(autre);
     drawSprites(houses);
+    drawSprite(myCat);
     
     camera.off();
+    
+    
+
     
 }
