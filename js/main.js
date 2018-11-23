@@ -103,17 +103,17 @@ function draw() {
     drawSprite(myMap);
     /*faire bouger le sprite (mamie) avec les fleches*/
       if(keyDown(LEFT_ARROW)){
-          mami.position.x -= 4;
+          mami.position.x -= 1;
       }
       if(keyDown(RIGHT_ARROW)){
-          mami.position.x += 4;
+          mami.position.x += 1;
       }
       if(keyDown(UP_ARROW)){
-        mami.position.y -= 4 ;
+        mami.position.y -= 1 ;
         }
 
         if(keyDown(DOWN_ARROW)) {
-            mami.position.y += 4;
+            mami.position.y += 1;
         }
     /*la caméra suit le sprite*/
     camera.position.x = mami.position.x;
@@ -146,6 +146,7 @@ function draw() {
     //comportement du chat
     myCat.maxSpeed = 3;
     myCat.attractionPoint(0.08, mami.position.x, mami.position.y);
+    myCat.collide(houses);
     
     //collisions : 
     mami.collide(houses);
