@@ -7,7 +7,9 @@ let stickImage;//canne de mami
 let isShooting = false;//vrai si un coup de canne est donné.
 let stickPosX;
 let stickPosY;
-
+let stickOffsetX;
+let stickOffsetY;
+let coef; //1 ou -1 selon rotation canne a droite ou a gauche
 //decl. maisons
 let house1;
 let house2;
@@ -122,8 +124,10 @@ function setup() {
     mami.addAnimation('shooting', mamiShoot);
     mami.addAnimation('standMad', mamiMad);
     mami.setCollider('rectangle', 0, 25, 25, 49);
-    stickPosX = mami.position.x + 22;
-    stickPosY = mami.position.y + 23;
+    stickOffsetX = 22;
+    stickOffsetY = 23;
+    stickPosX = mami.position.x + stickOffsetX;
+    stickPosY = mami.position.y + stickOffsetY;
     //sprite pour la canne
     mami.stick = createSprite(stickPosX, stickPosY);
     mami.stick.addImage('stick', stickImage);
@@ -144,35 +148,44 @@ function setup() {
 function draw() {
     background(220);
     
-    stickPosX = mami.position.x + 22;
-    stickPosY = mami.position.y + 23;
+    stickPosX = mami.position.x + stickOffsetX;
+    stickPosY = mami.position.y + stickOffsetY;
     
     
     drawSprite(myMap);
     /*faire bouger le sprite (mamie) avec les fleches*/
     mamiWalk.stop();
-      if(keyDown(LEFT_ARROW)){
+    if(keyDown(LEFT_ARROW)){
+          stickOffsetX = -22;
+          coef = -1;
           mami.position.x -= 0.5;
-          mami.stick.position.x = mami.position.x + 22;
+          mami.stick.position.x = mami.position.x + stickOffsetX;
           mami.changeAnimation('walkLeft');
           mami.animation.play();
       }
-      if(keyDown(RIGHT_ARROW)){
+    if(keyDown(RIGHT_ARROW)){
+          stickOffsetX = 22;
+          coef = 1;
           mami.position.x += 0.5;
-          mami.stick.position.x = mami.position.x + 22;
+          mami.stick.position.x = mami.position.x + stickOffsetX;
           mami.changeAnimation('walkRight');
           mami.animation.play();
       }
-      if(keyDown(UP_ARROW)){
+    if(keyDown(UP_ARROW)){
+        coef = -1;
+        stickOffsetX = -22;
         mami.position.y -= 0.5;
-        mami.stick.position.y = mami.position.y + 23;
+        mami.stick.position.x = mami.position.x + stickOffsetX;
+        mami.stick.position.y = mami.position.y + stickOffsetY;
         mami.changeAnimation('walkUp');
         mami.animation.play();
         }
-
-        if(keyDown(DOWN_ARROW)) {
+    if(keyDown(DOWN_ARROW)) {
+            coef = 1;
+            stickOffsetX = 22;
             mami.position.y += 0.5;
-            mami.stick.position.y = mami.position.y + 23;
+            mami.stick.position.x = mami.position.x + stickOffsetX;
+            mami.stick.position.y = mami.position.y + stickOffsetY;
             mami.changeAnimation('walkDown');
             mami.animation.play();
         }
@@ -235,7 +248,7 @@ function draw() {
     //ramener la canne:
     function stopStick() {
         if (mami.stick.rotation <= -90) {
-            mami.stick.rotation +=10;
+            mami.stick.rotation += 10;
             YplusVal = 0;
             mami.stick.position.x = (stickPosX) - Math.cos(stickAngle) * 30;
             mami.stick.position.y = (stickPosY - 30) - Math.sin(stickAngle) * (30);
