@@ -192,14 +192,12 @@ function draw() {
     
     //comportement du chat
     myCat.maxSpeed = 2.5;
-    myCat.attractionPoint(0.05, mami.position.x, mami.position.y);
+    myCat.attractionPoint(0.02, mami.position.x, mami.position.y);
+    
     
     //collisions : 
     mami.collide(houses);
     myCat.collide(houses);
-    if (isShooting) {
-        myCat.bounce(mami.stick);
-    }
     
     //frapper avec la canne:
     let stickAngle = mami.stick.rotation * Math.PI / 180;
@@ -240,10 +238,12 @@ function draw() {
         }
     };
     
-    function ejectCat() {
+    let ejectCat = function() {
         if (isShooting) {
-            return true;
-        } 
+            myCat.maxSpeed = 50;
+            myCat.setVelocity(50, 50);
+
+        }
     }
     myCat.overlap(mami.stick, ejectCat);
     
