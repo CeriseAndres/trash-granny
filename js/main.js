@@ -237,11 +237,24 @@ function draw() {
         mami.animation.play();
         mami.stick.rotation -= 12;
         YplusVal += 10;
-        mami.stick.position.x = (stickPosX) - Math.cos(stickAngle) * 5;
+        mami.stick.position.x = stickPosX - (Math.cos(stickAngle) * 5);
         mami.stick.position.y = (stickPosY - 30) - Math.sin(stickAngle) * (30+YplusVal);
-        if (mami.stick.rotation < -160) {
+        if (mami.stick.rotation < -160 ) {
             isShooting =  false;
             mami.changeAnimation('standMad');
+        }
+    }
+    //frapper à gauche
+    function shootStickLeft() {
+        //mami.changeAnimation('shooting');
+        //mami.animation.play();
+        mami.stick.rotation += 12;
+        YplusVal += 10;
+        mami.stick.position.x = stickPosX - (Math.cos(stickAngle) * 5);
+        mami.stick.position.y = (stickPosY - 30) - Math.sin(stickAngle) * (30+YplusVal);
+        if (mami.stick.rotation > 0) {
+            isShooting =  false;
+            //mami.changeAnimation('standMad');
         }
     }
     
@@ -255,12 +268,25 @@ function draw() {
         }
         
     }
+    //ramener la canne quand frappé à gauche
+    function stopStickLeft() {
+        if (mami.stick.rotation >= -90) {
+            mami.stick.rotation -= 10;
+            YplusVal = 0;
+            mami.stick.position.x = (stickPosX) - Math.cos(stickAngle) * 30;
+            mami.stick.position.y = (stickPosY - 30) - Math.sin(stickAngle) * (30);
+        }
+        
+    }
     
     if (isShooting) {
-        shootStick();
+        if (coef === 1) shootStick();
+        if (coef === -1) shootStickLeft();
+        
     }
     if (!isShooting) {
-        stopStick();
+        if (coef === 1) stopStick();
+        if (coef === -1) stopStickLeft();
     }
     
 
