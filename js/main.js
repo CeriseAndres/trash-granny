@@ -50,6 +50,16 @@ function preload() {
     stickImage = loadImage('img/stick.png');
     mamiWalk = loadAnimation('img/mami_walk1.png', 'img/mami_walk2.png', 'img/mami_walk3.png', 'img/mami_walk2.png');
     mamiWalk.frameDelay = 8;
+    
+    mamiWalkUp = loadAnimation("img/mami_walkUp1.png", "img/mami_walkUp2.png", "img/mami_walkUp3.png", "img/mami_walkUp2.png");
+    mamiWalkUp.frameDelay = 8;
+    
+    mamiWalkRight = loadAnimation("img/mami_walkRight1.png", "img/mami_walkRight2.png", "img/mami_walkRight3.png", "img/mami_walkRight2.png");
+    mamiWalkRight.frameDelay = 8;
+    
+    mamiWalkLeft = loadAnimation("img/mami_walkLeft1.png", "img/mami_walkLeft2.png", "img/mami_walkLeft3.png", "img/mami_walkLeft2.png");
+    mamiWalkLeft.frameDelay = 8;
+    
     mamiShoot = loadAnimation('img/mami_shoot2.png', 'img/mami_shoot2.png','img/mami_shoot3.png', 'img/mami_shoot3.png','img/mami_shoot3.png', 'img/mami_shoot2.png');
     //mamiShoot.looping = false;
     mamiShoot.frameDelay = 2;
@@ -106,6 +116,9 @@ function setup() {
     mami = createSprite(200, 300);
     mami.addAnimation('stand', mamImage);
     mami.addAnimation('walkDown', mamiWalk);
+    mami.addAnimation('walkUp', mamiWalkUp);
+    mami.addAnimation('walkRight', mamiWalkRight);
+    mami.addAnimation('walkLeft', mamiWalkLeft);
     mami.addAnimation('shooting', mamiShoot);
     mami.addAnimation('standMad', mamiMad);
     mami.setCollider('rectangle', 0, 25, 25, 49);
@@ -141,26 +154,30 @@ function draw() {
       if(keyDown(LEFT_ARROW)){
           mami.position.x -= 0.5;
           mami.stick.position.x = mami.position.x + 22;
-          mami.changeAnimation('walkDown');
+          mami.changeAnimation('walkLeft');
+          mami.animation.play();
       }
       if(keyDown(RIGHT_ARROW)){
           mami.position.x += 0.5;
           mami.stick.position.x = mami.position.x + 22;
-          mami.changeAnimation('walkDown');
+          mami.changeAnimation('walkRight');
+          mami.animation.play();
       }
       if(keyDown(UP_ARROW)){
-            mami.position.y -= 0.5;
-            mami.stick.position.y = mami.position.y + 23;
-            mami.changeAnimation('walkDown');
+        mami.position.y -= 0.5;
+        mami.stick.position.y = mami.position.y + 23;
+        mami.changeAnimation('walkUp');
+        mami.animation.play();
         }
 
         if(keyDown(DOWN_ARROW)) {
             mami.position.y += 0.5;
             mami.stick.position.y = mami.position.y + 23;
             mami.changeAnimation('walkDown');
+            mami.animation.play();
         }
     if (keyWentUp(LEFT_ARROW) || keyWentUp(RIGHT_ARROW) || keyWentUp(UP_ARROW) || keyWentUp(DOWN_ARROW)) {
-        mami.changeAnimation('stand');
+        mami.animation.stop();
     }
     /*la caméra suit le sprite*/
     camera.position.x = mami.position.x;
@@ -204,6 +221,7 @@ function draw() {
     let YplusVal = 0;
     function shootStick() {
         mami.changeAnimation('shooting');
+        mami.animation.play();
         mami.stick.rotation -= 12;
         YplusVal += 10;
         mami.stick.position.x = (stickPosX) - Math.cos(stickAngle) * 5;
@@ -214,12 +232,6 @@ function draw() {
         }
     }
     
-    if (isShooting) {
-        shootStick();
-    }
-    if (!isShooting) {
-        stopStick();
-    }
     //ramener la canne:
     function stopStick() {
         if (mami.stick.rotation <= -90) {
@@ -231,6 +243,15 @@ function draw() {
         
     }
     
+    if (isShooting) {
+        shootStick();
+    }
+    if (!isShooting) {
+        stopStick();
+    }
+    
+
+    
     //déclencher coup de canne
     window.onkeydown = function(e) {
         if (e.keyCode == 32) {
@@ -238,11 +259,11 @@ function draw() {
         }
     };
     
+    //eloigner le chat en frappant
     let ejectCat = function() {
         if (isShooting) {
             myCat.maxSpeed = 50;
             myCat.setVelocity(50, 50);
-
         }
     }
     myCat.overlap(mami.stick, ejectCat);
