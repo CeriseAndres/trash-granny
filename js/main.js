@@ -36,7 +36,8 @@ function preload() {
     //fond de la map
     mapImage = loadImage('img/map.png');
     //image de la mamie
-    mamImage = loadAnimation('img/mami.png');
+    mamImage = loadAnimation('img/mami_walk2.png');
+    mamiMad = loadAnimation('img/mami_stand_mad.png');
     //images des maisons
     houseImage1 = loadImage('img/maison1.png');
     houseImage2 = loadImage('img/maison2.png');
@@ -44,10 +45,16 @@ function preload() {
     houseImage4 = loadImage('img/maison4.png');
     houseImage1rev = loadImage('img/maison1rev.png');
     trashImage = loadImage('img/local-poubelle.png');
+    
+    //mamie et canne
     stickImage = loadImage('img/stick.png');
     mamiWalk = loadAnimation('img/mami_walk1.png', 'img/mami_walk2.png', 'img/mami_walk3.png', 'img/mami_walk2.png');
     mamiWalk.frameDelay = 8;
+    mamiShoot = loadAnimation('img/mami_shoot2.png', 'img/mami_shoot2.png','img/mami_shoot3.png', 'img/mami_shoot3.png','img/mami_shoot3.png', 'img/mami_shoot2.png');
+    //mamiShoot.looping = false;
+    mamiShoot.frameDelay = 2;
     
+    //chats
     catWalk = loadAnimation("img/sprites_cat/cat1_walk1.png", "img/sprites_cat/cat1_walk2.png", "img/sprites_cat/cat1_walk3.png");
     catWalk.frameDelay = 5;
 }
@@ -95,13 +102,16 @@ function setup() {
     houseTrash.addImage('localPoub', trashImage);
     houses.add(houseTrash);
     
-
+    //sprite mami
     mami = createSprite(200, 300);
     mami.addAnimation('stand', mamImage);
     mami.addAnimation('walkDown', mamiWalk);
+    mami.addAnimation('shooting', mamiShoot);
+    mami.addAnimation('standMad', mamiMad);
     mami.setCollider('rectangle', 0, 25, 25, 49);
     stickPosX = mami.position.x + 22;
     stickPosY = mami.position.y + 23;
+    //sprite pour la canne
     mami.stick = createSprite(stickPosX, stickPosY);
     mami.stick.addImage('stick', stickImage);
     
@@ -114,7 +124,7 @@ function setup() {
     myCat = createSprite(300,200,20,20);
     myCat.shapeColor = color(0,0,0, 255);
     myCat.addAnimation('normal', catWalk);
-    myCat.mass = 0.5;
+    myCat.mass = 0;
     
 }
 
@@ -182,7 +192,7 @@ function draw() {
     
     //comportement du chat
     myCat.maxSpeed = 2.5;
-    myCat.attractionPoint(0.04, mami.position.x, mami.position.y);
+    myCat.attractionPoint(0.05, mami.position.x, mami.position.y);
     
     //collisions : 
     mami.collide(houses);
@@ -195,12 +205,14 @@ function draw() {
     let stickAngle = mami.stick.rotation * Math.PI / 180;
     let YplusVal = 0;
     function shootStick() {
-        mami.stick.rotation -= 15;
-        YplusVal += 15;
-        mami.stick.position.x = (stickPosX) - Math.cos(stickAngle) * 30;
+        mami.changeAnimation('shooting');
+        mami.stick.rotation -= 12;
+        YplusVal += 10;
+        mami.stick.position.x = (stickPosX) - Math.cos(stickAngle) * 5;
         mami.stick.position.y = (stickPosY - 30) - Math.sin(stickAngle) * (30+YplusVal);
-        if (mami.stick.rotation < -220) {
+        if (mami.stick.rotation < -160) {
             isShooting =  false;
+            mami.changeAnimation('standMad');
         }
     }
     
@@ -213,13 +225,12 @@ function draw() {
     //ramener la canne:
     function stopStick() {
         if (mami.stick.rotation <= -90) {
-            
             mami.stick.rotation +=10;
             YplusVal = 0;
-            
             mami.stick.position.x = (stickPosX) - Math.cos(stickAngle) * 30;
-            mami.stick.position.y = (stickPosY - 30) - Math.sin(stickAngle) * (30+YplusVal);
-        } 
+            mami.stick.position.y = (stickPosY - 30) - Math.sin(stickAngle) * (30);
+        }
+        
     }
     
     //déclencher coup de canne
@@ -228,6 +239,13 @@ function draw() {
             isShooting = true;
         }
     };
+    
+    function ejectCat() {
+        if (isShooting) {
+            return true;
+        } 
+    }
+    myCat.overlap(mami.stick, ejectCat);
     
     drawSprites(houses);
     drawSprite(mami);
