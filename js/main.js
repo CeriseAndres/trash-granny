@@ -101,7 +101,7 @@ function setup() {
     mami.addAnimation('walkDown', mamiWalk);
     mami.setCollider('rectangle', 0, 25, 25, 49);
     stickPosX = mami.position.x + 22;
-    stickPosY = mami.position.y + 15;
+    stickPosY = mami.position.y + 23;
     mami.stick = createSprite(stickPosX, stickPosY);
     mami.stick.addImage('stick', stickImage);
     
@@ -121,6 +121,10 @@ function setup() {
 function draw() {
     background(220);
     
+    stickPosX = mami.position.x + 22;
+    stickPosY = mami.position.y + 23;
+    
+    
     drawSprite(myMap);
     /*faire bouger le sprite (mamie) avec les fleches*/
     mamiWalk.stop();
@@ -136,13 +140,13 @@ function draw() {
       }
       if(keyDown(UP_ARROW)){
             mami.position.y -= 0.5;
-            mami.stick.position.y = mami.position.y + 15;
+            mami.stick.position.y = mami.position.y + 23;
             mami.changeAnimation('walkDown');
         }
 
         if(keyDown(DOWN_ARROW)) {
             mami.position.y += 0.5;
-            mami.stick.position.y = mami.position.y + 15;
+            mami.stick.position.y = mami.position.y + 23;
             mami.changeAnimation('walkDown');
         }
     if (keyWentUp(LEFT_ARROW) || keyWentUp(RIGHT_ARROW) || keyWentUp(UP_ARROW) || keyWentUp(DOWN_ARROW)) {
@@ -177,21 +181,25 @@ function draw() {
         mami.position.y = myMap.height - mami.height / 2;
     
     //comportement du chat
-    myCat.maxSpeed = 3;
+    myCat.maxSpeed = 2.5;
     myCat.attractionPoint(0.04, mami.position.x, mami.position.y);
+    
+    //collisions : 
+    mami.collide(houses);
     myCat.collide(houses);
     if (isShooting) {
         myCat.bounce(mami.stick);
     }
     
-    
-    //collisions : 
-    mami.collide(houses);
-    
     //frapper avec la canne:
+    let stickAngle = mami.stick.rotation * Math.PI / 180;
+    let YplusVal = 0;
     function shootStick() {
         mami.stick.rotation -= 15;
-        if (mami.stick.rotation < -180) {
+        YplusVal += 15;
+        mami.stick.position.x = (stickPosX) - Math.cos(stickAngle) * 30;
+        mami.stick.position.y = (stickPosY - 30) - Math.sin(stickAngle) * (30+YplusVal);
+        if (mami.stick.rotation < -220) {
             isShooting =  false;
         }
     }
@@ -205,9 +213,13 @@ function draw() {
     //ramener la canne:
     function stopStick() {
         if (mami.stick.rotation <= -90) {
+            
             mami.stick.rotation +=10;
-        }
-        
+            YplusVal = 0;
+            
+            mami.stick.position.x = (stickPosX) - Math.cos(stickAngle) * 30;
+            mami.stick.position.y = (stickPosY - 30) - Math.sin(stickAngle) * (30+YplusVal);
+        } 
     }
     
     //déclencher coup de canne
