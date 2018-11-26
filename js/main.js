@@ -62,9 +62,13 @@ function preload() {
     mamiWalkLeft = loadAnimation("img/mami_walkLeft1.png", "img/mami_walkLeft2.png", "img/mami_walkLeft3.png", "img/mami_walkLeft2.png");
     mamiWalkLeft.frameDelay = 8;
     
-    mamiShoot = loadAnimation('img/mami_shoot2.png', 'img/mami_shoot2.png','img/mami_shoot3.png', 'img/mami_shoot3.png','img/mami_shoot3.png', 'img/mami_shoot2.png');
+    mamiShoot = loadAnimation('img/mami_shoot2.png','img/mami_shoot3.png');
     //mamiShoot.looping = false;
-    mamiShoot.frameDelay = 2;
+    mamiShoot.frameDelay = 4;
+    
+    mamiStopShoot = loadAnimation('img/mami_shoot2.png', 'img/mami_shoot1.png', 'img/mami_shoot1.png');
+    mamiStopShoot.looping = false;
+    mamiStopShoot.frameDelay = 4;
     
     //chats
     catWalk = loadAnimation("img/sprites_cat/cat1_walk1.png", "img/sprites_cat/cat1_walk2.png", "img/sprites_cat/cat1_walk3.png");
@@ -122,6 +126,7 @@ function setup() {
     mami.addAnimation('walkRight', mamiWalkRight);
     mami.addAnimation('walkLeft', mamiWalkLeft);
     mami.addAnimation('shooting', mamiShoot);
+    mami.addAnimation('stopShoot', mamiStopShoot);
     mami.addAnimation('standMad', mamiMad);
     mami.setCollider('rectangle', 0, 25, 25, 49);
     stickOffsetX = 22;
@@ -242,7 +247,8 @@ function draw() {
         mami.stick.position.y = (stickPosY - 30) - Math.sin(stickAngle) * (30+YplusVal);
         if (mami.stick.rotation < -160 ) {
             isShooting =  false;
-            mami.changeAnimation('standMad');
+            mami.changeAnimation('stopShoot');
+            mami.animation.play();
         }
     }
     //frapper à gauche
