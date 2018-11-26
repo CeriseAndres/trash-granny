@@ -1,8 +1,19 @@
+//placement des canvas dans le dom par leur parent :
+let canvasParent = document.getElementById('canvasParent');
+let dashboardParent = document.getElementById('dashboard');
+let dashboard = document.createElement('canvas');
+dashboardParent.appendChild(dashboard);
+dashboard.width = 300;
+dashboard.height = 600;
+let dashCtx = dashboard.getContext('2d');
+dashCtx.font = "13px monospace";
+
 let myMap; //declaration de la map et de son image
 let mapImage;
 
 let mami;//decl. mami et son image
 let mamImage;
+
 let stickImage;//canne de mami
 let isShooting = false;//vrai si un coup de canne est donné.
 let stickPosX;
@@ -58,6 +69,15 @@ let cat3spawn = false;
 let myDragonBoss;
 let dragonspawn = false;
 
+
+//barre de vie
+let mamiLife = 500;
+
+//comptage de points
+let mamiScore = 0;
+
+let gameover;
+
 function preload() {
     //fond de la map
     mapImage = loadImage('img/map.png');
@@ -90,32 +110,31 @@ function preload() {
     mamiWalkLeft = loadAnimation("img/mami_walkLeft1.png", "img/mami_walkLeft2.png", "img/mami_walkLeft3.png", "img/mami_walkLeft2.png");
     mamiWalkLeft.frameDelay = 8;
     
-    mamiShoot = loadAnimation('img/mami_shoot2.png','img/mami_shoot3.png', 'img/mami_shoot3.png');
-    mamiShoot.looping = false;
+    mamiShoot = loadAnimation('img/mami_shoot1.png', 'img/mami_shoot2.png','img/mami_shoot3.png');
+    //mamiShoot.looping = false;
     mamiShoot.frameDelay = 6;
     
-    mamiShootLeft = loadAnimation('img/mami_shootLeft2.png', 'img/mami_shootLeft3.png', 'img/mami_shootLeft3.png');
-    mamiShootLeft.looping = false;
+    mamiShootLeft = loadAnimation('img/mami_shootLeft2.png', 'img/mami_shootLeft3.png');
+    //mamiShootLeft.looping = false;
     mamiShootLeft.frameDelay = 6;
     
-    mamiStopShoot = loadAnimation('img/mami_shoot2.png', 'img/mami_shoot1.png', 'img/mami_shoot1.png');
+    mamiStopShoot = loadAnimation('img/mami_shoot3.png', 'img/mami_shoot2.png', 'img/mami_shoot1.png');
     mamiStopShoot.looping = false;
     mamiStopShoot.frameDelay = 6;
     
-    mamiStopShootLeft = loadAnimation('img/mami_shootLeft2.png', 'img/mami_walkLeft2.png', 'img/mami_walkLeft2.png');
+    mamiStopShootLeft = loadAnimation('img/mami_shootLeft3.png', 'img/mami_shootLeft2.png', 'img/mami_walkLeft2.png');
     mamiStopShootLeft.looping = false;
     mamiStopShootLeft.frameDelay = 6;
     
-    
-    //chats
-    catWalk = loadAnimation("img/sprites_cat/cat1_walk1.png", "img/sprites_cat/cat1_walk2.png", "img/sprites_cat/cat1_walk3.png");
-    catWalk.frameDelay = 5;
+    gameover = loadImage('img/gameover.png');
 
 }
 
 function setup() {
     //initialisation de la map :
     let canvas = createCanvas(800, 600);
+    canvas.parentElement = canvasParent;
+    
     myMap = createSprite(800, 600);
     myMap.addImage('map', mapImage);
     houses = new Group();
@@ -204,8 +223,9 @@ function setup() {
     stickPosX = mami.position.x + stickOffsetX;
     stickPosY = mami.position.y + stickOffsetY;
     //sprite pour la canne
-    mami.stick = createSprite(stickPosX, stickPosY);
-    mami.stick.addImage('stick', stickImage);
+    mami.stick = createSprite(stickPosX, stickPosY, 35, 2);
+    mami.stick.shapeColor = color(0,0,0,0);
+    //mami.stick.addImage('stick', stickImage);
     
     /*tourner le sprite mami pour que sa direction corresponde à celle des flèches du clavier*/
     mami.rotation = -90;
@@ -248,253 +268,300 @@ function setup() {
 
 function draw() {
     background(220);
-    
-    stickPosX = mami.position.x + stickOffsetX;
-    stickPosY = mami.position.y + stickOffsetY;
-    
-    drawSprite(myMap);
-    
-    /*faire bouger le sprite (mamie) avec les fleches*/
-    if(keyDown(LEFT_ARROW)){
-          stickOffsetX = -22;
-          coef = -1;
-          mami.position.x -= 0.5;
-          mami.stick.position.x = mami.position.x + stickOffsetX;
-          mami.changeAnimation('walkLeft');
-          mami.animation.play();
-      }
-    if(keyDown(RIGHT_ARROW)){
-          stickOffsetX = 22;
-          coef = 1;
-          mami.position.x += 0.5;
-          mami.stick.position.x = mami.position.x + stickOffsetX;
-          mami.changeAnimation('walkRight');
-          mami.animation.play();
-      }
-    if(keyDown(UP_ARROW)){
-        coef = -1;
-        stickOffsetX = -22;
-        mami.position.y -= 0.5;
-        mami.stick.position.x = mami.position.x + stickOffsetX;
-        mami.stick.position.y = mami.position.y + stickOffsetY;
-        mami.changeAnimation('walkUp');
-        mami.animation.play();
+    //en cas de défaite : (life < 0)
+    if (mamiLife <= 0) {
+        background(0);
+        image(gameover, width/2, height/2);
     }
-    if(keyDown(DOWN_ARROW)) {
-            coef = 1;
-            stickOffsetX = 22;
-            mami.position.y += 0.5;
+    //sinon, on execute le jeu
+    else {
+        
+        stickPosX = mami.position.x + stickOffsetX;
+        stickPosY = mami.position.y + stickOffsetY;
+
+        drawSprite(myMap);
+
+        /*faire bouger le sprite (mamie) avec les fleches*/
+        if(keyDown(LEFT_ARROW)){
+              stickOffsetX = -22;
+              coef = -1;
+              mami.position.x -= 0.5;
+              mami.stick.position.x = mami.position.x + stickOffsetX;
+              mami.changeAnimation('walkLeft');
+              mami.animation.play();
+          }
+        if(keyDown(RIGHT_ARROW)){
+              stickOffsetX = 22;
+              coef = 1;
+              mami.position.x += 0.5;
+              mami.stick.position.x = mami.position.x + stickOffsetX;
+              mami.changeAnimation('walkRight');
+              mami.animation.play();
+          }
+        if(keyDown(UP_ARROW)){
+            coef = -1;
+            stickOffsetX = -22;
+            mami.position.y -= 0.5;
             mami.stick.position.x = mami.position.x + stickOffsetX;
             mami.stick.position.y = mami.position.y + stickOffsetY;
-            mami.changeAnimation('walkDown');
-            mami.animation.play();
-    }
-        
-    if (keyWentUp(LEFT_ARROW) || keyWentUp(RIGHT_ARROW) || keyWentUp(UP_ARROW) || keyWentUp(DOWN_ARROW)) {
-        mami.animation.stop();
-    }
-    
-    /*la caméra suit le sprite*/
-    camera.position.x = mami.position.x;
-    camera.position.y = mami.position.y;
-
-    /*limiter le mouvement de la caméra au bord de la map*/
-    if (camera.position.x < canvas.width /2) {
-        camera.position.x = canvas.width / 2;
-    }
-    if (camera.position.x > (myMap.width - (canvas.width / 2))) {
-        camera.position.x = myMap.width - (canvas.width / 2);
-    }
-    if (camera.position.y < canvas.height / 2 ) {
-        camera.position.y = canvas.height / 2;
-    }
-    if (camera.position.y > (myMap.height - (canvas.height / 2))) {
-        camera.position.y = myMap.height - (canvas.height / 2);
-    }
-
-    /*limiter le mouvement du sprite aux limites de la map. (calcul un peu bizarre car les coordonnées de la classe sprite sont données pour son centre)*/
-    if((mami.position.x - (mami.width / 2)) < 0)
-        mami.position.x = 0 + mami.width / 2;
-    if((mami.position.x + (mami.width / 2)) > myMap.width)
-        mami.position.x = myMap.width - mami.width / 2;
-    if((mami.position.y - (mami.height / 2)) < 0)
-        mami.position.y = 0 + mami.height / 2;
-    if((mami.position.y + (mami.height / 2)) > myMap.height)
-        mami.position.y = myMap.height - mami.height / 2;
-
-    //collisions : 
-    mami.collide(houses);
-    cats.collide(houses);
-    mami.collide(obstacles);
-    cats.collide(obstacles);
-    
-    //frapper avec la canne:
-    let stickAngle = mami.stick.rotation * Math.PI / 180;
-    let YplusVal = 0;
-    function shootStick() {
-        mami.changeAnimation('shooting');
-        mami.animation.play();
-        mami.stick.rotation -= 10;
-        YplusVal += 10;
-        mami.stick.position.x = stickPosX - (Math.cos(stickAngle) * 15);
-        mami.stick.position.y = (stickPosY - 30) - Math.sin(stickAngle) * (30+YplusVal);
-        if (mami.stick.rotation < -160 ) {
-            isShooting =  false;
-            mami.changeAnimation('stopShoot');
+            mami.changeAnimation('walkUp');
             mami.animation.play();
         }
-    }
-    //frapper à gauche
-    function shootStickLeft() {
-        mami.changeAnimation('shootLeft');
-        mami.animation.play();
-        mami.stick.rotation += 10;
-        YplusVal += 10;
-        mami.stick.position.x = stickPosX - (Math.cos(stickAngle) * 15);
-        mami.stick.position.y = (stickPosY - 30) - Math.sin(stickAngle) * (30+YplusVal);
-        if (mami.stick.rotation > -20) {
-            isShooting =  false;
-            mami.changeAnimation('stopShootLeft');
-            mami.animation.play();
+        if(keyDown(DOWN_ARROW)) {
+                coef = 1;
+                stickOffsetX = 22;
+                mami.position.y += 0.5;
+                mami.stick.position.x = mami.position.x + stickOffsetX;
+                mami.stick.position.y = mami.position.y + stickOffsetY;
+                mami.changeAnimation('walkDown');
+                mami.animation.play();
+        }      
+        if (keyWentUp(LEFT_ARROW) || keyWentUp(RIGHT_ARROW) || keyWentUp(UP_ARROW) || keyWentUp(DOWN_ARROW)) {
+            mami.animation.stop();
         }
-    }
-    
-    //ramener la canne:
-    function stopStick() {
-        if (mami.stick.rotation <= -90) {
-            mami.stick.rotation += 10;
-            YplusVal = 0;
-            mami.stick.position.x = (stickPosX) - Math.cos(stickAngle) * 30;
-            mami.stick.position.y = (stickPosY - 30) - Math.sin(stickAngle) * (30);
-        } 
-    }
-    //ramener la canne quand frappé à gauche
-    function stopStickLeft() {
-        if (mami.stick.rotation >= -90) {
+
+        /*la caméra suit le sprite*/
+        camera.position.x = mami.position.x;
+        camera.position.y = mami.position.y;
+
+        /*limiter le mouvement de la caméra au bord de la map*/
+        if (camera.position.x < canvas.width /2) {
+            camera.position.x = canvas.width / 2;
+        }
+        if (camera.position.x > (myMap.width - (canvas.width / 2))) {
+            camera.position.x = myMap.width - (canvas.width / 2);
+        }
+        if (camera.position.y < canvas.height / 2 ) {
+            camera.position.y = canvas.height / 2;
+        }
+        if (camera.position.y > (myMap.height - (canvas.height / 2))) {
+            camera.position.y = myMap.height - (canvas.height / 2);
+        }
+
+        /*limiter le mouvement du sprite aux limites de la map. (calcul un peu bizarre car les coordonnées de la classe sprite sont données pour son centre)*/
+        if((mami.position.x - (mami.width / 2)) < 0)
+            mami.position.x = 0 + mami.width / 2;
+        if((mami.position.x + (mami.width / 2)) > myMap.width)
+            mami.position.x = myMap.width - mami.width / 2;
+        if((mami.position.y - (mami.height / 2)) < 0)
+            mami.position.y = 0 + mami.height / 2;
+        if((mami.position.y + (mami.height / 2)) > myMap.height)
+            mami.position.y = myMap.height - mami.height / 2;
+
+        //collisions : 
+        mami.collide(houses);
+        cats.collide(houses);
+        mami.collide(obstacles);
+        cats.collide(obstacles);
+
+        //frapper avec la canne:
+        let stickAngle = mami.stick.rotation * Math.PI / 180;
+        let YplusVal = 0;
+        function shootStick() {
+            mami.changeAnimation('shooting');
+            mami.animation.play();
             mami.stick.rotation -= 10;
-            YplusVal = 0;
-            mami.stick.position.x = (stickPosX) - Math.cos(stickAngle) * 30;
-            mami.stick.position.y = (stickPosY - 30) - Math.sin(stickAngle) * (30);
+            YplusVal += 10;
+            mami.stick.position.x = stickPosX - (Math.cos(stickAngle) * 15);
+            mami.stick.position.y = (stickPosY - 30) - Math.sin(stickAngle) * (30+YplusVal);
+            if (mami.stick.rotation < -190 ) {
+                isShooting =  false;
+                mami.changeAnimation('stopShoot');
+                mami.animation.play();
+            }
         }
-        
-    }
-    
-    if (isShooting) {
-        if (coef === 1) shootStick();
-        if (coef === -1) shootStickLeft();
-        
-    }
-    if (!isShooting) {
-        if (coef === 1) stopStick();
-        if (coef === -1) stopStickLeft();
-    }
-    
-    
-    //déclencher coup de canne
-    window.onkeydown = function(e) {
-        if (e.keyCode == 32) {
-            isShooting = true;
-        }
-    };
-
-    /*Apparition des chats à une ordonnée précise de la mamie*/
-    function drawCat(cat) {
-        drawSprite(cat);
-    }
-
-    function drawBoss(dragon) {
-      drawSprite(dragon);
-    }
-
-   function spawnCat() {
-        if ((mami.position.x == 200)) {
-            drawCat(myCat1);
-            cat1spawn = true;
-
-        }
-        if (mami.position.x == 300) {
-            drawCat(myCat2);
-            cat2spawn = true;
-        }
-        if (mami.position.x == 500) {
-            drawCat(myCat3);
-            cat3spawn = true;
+        //frapper à gauche
+        function shootStickLeft() {
+            mami.changeAnimation('shootLeft');
+            mami.animation.play();
+            mami.stick.rotation += 10;
+            YplusVal += 10;
+            mami.stick.position.x = stickPosX - (Math.cos(stickAngle) * 15);
+            mami.stick.position.y = (stickPosY - 30) - Math.sin(stickAngle) * (30+YplusVal);
+            if (mami.stick.rotation > 10) {
+                isShooting =  false;
+                mami.changeAnimation('stopShootLeft');
+                mami.animation.play();
+            }
         }
 
-    }
+        //ramener la canne:
+        function stopStick() {
+            if (mami.stick.rotation <= -90) {
+                mami.stick.rotation += 10;
+                YplusVal = 0;
+                mami.stick.position.x = (stickPosX) - Math.cos(stickAngle) * 30;
+                mami.stick.position.y = (stickPosY - 30) - Math.sin(stickAngle) * (30);
+            } 
+        }
+        //ramener la canne quand frappé à gauche
+        function stopStickLeft() {
+            if (mami.stick.rotation >= -90) {
+                mami.stick.rotation -= 10;
+                YplusVal = 0;
+                mami.stick.position.x = (stickPosX) - Math.cos(stickAngle) * 30;
+                mami.stick.position.y = (stickPosY - 30) - Math.sin(stickAngle) * (30);
+            }
 
-    function spawnBoss() {
-      if (mami.position.x == 500) {
-        drawBoss(myDragonBoss);
-        dragonspawn = true;
-      }
-    }
-    
-    function updateBoss() {
-      if (dragonspawn) {
-        myDragonBoss.maxSpeed = 3;
-        myDragonBoss.attractionPoint(0.04, mami.position.x, mami.position.y);
-        drawSprite(myDragonBoss);
-      }
-    }
-
-    function updateCats() {
-        if (cat1spawn) {
-            myCat1.maxSpeed = 2;
-            myCat1.attractionPoint(0.01, mami.position.x, mami.position.y);
-            drawSprite(myCat1);
         }
 
-        if (cat2spawn) {
-            myCat2.maxSpeed = 2;
-            myCat2.attractionPoint(0.01, mami.position.x, mami.position.y);
-            drawSprite(myCat2);
-        }
-
-        if (cat3spawn) {
-        myCat3.maxSpeed = 2;
-        myCat3.attractionPoint(0.01, mami.position.x, mami.position.y);
-        drawSprite(myCat3);
-        }
-
-    }
-    
-    //eloigner les chats en frappant
-    myCat1.overlap(mami.stick, function() {
         if (isShooting) {
-            myCat1.maxSpeed = 100;
-            myCat1.setVelocity(50, 50);
-        }
-    });
-    myCat2.overlap(mami.stick, function() {
-        if (isShooting) {
-            myCat2.maxSpeed = 100;
-            myCat2.setVelocity(50, 50);
-        }
-    });
-    myCat3.overlap(mami.stick, function() {
-        if (isShooting) {
-            myCat3.maxSpeed = 100;
-            myCat3.setVelocity(50, 50);
-        }
-    });
-    //éloigner le boss en frappant
-    myDragonBoss.overlap(mami.stick, function() {
-        if (isShooting) {
-            myDragonBoss.maxSpeed = 50;
-            myDragonBoss.setVelocity(50, 50);
-        }
-    });
+            if (coef === 1) shootStick();
+            if (coef === -1) shootStickLeft();
 
-    drawSprites(houses);
-    drawSprites(obstacles);
-    drawSprite(mami);
-    drawSprite(mami.stick);
+        }
+        if (!isShooting) {
+            if (coef === 1) stopStick();
+            if (coef === -1) stopStickLeft();
+        }
 
-    spawnCat();
-    spawnBoss();
-    updateCats();
-    updateBoss();
 
-    camera.off();
+        //déclencher coup de canne
+        window.onkeydown = function(e) {
+            if (e.keyCode == 32) {
+                isShooting = true;
+            }
+        };
+
+        /*Apparition des chats à une ordonnée précise de la mamie*/
+        function drawCat(cat) {
+            drawSprite(cat);
+        }
+
+        function drawBoss(dragon) {
+          drawSprite(dragon);
+        }
+
+       function spawnCat() {
+            if ((mami.position.x == 200)) {
+                drawCat(myCat1);
+                cat1spawn = true;
+
+            }
+            if (mami.position.x == 300) {
+                drawCat(myCat2);
+                cat2spawn = true;
+            }
+            if (mami.position.x == 500) {
+                drawCat(myCat3);
+                cat3spawn = true;
+            }
+
+        }
+
+        function spawnBoss() {
+          if (mami.position.x == 500) {
+            drawBoss(myDragonBoss);
+            dragonspawn = true;
+          }
+        }
+
+        function updateBoss() {
+          if (dragonspawn) {
+            myDragonBoss.maxSpeed = 3;
+            myDragonBoss.attractionPoint(0.04, mami.position.x, mami.position.y);
+            drawSprite(myDragonBoss);
+          }
+        }
+
+        function updateCats() {
+            if (cat1spawn) {
+                myCat1.maxSpeed = 2;
+                myCat1.attractionPoint(0.01, mami.position.x, mami.position.y);
+                drawSprite(myCat1);
+            }
+
+            if (cat2spawn) {
+                myCat2.maxSpeed = 2;
+                myCat2.attractionPoint(0.01, mami.position.x, mami.position.y);
+                drawSprite(myCat2);
+            }
+
+            if (cat3spawn) {
+            myCat3.maxSpeed = 2;
+            myCat3.attractionPoint(0.01, mami.position.x, mami.position.y);
+            drawSprite(myCat3);
+            }
+
+        }
+
+        //interactions mamie/chats :
+        myCat1.overlap(mami.stick, function() {
+            if (isShooting) {
+                myCat1.maxSpeed = 100;
+                myCat1.setVelocity(50*coef, 50*coef);
+                mamiScore ++;
+            }
+            else {
+                mamiLife --;
+            }
+        });
+        myCat2.overlap(mami.stick, function() {
+            if (isShooting) {
+                myCat2.maxSpeed = 100;
+                myCat2.setVelocity(50*coef, 50*coef);
+                mamiScore ++;
+            }
+            else {
+                mamiLife --;
+            }
+        });
+        myCat3.overlap(mami.stick, function() {
+            if (isShooting) {
+                myCat3.maxSpeed = 100;
+                myCat3.setVelocity(50*coef, 50*coef);
+                mamiScore ++;
+            }
+            else {
+                mamiLife --;
+            }
+        });
+        //éloigner le boss en frappant
+        myDragonBoss.overlap(mami.stick, function() {
+            if (isShooting) {
+                myDragonBoss.maxSpeed = 50;
+                myDragonBoss.setVelocity(50*coef, 50*coef);
+                mamiScore += 5;
+            }
+            else {
+                mamiLife -= 2;
+            }
+        });
+        //afficher la barre de vie :
+        function showDashboard() {
+            let mamiFaceImg = new Image();
+            if (((mamiLife / 500) *100) < 70 &&((mamiLife / 500) *100)>=50) mamiFaceImg.src ='img/mamiface-70.png';
+            else if (((mamiLife / 500) *100) < 50 && ((mamiLife / 500) *100) >= 20) {
+                mamiFaceImg.src ='img/mamiface-50.png';
+            }
+            else if (((mamiLife / 500) *100) < 20) {
+                mamiFaceImg.src ='img/mamiface-20.png';
+            }
+            else {
+                mamiFaceImg.src ='img/mamiface-normal.png';
+            }
+            dashCtx.fillStyle = "#000";
+            dashCtx.fillRect(0,0,dashboard.width,dashboard.height);
+            dashCtx.fillStyle = "#0f0";
+            dashCtx.fillText("Vie mamie :  " + parseInt((mamiLife / 500) *100)+"%", 20, 45);
+            dashCtx.fillText("Score :  " + mamiScore + " points", 20, 270);
+            dashCtx.fillRect(20,60, mamiLife /2, 30);
+            dashCtx.strokeStyle = "#090";
+            dashCtx.strokeRect(20, 60, 250, 30);
+            dashCtx.drawImage(mamiFaceImg, 20, 120);
+        }
+        showDashboard();
+
+        drawSprites(houses);
+        drawSprites(obstacles);
+        drawSprite(mami);
+        drawSprite(mami.stick);
+
+        spawnCat();
+        spawnBoss();
+        updateCats();
+        updateBoss();
+
+        camera.off();
+    }//fin du else de départ 
 }
