@@ -145,7 +145,7 @@ function draw() {
     
     //comportement du chat
     myCat.maxSpeed = 3;
-    myCat.attractionPoint(0.08, mami.position.x, mami.position.y);
+    myCat.attractionPoint(0.04, mami.position.x, mami.position.y);
     myCat.collide(houses);
     
     //collisions : 
