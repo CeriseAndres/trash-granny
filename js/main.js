@@ -49,11 +49,14 @@ let trashImage;
 let myCat1;
 let myCat2;
 let myCat3;
+
 let cats;
 
 let cat1spawn = false;
 let cat2spawn = false;
 let cat3spawn = false;
+let myDragonBoss;
+let dragonspawn = false;
 
 function preload() {
     //fond de la map
@@ -210,6 +213,20 @@ function setup() {
     //pour que la canne soit plus puissante que le chat
     mami.stick.mass = 100000;
 
+    maisons = new Group();
+    let maison1 = createSprite(80, 80, 100, 100);
+    maison1.shapeColor = color(0,0,255);
+    maisons.add(maison1);
+    let maison2 = createSprite(400, 150, 100, 100);
+    maison2.shapeColor = color(0,0,255);
+    maisons.add(maison2);
+    let maison3 = createSprite(80, 350, 100, 100);
+    maison3.shapeColor = color(0,0,255);
+    maisons.add(maison3);
+    let maison4 = createSprite(600, 300, 100, 100);
+    maison4.shapeColor = color(0,0,255);
+    maisons.add(maison4);
+
     cats = new Group();
     
     myCat1 = createSprite(500,300,20,20);
@@ -224,7 +241,9 @@ function setup() {
     myCat3.addAnimation('normal', "img/sprites_cat/cat3_walk1.png", "img/sprites_cat/cat3_walk2.png", "img/sprites_cat/cat3_walk3.png");
     cats.add(myCat3)
 
-
+    myDragonBoss = createSprite(800,600,100,100);
+    myDragonBoss.addAnimation('normal',"img/sprites_boss/dragon_fly1.png","img/sprites_boss/dragon_fly2.png","img/sprites_boss/dragon_fly3.png");
+    myDragonBoss.animation.frameDelay = 8;
 }
 
 function draw() {
@@ -233,11 +252,9 @@ function draw() {
     stickPosX = mami.position.x + stickOffsetX;
     stickPosY = mami.position.y + stickOffsetY;
     
-    
     drawSprite(myMap);
-    /*faire bouger le sprite (mamie) avec les fleches*/
     
-    //mamiWalk.stop();
+    /*faire bouger le sprite (mamie) avec les fleches*/
     if(keyDown(LEFT_ARROW)){
           stickOffsetX = -22;
           coef = -1;
@@ -280,7 +297,7 @@ function draw() {
     /*la caméra suit le sprite*/
     camera.position.x = mami.position.x;
     camera.position.y = mami.position.y;
-    
+
     /*limiter le mouvement de la caméra au bord de la map*/
     if (camera.position.x < canvas.width /2) {
         camera.position.x = canvas.width / 2;
@@ -294,7 +311,7 @@ function draw() {
     if (camera.position.y > (myMap.height - (canvas.height / 2))) {
         camera.position.y = myMap.height - (canvas.height / 2);
     }
-    
+
     /*limiter le mouvement du sprite aux limites de la map. (calcul un peu bizarre car les coordonnées de la classe sprite sont données pour son centre)*/
     if((mami.position.x - (mami.width / 2)) < 0)
         mami.position.x = 0 + mami.width / 2;
@@ -304,11 +321,6 @@ function draw() {
         mami.position.y = 0 + mami.height / 2;
     if((mami.position.y + (mami.height / 2)) > myMap.height)
         mami.position.y = myMap.height - mami.height / 2;
-    
-    //comportement du chat
-//    myCat.maxSpeed = 2.5;
-//    myCat.attractionPoint(0.02, mami.position.x, mami.position.y);
-//    myCat.collide(houses);
 
     //collisions : 
     mami.collide(houses);
@@ -377,7 +389,6 @@ function draw() {
         if (coef === -1) stopStickLeft();
     }
     
-
     
     //déclencher coup de canne
     window.onkeydown = function(e) {
@@ -391,11 +402,15 @@ function draw() {
         drawSprite(cat);
     }
 
+    function drawBoss(dragon) {
+      drawSprite(dragon);
+    }
+
    function spawnCat() {
         if ((mami.position.x == 200)) {
             drawCat(myCat1);
             cat1spawn = true;
-            
+
         }
         if (mami.position.x == 300) {
             drawCat(myCat2);
@@ -405,9 +420,24 @@ function draw() {
             drawCat(myCat3);
             cat3spawn = true;
         }
-        
+
     }
- 
+
+    function spawnBoss() {
+      if (mami.position.x == 500) {
+        drawBoss(myDragonBoss);
+        dragonspawn = true;
+      }
+    }
+    
+    function updateBoss() {
+      if (dragonspawn) {
+        myDragonBoss.maxSpeed = 3;
+        myDragonBoss.attractionPoint(0.04, mami.position.x, mami.position.y);
+        drawSprite(myDragonBoss);
+      }
+    }
+
     function updateCats() {
         if (cat1spawn) {
             myCat1.maxSpeed = 2;
@@ -417,13 +447,13 @@ function draw() {
 
         if (cat2spawn) {
             myCat2.maxSpeed = 2;
-            myCat2.attractionPoint(0.02, mami.position.x, mami.position.y);
+            myCat2.attractionPoint(0.01, mami.position.x, mami.position.y);
             drawSprite(myCat2);
         }
 
         if (cat3spawn) {
         myCat3.maxSpeed = 2;
-        myCat3.attractionPoint(0.02, mami.position.x, mami.position.y);
+        myCat3.attractionPoint(0.01, mami.position.x, mami.position.y);
         drawSprite(myCat3);
         }
 
@@ -432,8 +462,8 @@ function draw() {
     //eloigner les chats en frappant
     myCat1.overlap(mami.stick, function() {
         if (isShooting) {
-            myCat1.maxSpeed = 500;
-            myCat1.setVelocity(100, 100);
+            myCat1.maxSpeed = 100;
+            myCat1.setVelocity(50, 50);
         }
     });
     myCat2.overlap(mami.stick, function() {
@@ -448,6 +478,13 @@ function draw() {
             myCat3.setVelocity(50, 50);
         }
     });
+    //éloigner le boss en frappant
+    myDragonBoss.overlap(mami.stick, function() {
+        if (isShooting) {
+            myDragonBoss.maxSpeed = 50;
+            myDragonBoss.setVelocity(50, 50);
+        }
+    });
 
     drawSprites(houses);
     drawSprites(obstacles);
@@ -455,7 +492,9 @@ function draw() {
     drawSprite(mami.stick);
 
     spawnCat();
+    spawnBoss();
     updateCats();
+    updateBoss();
 
     camera.off();
 }
