@@ -45,11 +45,20 @@ let houseImage4;
 let houseImage1rev;
 let trashImage;
 
-let myCat;
+//let myCat;
+let myCat1;
+let myCat2;
+let myCat3;
+let cats;
+
+let cat1spawn = false;
+let cat2spawn = false;
+let cat3spawn = false;
 
 function preload() {
     //fond de la map
     mapImage = loadImage('img/map.png');
+
     //image de la mamie
     mamImage = loadAnimation('img/mami_walk2.png');
     mamiMad = loadAnimation('img/mami_stand_mad.png');
@@ -98,6 +107,7 @@ function preload() {
     //chats
     catWalk = loadAnimation("img/sprites_cat/cat1_walk1.png", "img/sprites_cat/cat1_walk2.png", "img/sprites_cat/cat1_walk3.png");
     catWalk.frameDelay = 5;
+
 }
 
 function setup() {
@@ -174,7 +184,7 @@ function setup() {
     obstacles.add(haieY3);
     
     //sprite mami
-    mami = createSprite(200, 350);
+    mami = createSprite(150, 350);
     mami.addAnimation('stand', mamImage);
     mami.addAnimation('walkDown', mamiWalk);
     mami.addAnimation('walkUp', mamiWalkUp);
@@ -200,11 +210,21 @@ function setup() {
     //pour que la canne soit plus puissante que le chat
     mami.stick.mass = 100000;
 
-    myCat = createSprite(300,200,20,20);
-    myCat.shapeColor = color(0,0,0, 255);
-    myCat.addAnimation('normal', catWalk);
-    myCat.mass = 0;
+    cats = new Group();
     
+    myCat1 = createSprite(500,300,20,20);
+    myCat1.addAnimation('normal', "img/sprites_cat/cat1_walk1.png", "img/sprites_cat/cat1_walk2.png", "img/sprites_cat/cat1_walk3.png");
+    cats.add(myCat1);
+    
+    myCat2 = createSprite(50,10,20,20);
+    myCat2.addAnimation('normal', "img/sprites_cat/cat2_walk1.png", "img/sprites_cat/cat2_walk2.png", "img/sprites_cat/cat2_walk3.png");
+    cats.add(myCat2);
+
+    myCat3 = createSprite(800,500,20,20);
+    myCat3.addAnimation('normal', "img/sprites_cat/cat3_walk1.png", "img/sprites_cat/cat3_walk2.png", "img/sprites_cat/cat3_walk3.png");
+    cats.add(myCat3)
+
+
 }
 
 function draw() {
@@ -216,7 +236,8 @@ function draw() {
     
     drawSprite(myMap);
     /*faire bouger le sprite (mamie) avec les fleches*/
-    mamiWalk.stop();
+    
+    //mamiWalk.stop();
     if(keyDown(LEFT_ARROW)){
           stickOffsetX = -22;
           coef = -1;
@@ -241,7 +262,7 @@ function draw() {
         mami.stick.position.y = mami.position.y + stickOffsetY;
         mami.changeAnimation('walkUp');
         mami.animation.play();
-        }
+    }
     if(keyDown(DOWN_ARROW)) {
             coef = 1;
             stickOffsetX = 22;
@@ -250,10 +271,12 @@ function draw() {
             mami.stick.position.y = mami.position.y + stickOffsetY;
             mami.changeAnimation('walkDown');
             mami.animation.play();
-        }
+    }
+        
     if (keyWentUp(LEFT_ARROW) || keyWentUp(RIGHT_ARROW) || keyWentUp(UP_ARROW) || keyWentUp(DOWN_ARROW)) {
         mami.animation.stop();
     }
+    
     /*la caméra suit le sprite*/
     camera.position.x = mami.position.x;
     camera.position.y = mami.position.y;
@@ -283,16 +306,15 @@ function draw() {
         mami.position.y = myMap.height - mami.height / 2;
     
     //comportement du chat
-    myCat.maxSpeed = 2.5;
-    myCat.attractionPoint(0.02, mami.position.x, mami.position.y);
-    myCat.collide(houses);
+//    myCat.maxSpeed = 2.5;
+//    myCat.attractionPoint(0.02, mami.position.x, mami.position.y);
+//    myCat.collide(houses);
 
-    
     //collisions : 
     mami.collide(houses);
-    myCat.collide(houses);
+    cats.collide(houses);
     mami.collide(obstacles);
-    myCat.collide(obstacles);
+    cats.collide(obstacles);
     
     //frapper avec la canne:
     let stickAngle = mami.stick.rotation * Math.PI / 180;
@@ -332,8 +354,7 @@ function draw() {
             YplusVal = 0;
             mami.stick.position.x = (stickPosX) - Math.cos(stickAngle) * 30;
             mami.stick.position.y = (stickPosY - 30) - Math.sin(stickAngle) * (30);
-        }
-        
+        } 
     }
     //ramener la canne quand frappé à gauche
     function stopStickLeft() {
@@ -364,22 +385,77 @@ function draw() {
             isShooting = true;
         }
     };
-    
-    //eloigner le chat en frappant
-    let ejectCat = function() {
-        if (isShooting) {
-            myCat.maxSpeed = 50;
-            myCat.setVelocity(50, 50);
-        }
+
+    /*Apparition des chats à une ordonnée précise de la mamie*/
+    function drawCat(cat) {
+        drawSprite(cat);
     }
-    myCat.overlap(mami.stick, ejectCat);
+
+   function spawnCat() {
+        if ((mami.position.x == 200)) {
+            drawCat(myCat1);
+            cat1spawn = true;
+            
+        }
+        if (mami.position.x == 300) {
+            drawCat(myCat2);
+            cat2spawn = true;
+        }
+        if (mami.position.x == 500) {
+            drawCat(myCat3);
+            cat3spawn = true;
+        }
+        
+    }
+ 
+    function updateCats() {
+        if (cat1spawn) {
+            myCat1.maxSpeed = 2;
+            myCat1.attractionPoint(0.01, mami.position.x, mami.position.y);
+            drawSprite(myCat1);
+        }
+
+        if (cat2spawn) {
+            myCat2.maxSpeed = 2;
+            myCat2.attractionPoint(0.02, mami.position.x, mami.position.y);
+            drawSprite(myCat2);
+        }
+
+        if (cat3spawn) {
+        myCat3.maxSpeed = 2;
+        myCat3.attractionPoint(0.02, mami.position.x, mami.position.y);
+        drawSprite(myCat3);
+        }
+
+    }
     
+    //eloigner les chats en frappant
+    myCat1.overlap(mami.stick, function() {
+        if (isShooting) {
+            myCat1.maxSpeed = 500;
+            myCat1.setVelocity(100, 100);
+        }
+    });
+    myCat2.overlap(mami.stick, function() {
+        if (isShooting) {
+            myCat2.maxSpeed = 100;
+            myCat2.setVelocity(50, 50);
+        }
+    });
+    myCat3.overlap(mami.stick, function() {
+        if (isShooting) {
+            myCat3.maxSpeed = 100;
+            myCat3.setVelocity(50, 50);
+        }
+    });
+
     drawSprites(houses);
     drawSprites(obstacles);
     drawSprite(mami);
     drawSprite(mami.stick);
-    drawSprite(myCat);
-    
-    camera.off();
 
+    spawnCat();
+    updateCats();
+
+    camera.off();
 }
