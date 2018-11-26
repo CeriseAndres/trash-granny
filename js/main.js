@@ -3,7 +3,13 @@ let mapImage;
 
 let mami;//decl. mami et son image
 let mamImage;
-
+let stickImage;//canne de mami
+let isShooting = false;//vrai si un coup de canne est donné.
+let stickPosX;
+let stickPosY;
+let stickOffsetX;
+let stickOffsetY;
+let coef; //1 ou -1 selon rotation canne a droite ou a gauche
 //decl. maisons
 let house1;
 let house2;
@@ -25,14 +31,15 @@ let houseImage4;
 let houseImage1rev;
 let trashImage;
 
-
 let myCat;
+
 
 function preload() {
     //fond de la map
     mapImage = loadImage('img/map.png');
     //image de la mamie
-    mamImage = loadImage('img/mami.png');
+    mamImage = loadAnimation('img/mami_walk2.png');
+    mamiMad = loadAnimation('img/mami_stand_mad.png');
     //images des maisons
     houseImage1 = loadImage('img/maison1.png');
     houseImage2 = loadImage('img/maison2.png');
@@ -40,6 +47,28 @@ function preload() {
     houseImage4 = loadImage('img/maison4.png');
     houseImage1rev = loadImage('img/maison1rev.png');
     trashImage = loadImage('img/local-poubelle.png');
+    
+    //mamie et canne
+    stickImage = loadImage('img/stick.png');
+    mamiWalk = loadAnimation('img/mami_walk1.png', 'img/mami_walk2.png', 'img/mami_walk3.png', 'img/mami_walk2.png');
+    mamiWalk.frameDelay = 8;
+    
+    mamiWalkUp = loadAnimation("img/mami_walkUp1.png", "img/mami_walkUp2.png", "img/mami_walkUp3.png", "img/mami_walkUp2.png");
+    mamiWalkUp.frameDelay = 8;
+    
+    mamiWalkRight = loadAnimation("img/mami_walkRight1.png", "img/mami_walkRight2.png", "img/mami_walkRight3.png", "img/mami_walkRight2.png");
+    mamiWalkRight.frameDelay = 8;
+    
+    mamiWalkLeft = loadAnimation("img/mami_walkLeft1.png", "img/mami_walkLeft2.png", "img/mami_walkLeft3.png", "img/mami_walkLeft2.png");
+    mamiWalkLeft.frameDelay = 8;
+    
+    mamiShoot = loadAnimation('img/mami_shoot2.png', 'img/mami_shoot2.png','img/mami_shoot3.png', 'img/mami_shoot3.png','img/mami_shoot3.png', 'img/mami_shoot2.png');
+    //mamiShoot.looping = false;
+    mamiShoot.frameDelay = 2;
+    
+    //chats
+    catWalk = loadAnimation("img/sprites_cat/cat1_walk1.png", "img/sprites_cat/cat1_walk2.png", "img/sprites_cat/cat1_walk3.png");
+    catWalk.frameDelay = 5;
 }
 
 function setup() {
@@ -85,36 +114,84 @@ function setup() {
     houseTrash.addImage('localPoub', trashImage);
     houses.add(houseTrash);
     
-
+    //sprite mami
     mami = createSprite(200, 300);
-    mami.addImage('stand', mamImage);
+    mami.addAnimation('stand', mamImage);
+    mami.addAnimation('walkDown', mamiWalk);
+    mami.addAnimation('walkUp', mamiWalkUp);
+    mami.addAnimation('walkRight', mamiWalkRight);
+    mami.addAnimation('walkLeft', mamiWalkLeft);
+    mami.addAnimation('shooting', mamiShoot);
+    mami.addAnimation('standMad', mamiMad);
+    mami.setCollider('rectangle', 0, 25, 25, 49);
+    stickOffsetX = 22;
+    stickOffsetY = 23;
+    stickPosX = mami.position.x + stickOffsetX;
+    stickPosY = mami.position.y + stickOffsetY;
+    //sprite pour la canne
+    mami.stick = createSprite(stickPosX, stickPosY);
+    mami.stick.addImage('stick', stickImage);
     
-    /*tourner le sprite pour qu'il soit tourné vers le bas*/
+    /*tourner le sprite mami pour que sa direction corresponde à celle des flèches du clavier*/
     mami.rotation = -90;
+    mami.stick.rotation = -90;
+    //pour que la canne soit plus puissante que le chat
+    mami.stick.mass = 100000;
 
     myCat = createSprite(300,200,20,20);
     myCat.shapeColor = color(0,0,0, 255);
-    myCat.addAnimation('normal', "img/sprites_cat/cat1_walk1.png", "img/sprites_cat/cat1_walk2.png", "img/sprites_cat/cat1_walk3.png");
+    myCat.addAnimation('normal', catWalk);
+    myCat.mass = 0;
     
 }
+
 function draw() {
     background(220);
     
+    stickPosX = mami.position.x + stickOffsetX;
+    stickPosY = mami.position.y + stickOffsetY;
+    
+    
     drawSprite(myMap);
     /*faire bouger le sprite (mamie) avec les fleches*/
-      if(keyDown(LEFT_ARROW)){
-          mami.position.x -= 1;
+    mamiWalk.stop();
+    if(keyDown(LEFT_ARROW)){
+          stickOffsetX = -22;
+          coef = -1;
+          mami.position.x -= 0.5;
+          mami.stick.position.x = mami.position.x + stickOffsetX;
+          mami.changeAnimation('walkLeft');
+          mami.animation.play();
       }
-      if(keyDown(RIGHT_ARROW)){
-          mami.position.x += 1;
+    if(keyDown(RIGHT_ARROW)){
+          stickOffsetX = 22;
+          coef = 1;
+          mami.position.x += 0.5;
+          mami.stick.position.x = mami.position.x + stickOffsetX;
+          mami.changeAnimation('walkRight');
+          mami.animation.play();
       }
-      if(keyDown(UP_ARROW)){
-        mami.position.y -= 1 ;
+    if(keyDown(UP_ARROW)){
+        coef = -1;
+        stickOffsetX = -22;
+        mami.position.y -= 0.5;
+        mami.stick.position.x = mami.position.x + stickOffsetX;
+        mami.stick.position.y = mami.position.y + stickOffsetY;
+        mami.changeAnimation('walkUp');
+        mami.animation.play();
         }
-
-        if(keyDown(DOWN_ARROW)) {
-            mami.position.y += 1;
+    if(keyDown(DOWN_ARROW)) {
+            coef = 1;
+            stickOffsetX = 22;
+            mami.position.y += 0.5;
+            mami.stick.position.x = mami.position.x + stickOffsetX;
+            mami.stick.position.y = mami.position.y + stickOffsetY;
+            mami.changeAnimation('walkDown');
+            mami.animation.play();
         }
+    if (keyWentUp(LEFT_ARROW) || keyWentUp(RIGHT_ARROW) || keyWentUp(UP_ARROW) || keyWentUp(DOWN_ARROW)) {
+        mami.animation.stop();
+    }
     /*la caméra suit le sprite*/
     camera.position.x = mami.position.x;
     camera.position.y = mami.position.y;
@@ -144,21 +221,98 @@ function draw() {
         mami.position.y = myMap.height - mami.height / 2;
     
     //comportement du chat
-    myCat.maxSpeed = 3;
-    myCat.attractionPoint(0.04, mami.position.x, mami.position.y);
+    myCat.maxSpeed = 2.5;
+    myCat.attractionPoint(0.02, mami.position.x, mami.position.y);
     myCat.collide(houses);
+
     
     //collisions : 
     mami.collide(houses);
+    myCat.collide(houses);
     
+    //frapper avec la canne:
+    let stickAngle = mami.stick.rotation * Math.PI / 180;
+    let YplusVal = 0;
+    function shootStick() {
+        mami.changeAnimation('shooting');
+        mami.animation.play();
+        mami.stick.rotation -= 12;
+        YplusVal += 10;
+        mami.stick.position.x = stickPosX - (Math.cos(stickAngle) * 5);
+        mami.stick.position.y = (stickPosY - 30) - Math.sin(stickAngle) * (30+YplusVal);
+        if (mami.stick.rotation < -160 ) {
+            isShooting =  false;
+            mami.changeAnimation('standMad');
+        }
+    }
+    //frapper à gauche
+    function shootStickLeft() {
+        //mami.changeAnimation('shooting');
+        //mami.animation.play();
+        mami.stick.rotation += 12;
+        YplusVal += 10;
+        mami.stick.position.x = stickPosX - (Math.cos(stickAngle) * 5);
+        mami.stick.position.y = (stickPosY - 30) - Math.sin(stickAngle) * (30+YplusVal);
+        if (mami.stick.rotation > 0) {
+            isShooting =  false;
+            //mami.changeAnimation('standMad');
+        }
+    }
     
-    drawSprite(mami);
-    drawSprites(houses);
-    drawSprite(myCat);
+    //ramener la canne:
+    function stopStick() {
+        if (mami.stick.rotation <= -90) {
+            mami.stick.rotation += 10;
+            YplusVal = 0;
+            mami.stick.position.x = (stickPosX) - Math.cos(stickAngle) * 30;
+            mami.stick.position.y = (stickPosY - 30) - Math.sin(stickAngle) * (30);
+        }
+        
+    }
+    //ramener la canne quand frappé à gauche
+    function stopStickLeft() {
+        if (mami.stick.rotation >= -90) {
+            mami.stick.rotation -= 10;
+            YplusVal = 0;
+            mami.stick.position.x = (stickPosX) - Math.cos(stickAngle) * 30;
+            mami.stick.position.y = (stickPosY - 30) - Math.sin(stickAngle) * (30);
+        }
+        
+    }
     
-    camera.off();
-    
+    if (isShooting) {
+        if (coef === 1) shootStick();
+        if (coef === -1) shootStickLeft();
+        
+    }
+    if (!isShooting) {
+        if (coef === 1) stopStick();
+        if (coef === -1) stopStickLeft();
+    }
     
 
     
+    //déclencher coup de canne
+    window.onkeydown = function(e) {
+        if (e.keyCode == 32) {
+            isShooting = true;
+        }
+    };
+    
+    //eloigner le chat en frappant
+    let ejectCat = function() {
+        if (isShooting) {
+            myCat.maxSpeed = 50;
+            myCat.setVelocity(50, 50);
+        }
+    }
+    myCat.overlap(mami.stick, ejectCat);
+    
+    drawSprites(houses);
+    drawSprite(mami);
+    drawSprite(mami.stick);
+    drawSprite(myCat);
+    
+    camera.off();
+
 }
