@@ -21,6 +21,20 @@ let house7;
 let house8;
 let houseTrash; //local poubelle
 
+let haieXimg;
+let haieYimg;
+let haieXRevimg;
+let haieX1;
+let haieX2;
+let haieX3;
+let haieX4;
+let haieX5;
+let haieY1;
+let haieY2;
+let haieY3;
+let haieY4;
+let obstacles;
+
 let houses;  //groupe de toutes les maisons pour traitement de groupe
 
 //decl. images maison
@@ -46,6 +60,9 @@ function preload() {
     houseImage4 = loadImage('img/maison4.png');
     houseImage1rev = loadImage('img/maison1rev.png');
     trashImage = loadImage('img/local-poubelle.png');
+    haieXimg = loadImage('img/haieX.png');
+    haieXRevimg = loadImage("img/haieXrev.png");
+    haieYimg = loadImage('img/haieY.png');
     
     //mamie et canne
     stickImage = loadImage('img/stick.png');
@@ -126,8 +143,38 @@ function setup() {
     houseTrash.addImage('localPoub', trashImage);
     houses.add(houseTrash);
     
+    obstacles = new Group();
+    //haies horizontales
+    haieX1 = createSprite(380, 215);
+    haieX1.addImage('haieX', haieXimg);
+    obstacles.add(haieX1);
+    haieX2 = createSprite(340, 475);
+    haieX2.addImage('haieX', haieXimg);
+    obstacles.add(haieX2);
+    haieX3 = createSprite(440, 475);
+    haieX3.addImage('haieX', haieXimg);
+    obstacles.add(haieX3);
+    haieX4 = createSprite(550, 1040);
+    haieX4.addImage('haieX', haieXRevimg);
+    obstacles.add(haieX4);
+    haieX5 = createSprite(1170, 980);
+    haieX5.addImage('haieX', haieXRevimg);
+    obstacles.add(haieX5);
+    //haies verticales
+    haieY1 = createSprite(240, 775);
+    haieY1.addImage('haieY', haieYimg);
+    obstacles.add(haieY1);
+    
+    haieY2 = createSprite(660, 550);
+    haieY2.addImage('haieY', haieYimg);
+    obstacles.add(haieY2);
+    
+    haieY3 = createSprite(1320, 680);
+    haieY3.addImage('haieY', haieYimg);
+    obstacles.add(haieY3);
+    
     //sprite mami
-    mami = createSprite(200, 300);
+    mami = createSprite(200, 350);
     mami.addAnimation('stand', mamImage);
     mami.addAnimation('walkDown', mamiWalk);
     mami.addAnimation('walkUp', mamiWalkUp);
@@ -244,6 +291,8 @@ function draw() {
     //collisions : 
     mami.collide(houses);
     myCat.collide(houses);
+    mami.collide(obstacles);
+    myCat.collide(obstacles);
     
     //frapper avec la canne:
     let stickAngle = mami.stick.rotation * Math.PI / 180;
@@ -326,6 +375,7 @@ function draw() {
     myCat.overlap(mami.stick, ejectCat);
     
     drawSprites(houses);
+    drawSprites(obstacles);
     drawSprite(mami);
     drawSprite(mami.stick);
     drawSprite(myCat);
