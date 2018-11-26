@@ -33,7 +33,6 @@ let trashImage;
 
 let myCat;
 
-
 function preload() {
     //fond de la map
     mapImage = loadImage('img/map.png');
@@ -62,13 +61,22 @@ function preload() {
     mamiWalkLeft = loadAnimation("img/mami_walkLeft1.png", "img/mami_walkLeft2.png", "img/mami_walkLeft3.png", "img/mami_walkLeft2.png");
     mamiWalkLeft.frameDelay = 8;
     
-    mamiShoot = loadAnimation('img/mami_shoot2.png','img/mami_shoot3.png');
-    //mamiShoot.looping = false;
-    mamiShoot.frameDelay = 4;
+    mamiShoot = loadAnimation('img/mami_shoot2.png','img/mami_shoot3.png', 'img/mami_shoot3.png');
+    mamiShoot.looping = false;
+    mamiShoot.frameDelay = 6;
+    
+    mamiShootLeft = loadAnimation('img/mami_shootLeft2.png', 'img/mami_shootLeft3.png', 'img/mami_shootLeft3.png');
+    mamiShootLeft.looping = false;
+    mamiShootLeft.frameDelay = 6;
     
     mamiStopShoot = loadAnimation('img/mami_shoot2.png', 'img/mami_shoot1.png', 'img/mami_shoot1.png');
     mamiStopShoot.looping = false;
-    mamiStopShoot.frameDelay = 4;
+    mamiStopShoot.frameDelay = 6;
+    
+    mamiStopShootLeft = loadAnimation('img/mami_shootLeft2.png', 'img/mami_walkLeft2.png', 'img/mami_walkLeft2.png');
+    mamiStopShootLeft.looping = false;
+    mamiStopShootLeft.frameDelay = 6;
+    
     
     //chats
     catWalk = loadAnimation("img/sprites_cat/cat1_walk1.png", "img/sprites_cat/cat1_walk2.png", "img/sprites_cat/cat1_walk3.png");
@@ -126,7 +134,9 @@ function setup() {
     mami.addAnimation('walkRight', mamiWalkRight);
     mami.addAnimation('walkLeft', mamiWalkLeft);
     mami.addAnimation('shooting', mamiShoot);
+    mami.addAnimation('shootLeft', mamiShootLeft);
     mami.addAnimation('stopShoot', mamiStopShoot);
+    mami.addAnimation('stopShootLeft', mamiStopShootLeft);
     mami.addAnimation('standMad', mamiMad);
     mami.setCollider('rectangle', 0, 25, 25, 49);
     stickOffsetX = 22;
@@ -241,9 +251,9 @@ function draw() {
     function shootStick() {
         mami.changeAnimation('shooting');
         mami.animation.play();
-        mami.stick.rotation -= 12;
+        mami.stick.rotation -= 10;
         YplusVal += 10;
-        mami.stick.position.x = stickPosX - (Math.cos(stickAngle) * 5);
+        mami.stick.position.x = stickPosX - (Math.cos(stickAngle) * 15);
         mami.stick.position.y = (stickPosY - 30) - Math.sin(stickAngle) * (30+YplusVal);
         if (mami.stick.rotation < -160 ) {
             isShooting =  false;
@@ -253,15 +263,16 @@ function draw() {
     }
     //frapper à gauche
     function shootStickLeft() {
-        //mami.changeAnimation('shooting');
-        //mami.animation.play();
-        mami.stick.rotation += 12;
+        mami.changeAnimation('shootLeft');
+        mami.animation.play();
+        mami.stick.rotation += 10;
         YplusVal += 10;
-        mami.stick.position.x = stickPosX - (Math.cos(stickAngle) * 5);
+        mami.stick.position.x = stickPosX - (Math.cos(stickAngle) * 15);
         mami.stick.position.y = (stickPosY - 30) - Math.sin(stickAngle) * (30+YplusVal);
-        if (mami.stick.rotation > 0) {
+        if (mami.stick.rotation > -20) {
             isShooting =  false;
-            //mami.changeAnimation('standMad');
+            mami.changeAnimation('stopShootLeft');
+            mami.animation.play();
         }
     }
     
