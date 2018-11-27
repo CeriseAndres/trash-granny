@@ -292,13 +292,13 @@ function setup() {
     myCake = createSprite(500,170);
     myCake.addImage('life', cakeImage);
 
-    myWine = createSprite(880,780);
+    myWine = createSprite(950,550);
     myWine.addImage('life', wineImage);
 
     myChicken = createSprite(250,860);
     myChicken.addImage('life', chickenImage);
 
-    myArmor = createSprite(1000,300);
+    myArmor = createSprite(1050,200);
     myArmor.addImage('armor', armorImage);
 }
 
@@ -486,7 +486,7 @@ function draw() {
     }
 
     function spawnBoss() {
-      if (mami.position.x == 1050) {
+      if (mami.position.x == 1111) {
         drawBoss(myDragonBoss);
         dragonspawn = true;
       }
