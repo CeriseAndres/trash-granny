@@ -742,10 +742,6 @@ function draw() {
         drawSprites(houses);
         drawSprites(obstacles);
         
-
-        spawnCat();
-        updateCats();
-        
         if (dragonLife > 0) {
             spawnBoss();
             updateBoss();
@@ -757,6 +753,9 @@ function draw() {
         
         drawSprite(mami);
         drawSprite(mami.stick);
+        
+        spawnCat();
+        updateCats();
 
         camera.off();
     }//fin du else de départ
