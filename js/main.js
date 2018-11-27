@@ -90,6 +90,9 @@ let wineImage;
 let myChicken;
 let chickenImage;
 
+let myCup;
+let cupImage;
+
 let myArmor;
 let armorImage;
 
@@ -167,6 +170,7 @@ function preload() {
     wineImage = loadImage('img/sprites_items/wine.png');
     chickenImage = loadImage('img/sprites_items/chicken.png');
     armorImage = loadImage('img/sprites_items/armor.png');
+    cupImage = loadImage('img/sprites_items/cup.png');
 }
 
 function setup() {
@@ -312,16 +316,19 @@ function setup() {
     //Items
     items = new Group();
 
-    myCake = createSprite(500,170);
+    myCake = createSprite(400,550);
     myCake.addImage('life', cakeImage);
 
-    myWine = createSprite(950,550);
+    myWine = createSprite(1000,1000);
     myWine.addImage('life', wineImage);
 
-    myChicken = createSprite(250,860);
+    myChicken = createSprite(550,900);
     myChicken.addImage('life', chickenImage);
 
-    myArmor = createSprite(1050,200);
+    myCup = createSprite(1050,590);
+    myCup.addImage('life', cupImage);
+
+    myArmor = createSprite(1050,350);
     myArmor.addImage('armor', armorImage);
 }
 
@@ -493,7 +500,6 @@ function draw() {
             if ((mami.position.x == 980)) {
                 drawCat(myCat1);
                 cat1spawn = true;
-
             }
             if (mami.position.x == 300) {
                 drawCat(myCat2);
@@ -503,19 +509,14 @@ function draw() {
                 drawCat(myCat3);
                 cat3spawn = true;
             }
-            if (mami.position.y == 700) {
+            if (mami.position.y == 600) {
                 drawCat(myCat4);
                 cat4spawn = true;
             }
-
-        }
-        if (mami.position.y == 700) {
-            drawCat(myCat4);
-            cat4spawn = true;
-        }
+          }
 
         function spawnBoss() {
-          if (mami.position.x == 500) {
+          if (mami.position.x >= 920 && mami.position.y >= 550 && mami.position.x <= 1250 && mami.position.y <= 720) {
             drawBoss(myDragonBoss);
             dragonspawn = true;
           }
@@ -547,6 +548,7 @@ function draw() {
         myCat3.attractionPoint(0.01, mami.position.x, mami.position.y);
         drawSprite(myCat3);
         }
+
         if (cat4spawn) {
         myCat4.maxSpeed = 2;
         myCat4.attractionPoint(0.01, mami.position.x, mami.position.y);
@@ -601,17 +603,22 @@ function draw() {
         //Items disparaissent et remettent de la vie quand mami les mange
         mami.overlap(myCake, function() {
           myCake.remove();
-          //mamiLife += 10;
+          mamiLife += 1;
         });
 
         mami.overlap(myWine, function() {
           myWine.remove();
-          //mamiLife += 10;
+          mamiLife += 1;
         });
 
         mami.overlap(myChicken, function() {
           myChicken.remove();
-          //mamiLife += 10;
+          mamiLife += 1;
+        });
+
+        mami.overlap(myCup, function() {
+          myCup.remove();
+          mamiLife += 1;
         });
 
         mami.overlap(myArmor, function() {
@@ -656,6 +663,7 @@ function draw() {
         drawSprite(myCake);
         drawSprite(myWine);
         drawSprite(myChicken);
+        drawSprite(myCup);
 
         drawSprite(myArmor);
 
