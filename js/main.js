@@ -76,6 +76,9 @@ let mamiLife = 500;
 //comptage de points
 let mamiScore = 0;
 
+//vie du boss(dragon)
+let dragonLife = 250;
+
 let gameover;
 
 function preload() {
@@ -270,8 +273,7 @@ function draw() {
     background(220);
     //en cas de défaite : (life < 0)
     if (mamiLife <= 0) {
-        background(0);
-        image(gameover, width/2, height/2);
+        image(gameover, mami.position.x - 400, mami.position.y - 300, 800, 600);
     }
     //sinon, on execute le jeu
     else {
@@ -522,6 +524,7 @@ function draw() {
                 myDragonBoss.maxSpeed = 50;
                 myDragonBoss.setVelocity(50*coef, 50*coef);
                 mamiScore += 5;
+                dragonLife -=2;
             }
             else {
                 mamiLife -= 2;
@@ -549,6 +552,12 @@ function draw() {
             dashCtx.strokeStyle = "#090";
             dashCtx.strokeRect(20, 60, 250, 30);
             dashCtx.drawImage(mamiFaceImg, 20, 120);
+            //afficher la lifebar du dragon quand il apparait
+            if (dragonspawn && dragonLife > 0) {
+                dashCtx.fillStyle = "#f00";
+                dashCtx.fillText("Dragon :  " + parseInt((dragonLife / 250) *100)+"%", 20, 325);
+                dashCtx.fillRect(20, 340, dragonLife, 30);
+            }
         }
         showDashboard();
 
@@ -558,10 +567,15 @@ function draw() {
         drawSprite(mami.stick);
 
         spawnCat();
-        spawnBoss();
         updateCats();
-        updateBoss();
-
+        
+        //le dragon n'est affiché que si sa vie est sup à 0.
+        //(donc il disparait quand il est mort en gros)
+        if(dragonLife > 0) {
+            spawnBoss();
+            updateBoss();
+        }
+        
         camera.off();
     }//fin du else de départ 
 }
