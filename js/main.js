@@ -633,7 +633,6 @@ function draw() {
         }
         showDashboard();
         
-        
         drawSprite(myCake);
         drawSprite(myWine);
         drawSprite(myChicken);
