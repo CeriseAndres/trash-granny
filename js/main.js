@@ -77,17 +77,39 @@ let cat4spawn =false;
 let myDragonBoss;
 let dragonBossImage;
 let dragonspawn = false;
+let myDragonDead; //sprite différent pour le dragon mort
+let dragonDeadImage;
 
 //barre de vie
 let mamiLife = 500;
 
 //comptage de points
 let mamiScore = 0;
+//compteur pour fixer limite score dans killBoss
+let bigUpCount = 0;
 
 //vie du boss(dragon)
 let dragonLife = 250;
 
 let gameover;
+
+//Items
+let items;
+
+let myCake;
+let cakeImage;
+
+let myWine;
+let wineImage;
+
+let myChicken;
+let chickenImage;
+
+let myArmor;
+let armorImage;
+
+let mamiHasArmor = false;
+let armorLife = 125;
 
 function preload() {
     //fond de la map
@@ -146,6 +168,10 @@ function preload() {
 
     //BOSS
     dragonBossImage = loadAnimation("img/sprites_boss/dragon_fly1.png","img/sprites_boss/dragon_fly2.png","img/sprites_boss/dragon_fly3.png");
+    dragonBossImage.frameDelay = 8;
+    dragonDeadImage = loadImage("img/sprites_boss/dragon_dead.png");
+    //dragonDeadImage.frameDelay = 50;
+    //dragonDeadImage.looping = false;
 
     //Items
     cakeImage = loadImage('img/sprites_items/cake.png');
@@ -291,7 +317,12 @@ function setup() {
     //boss
     myDragonBoss = createSprite(1600,1200,100,100);
     myDragonBoss.addAnimation('fly', dragonBossImage);
-    myDragonBoss.animation.frameDelay = 8;
+
+    
+//    myDragonDead = createSprite(300, 600);
+//    myDragonDead.addImage('dead', dragonDeadImage);
+    
+    
     
         //Items
     items = new Group();
@@ -527,6 +558,7 @@ function draw() {
         myCat3.attractionPoint(0.01, mami.position.x, mami.position.y);
         drawSprite(myCat3);
         }
+        
         if (cat4spawn) {
         myCat4.maxSpeed = 2;
         myCat4.attractionPoint(0.01, mami.position.x, mami.position.y);
@@ -542,7 +574,10 @@ function draw() {
                 mamiScore ++;
             }
             else {
-                mamiLife --;
+                if(mamiHasArmor === true) {
+                    armorLife -= 1;
+                }
+                else mamiLife -= 1;
             }
         });
         myCat2.overlap(mami.stick, function() {
@@ -552,7 +587,10 @@ function draw() {
                 mamiScore ++;
             }
             else {
-                mamiLife --;
+                if(mamiHasArmor === true) {
+                    armorLife -=1;
+                }
+                else mamiLife -= 1;
             }
         });
         myCat3.overlap(mami.stick, function() {
@@ -562,7 +600,23 @@ function draw() {
                 mamiScore ++;
             }
             else {
-                mamiLife --;
+                if(mamiHasArmor === true) {
+                    armorLife -=1;
+                }
+                else mamiLife -= 1;
+            }
+        });
+        myCat4.overlap(mami.stick, function() {
+            if (isShooting) {
+                myCat4.maxSpeed = 100;
+                myCat4.setVelocity(50*coef, 50*coef);
+                mamiScore ++;
+            }
+            else {
+                if(mamiHasArmor === true) {
+                    armorLife -=1;
+                }
+                else mamiLife -= 1;
             }
         });
         //éloigner le boss en frappant
@@ -571,54 +625,96 @@ function draw() {
                 myDragonBoss.maxSpeed = 50;
                 myDragonBoss.setVelocity(50*coef, 50*coef);
                 mamiScore += 5;
-                dragonLife -=2;
+                dragonLife -=50;
             }
             else {
-                mamiLife -= 2;
+                if(mamiHasArmor === true) {
+                    armorLife -=1;
+                }
+                else mamiLife -= 2;
             }
         });
+        //mort du dragon
+        function killBoss() {
+            myDragonDead = createSprite(myDragonBoss.position.x, myDragonBoss.position.y);
+            myDragonDead.immovable = true;
+            myDragonDead.addImage('dead', dragonDeadImage);
+            drawSprite(myDragonDead);
+            myDragonBoss.remove();
+            
+            //augmenter le score
+            bigUpCount++;
+            if (bigUpCount < 100) {
+                mamiScore +=10;
+            }
+        }
         
         //Items disparaissent et remettent de la vie quand mami les mange
         mami.overlap(myCake, function() {
           myCake.remove();
-          //mamiLife += 10;
+          mamiLife += 1;
         });
 
         mami.overlap(myWine, function() {
           myWine.remove();
-          //mamiLife += 10;
+          mamiLife += 1;
         });
 
         mami.overlap(myChicken, function() {
           myChicken.remove();
-          //mamiLife += 10;
+          mamiLife += 1;
         });
 
         mami.overlap(myArmor, function() {
           myArmor.remove();
+            mamiHasArmor = true;
           //mamiLife += 10;
         });
+        if (armorLife <= 0) {
+            myArmor.remove();
+            mamiHasArmor = false;
+        }
+        //limiter l'augmentation de la vie à son max normal 100%
+        if (mamiLife >= 500) {
+            mamiLife = 500;
+        }
 
-        
         //afficher le tableau de bord :
         function showDashboard() {
             let mamiFaceImg = new Image();
             //changer l'affichage du visage de la mamie en fonction
             //de sa santé :
-            if (((mamiLife / 500) *100) < 70 &&((mamiLife / 500) *100)>=50) mamiFaceImg.src ='img/mamiface-70.png';
+            if (((mamiLife / 500) *100) < 70 &&((mamiLife / 500) *100)>=50) {
+                mamiFaceImg.src ='img/mamiface-70.png';
+                if (isShooting === true && (((mamiLife / 500) *100) < 70 &&((mamiLife / 500) *100)>=50)) {
+                    mamiFaceImg.src = "img/mamiface-mad70.png";
+                }
+            }
             else if (((mamiLife / 500) *100) < 50 && ((mamiLife / 500) *100) >= 20) {
                 mamiFaceImg.src ='img/mamiface-50.png';
+                if (isShooting === true && (((mamiLife / 500) *100) < 50 && ((mamiLife / 500) *100) >= 20)) {
+                    mamiFaceImg.src = "img/mamiface-mad50.png";
+                }
             }
             else if (((mamiLife / 500) *100) < 20) {
                 mamiFaceImg.src ='img/mamiface-20.png';
+                if (isShooting === true && (((mamiLife / 500) *100) < 20)) {
+                    mamiFaceImg.src = "img/mamiface-mad20.png";
+                }
             }
             else {
                 mamiFaceImg.src ='img/mamiface-normal.png';
+                if (isShooting === true) {
+                    mamiFaceImg.src = "img/mamiface-mad.png";
+                }
             }
+            //afficher un fond noir
             dashCtx.fillStyle = "#000";
             dashCtx.fillRect(0,0,dashboard.width,dashboard.height);
+            //afficher la lifebar de mamie
             dashCtx.fillStyle = "#0f0";
             dashCtx.fillText("Vie mamie :  " + parseInt((mamiLife / 500) *100)+"%", 20, 45);
+            //afficher le score de mamie:
             dashCtx.fillText("Score :  " + mamiScore + " points", 20, 270);
             dashCtx.fillRect(20,60, mamiLife /2, 30);
             dashCtx.strokeStyle = "#090";
@@ -629,6 +725,16 @@ function draw() {
                 dashCtx.fillStyle = "#f00";
                 dashCtx.fillText("Dragon :  " + parseInt((dragonLife / 250) *100)+"%", 20, 325);
                 dashCtx.fillRect(20, 340, dragonLife, 30);
+                dashCtx.strokeStyle = "#900";
+                dashCtx.strokeRect(20, 340, 250, 30);
+            }
+            //afficher l'état de l'armure quand elle est là
+            if (mamiHasArmor === true) {
+                dashCtx.fillStyle = "#00f";
+                dashCtx.fillText("Armure : " + parseInt((armorLife / 125) * 100) + "%", 20, 415);
+                dashCtx.fillRect(20, 430, armorLife, 30);
+                dashCtx.strokeStyle = "#009";
+                dashCtx.strokeRect(20, 430, 125, 30);
             }
         }
         showDashboard();
@@ -647,11 +753,13 @@ function draw() {
         spawnCat();
         updateCats();
         
-        //le dragon n'est affiché que si sa vie est sup à 0.
-        //(donc il disparait quand il est mort en gros)
-        if(dragonLife > 0) {
+        if (dragonLife > 0) {
             spawnBoss();
             updateBoss();
+        }
+        //le dragon n'est affiché que si sa vie est sup à 0.
+        else if(dragonLife <= 0) {
+            killBoss();
         }
         
         camera.off();
