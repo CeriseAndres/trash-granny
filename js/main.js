@@ -289,13 +289,13 @@ function setup() {
     //Items
     items = new Group();
 
-    myCake = createSprite(600,300);
+    myCake = createSprite(500,170);
     myCake.addImage('life', cakeImage);
 
     myWine = createSprite(880,780);
     myWine.addImage('life', wineImage);
 
-    myChicken = createSprite(350,850);
+    myChicken = createSprite(250,860);
     myChicken.addImage('life', chickenImage);
 
     myArmor = createSprite(1000,300);
