@@ -77,26 +77,6 @@ let cat4spawn =false;
 let myDragonBoss;
 let dragonBossImage;
 let dragonspawn = false;
-let myDragonDead; //sprite différent pour le dragon mort
-let dragonDeadImage;
-
-//Items
-let items;
-
-let myCake;
-let cakeImage;
-
-let myWine;
-let wineImage;
-
-let myChicken;
-let chickenImage;
-
-let myCup;
-let cupImage;
-
-let myArmor;
-let armorImage;
 
 //barre de vie
 let mamiLife = 500;
