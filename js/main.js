@@ -49,14 +49,39 @@ let trashImage;
 let myCat1;
 let myCat2;
 let myCat3;
+let myCat4;
+let cat1Image;
+let cat2Image;
+let cat3Image;
+let cat4Image;
 
 let cats;
 
 let cat1spawn = false;
 let cat2spawn = false;
 let cat3spawn = false;
+let cat4spawn =false;
+
+//BOSS!
 let myDragonBoss;
+let dragonBossImage;
 let dragonspawn = false;
+
+//Items
+let items;
+
+let myCake;
+let cakeImage;
+
+let myWine;
+let wineImage;
+
+let myChicken;
+let chickenImage;
+
+let myArmor;
+let armorImage;
+
 
 function preload() {
     //fond de la map
@@ -75,41 +100,51 @@ function preload() {
     haieXimg = loadImage('img/haieX.png');
     haieXRevimg = loadImage("img/haieXrev.png");
     haieYimg = loadImage('img/haieY.png');
-    
+
     //mamie et canne
     stickImage = loadImage('img/stick.png');
     mamiWalk = loadAnimation('img/mami_walk1.png', 'img/mami_walk2.png', 'img/mami_walk3.png', 'img/mami_walk2.png');
     mamiWalk.frameDelay = 8;
-    
+
     mamiWalkUp = loadAnimation("img/mami_walkUp1.png", "img/mami_walkUp2.png", "img/mami_walkUp3.png", "img/mami_walkUp2.png");
     mamiWalkUp.frameDelay = 8;
-    
+
     mamiWalkRight = loadAnimation("img/mami_walkRight1.png", "img/mami_walkRight2.png", "img/mami_walkRight3.png", "img/mami_walkRight2.png");
     mamiWalkRight.frameDelay = 8;
-    
+
     mamiWalkLeft = loadAnimation("img/mami_walkLeft1.png", "img/mami_walkLeft2.png", "img/mami_walkLeft3.png", "img/mami_walkLeft2.png");
     mamiWalkLeft.frameDelay = 8;
-    
+
     mamiShoot = loadAnimation('img/mami_shoot2.png','img/mami_shoot3.png', 'img/mami_shoot3.png');
     mamiShoot.looping = false;
     mamiShoot.frameDelay = 6;
-    
+
     mamiShootLeft = loadAnimation('img/mami_shootLeft2.png', 'img/mami_shootLeft3.png', 'img/mami_shootLeft3.png');
     mamiShootLeft.looping = false;
     mamiShootLeft.frameDelay = 6;
-    
+
     mamiStopShoot = loadAnimation('img/mami_shoot2.png', 'img/mami_shoot1.png', 'img/mami_shoot1.png');
     mamiStopShoot.looping = false;
     mamiStopShoot.frameDelay = 6;
-    
+
     mamiStopShootLeft = loadAnimation('img/mami_shootLeft2.png', 'img/mami_walkLeft2.png', 'img/mami_walkLeft2.png');
     mamiStopShootLeft.looping = false;
     mamiStopShootLeft.frameDelay = 6;
-    
-    
-    //chats
-    catWalk = loadAnimation("img/sprites_cat/cat1_walk1.png", "img/sprites_cat/cat1_walk2.png", "img/sprites_cat/cat1_walk3.png");
-    catWalk.frameDelay = 5;
+
+    //cats
+    cat1Image = loadAnimation("img/sprites_cat/cat1_walk1.png", "img/sprites_cat/cat1_walk2.png", "img/sprites_cat/cat1_walk3.png");
+    cat2Image = loadAnimation("img/sprites_cat/cat2_walk1.png", "img/sprites_cat/cat2_walk2.png", "img/sprites_cat/cat2_walk3.png");
+    cat3Image = loadAnimation("img/sprites_cat/cat3_walk1.png", "img/sprites_cat/cat3_walk2.png", "img/sprites_cat/cat3_walk3.png");
+    cat4Image = loadAnimation("img/sprites_cat/cat4_walk1.png", "img/sprites_cat/cat4_walk2.png", "img/sprites_cat/cat4_walk3.png");
+
+    //BOSS
+    dragonBossImage = loadAnimation("img/sprites_boss/dragon_fly1.png","img/sprites_boss/dragon_fly2.png","img/sprites_boss/dragon_fly3.png");
+
+    //Items
+    cakeImage = loadImage('img/sprites_items/cake.png');
+    wineImage = loadImage('img/sprites_items/wine.png');
+    chickenImage = loadImage('img/sprites_items/chicken.png');
+    armorImage = loadImage('img/sprites_items/armor.png');
 
 }
 
@@ -123,39 +158,39 @@ function setup() {
     house1 = createSprite(190,120);
     house1.addImage('maison1', houseImage1);
     houses.add(house1);
-    
+
     house2 = createSprite(850, 60);
     house2.addImage('maison3', houseImage3);
     houses.add(house2);
-    
+
     house3 = createSprite(1400, 70);
     house3.addImage('maison2', houseImage2);
     houses.add(house3);
-    
+
     house4 = createSprite(160, 600);
     house4.addImage('maison3', houseImage3);
     houses.add(house4);
-    
+
     house5 = createSprite(795, 350);
     house5.addImage('maison4', houseImage4);
     houses.add(house5);
-    
+
     house6 = createSprite(1450, 515);
     house6.addImage('maison1rev', houseImage1rev);
     houses.add(house6);
-    
+
     house7 = createSprite(170, 1115);
     house7.addImage('maison2', houseImage2);
     houses.add(house7);
-    
+
     house8 = createSprite(780, 1000);
     house8.addImage('maison1rev', houseImage1rev);
     houses.add(house8);
-    
+
     houseTrash = createSprite(1415, 1020);
     houseTrash.addImage('localPoub', trashImage);
     houses.add(houseTrash);
-    
+
     obstacles = new Group();
     //haies horizontales
     haieX1 = createSprite(380, 215);
@@ -177,15 +212,15 @@ function setup() {
     haieY1 = createSprite(240, 775);
     haieY1.addImage('haieY', haieYimg);
     obstacles.add(haieY1);
-    
+
     haieY2 = createSprite(660, 550);
     haieY2.addImage('haieY', haieYimg);
     obstacles.add(haieY2);
-    
+
     haieY3 = createSprite(1320, 680);
     haieY3.addImage('haieY', haieYimg);
     obstacles.add(haieY3);
-    
+
     //sprite mami
     mami = createSprite(150, 350);
     mami.addAnimation('stand', mamImage);
@@ -206,7 +241,7 @@ function setup() {
     //sprite pour la canne
     mami.stick = createSprite(stickPosX, stickPosY);
     mami.stick.addImage('stick', stickImage);
-    
+
     /*tourner le sprite mami pour que sa direction corresponde à celle des flèches du clavier*/
     mami.rotation = -90;
     mami.stick.rotation = -90;
@@ -227,33 +262,56 @@ function setup() {
     maison4.shapeColor = color(0,0,255);
     maisons.add(maison4);
 
+    //cats
     cats = new Group();
-    
-    myCat1 = createSprite(500,300,20,20);
-    myCat1.addAnimation('normal', "img/sprites_cat/cat1_walk1.png", "img/sprites_cat/cat1_walk2.png", "img/sprites_cat/cat1_walk3.png");
+
+    myCat1 = createSprite(1280,480,20,20);
+    myCat1.addAnimation('walk', cat1Image);
     cats.add(myCat1);
-    
-    myCat2 = createSprite(50,10,20,20);
-    myCat2.addAnimation('normal', "img/sprites_cat/cat2_walk1.png", "img/sprites_cat/cat2_walk2.png", "img/sprites_cat/cat2_walk3.png");
+
+    myCat2 = createSprite(0,400,20,20);
+    myCat2.addAnimation('walk', cat2Image);
     cats.add(myCat2);
 
-    myCat3 = createSprite(800,500,20,20);
-    myCat3.addAnimation('normal', "img/sprites_cat/cat3_walk1.png", "img/sprites_cat/cat3_walk2.png", "img/sprites_cat/cat3_walk3.png");
-    cats.add(myCat3)
+    myCat3 = createSprite(700,580,20,20);
+    myCat3.addAnimation('walk', cat3Image);
+    cats.add(myCat3);
 
-    myDragonBoss = createSprite(800,600,100,100);
-    myDragonBoss.addAnimation('normal',"img/sprites_boss/dragon_fly1.png","img/sprites_boss/dragon_fly2.png","img/sprites_boss/dragon_fly3.png");
+    myCat4 = createSprite(480,1200,20,20);
+    myCat4.addAnimation('walk', cat4Image);
+    cats.add(myCat4);
+
+    //boss
+    myDragonBoss = createSprite(1600,1200,100,100);
+    myDragonBoss.addAnimation('fly', dragonBossImage);
     myDragonBoss.animation.frameDelay = 8;
+
+    //Items
+    items = new Group();
+
+    myCake = createSprite(600,300);
+    myCake.addImage('life', cakeImage);
+
+    myWine = createSprite(880,780);
+    myWine.addImage('life', wineImage);
+
+    myChicken = createSprite(350,850);
+    myChicken.addImage('life', chickenImage);
+
+    myArmor = createSprite(1000,300);
+    myArmor.addImage('armor', armorImage);
 }
 
 function draw() {
     background(220);
-    
+
     stickPosX = mami.position.x + stickOffsetX;
     stickPosY = mami.position.y + stickOffsetY;
-    
+
     drawSprite(myMap);
-    
+
+
+
     /*faire bouger le sprite (mamie) avec les fleches*/
     if(keyDown(LEFT_ARROW)){
           stickOffsetX = -22;
@@ -289,11 +347,11 @@ function draw() {
             mami.changeAnimation('walkDown');
             mami.animation.play();
     }
-        
+
     if (keyWentUp(LEFT_ARROW) || keyWentUp(RIGHT_ARROW) || keyWentUp(UP_ARROW) || keyWentUp(DOWN_ARROW)) {
         mami.animation.stop();
     }
-    
+
     /*la caméra suit le sprite*/
     camera.position.x = mami.position.x;
     camera.position.y = mami.position.y;
@@ -322,12 +380,12 @@ function draw() {
     if((mami.position.y + (mami.height / 2)) > myMap.height)
         mami.position.y = myMap.height - mami.height / 2;
 
-    //collisions : 
+    //collisions :
     mami.collide(houses);
     cats.collide(houses);
     mami.collide(obstacles);
     cats.collide(obstacles);
-    
+
     //frapper avec la canne:
     let stickAngle = mami.stick.rotation * Math.PI / 180;
     let YplusVal = 0;
@@ -358,7 +416,7 @@ function draw() {
             mami.animation.play();
         }
     }
-    
+
     //ramener la canne:
     function stopStick() {
         if (mami.stick.rotation <= -90) {
@@ -366,7 +424,7 @@ function draw() {
             YplusVal = 0;
             mami.stick.position.x = (stickPosX) - Math.cos(stickAngle) * 30;
             mami.stick.position.y = (stickPosY - 30) - Math.sin(stickAngle) * (30);
-        } 
+        }
     }
     //ramener la canne quand frappé à gauche
     function stopStickLeft() {
@@ -376,20 +434,20 @@ function draw() {
             mami.stick.position.x = (stickPosX) - Math.cos(stickAngle) * 30;
             mami.stick.position.y = (stickPosY - 30) - Math.sin(stickAngle) * (30);
         }
-        
+
     }
-    
+
     if (isShooting) {
         if (coef === 1) shootStick();
         if (coef === -1) shootStickLeft();
-        
+
     }
     if (!isShooting) {
         if (coef === 1) stopStick();
         if (coef === -1) stopStickLeft();
     }
-    
-    
+
+
     //déclencher coup de canne
     window.onkeydown = function(e) {
         if (e.keyCode == 32) {
@@ -407,7 +465,7 @@ function draw() {
     }
 
    function spawnCat() {
-        if ((mami.position.x == 200)) {
+        if ((mami.position.x == 980)) {
             drawCat(myCat1);
             cat1spawn = true;
 
@@ -416,20 +474,24 @@ function draw() {
             drawCat(myCat2);
             cat2spawn = true;
         }
-        if (mami.position.x == 500) {
+        if (mami.position.x == 600) {
             drawCat(myCat3);
             cat3spawn = true;
+        }
+        if (mami.position.y == 700) {
+            drawCat(myCat4);
+            cat4spawn = true;
         }
 
     }
 
     function spawnBoss() {
-      if (mami.position.x == 500) {
+      if (mami.position.x == 1050) {
         drawBoss(myDragonBoss);
         dragonspawn = true;
       }
     }
-    
+
     function updateBoss() {
       if (dragonspawn) {
         myDragonBoss.maxSpeed = 3;
@@ -456,9 +518,14 @@ function draw() {
         myCat3.attractionPoint(0.01, mami.position.x, mami.position.y);
         drawSprite(myCat3);
         }
+        if (cat4spawn) {
+        myCat4.maxSpeed = 2;
+        myCat4.attractionPoint(0.01, mami.position.x, mami.position.y);
+        drawSprite(myCat4);
+        }
 
     }
-    
+
     //eloigner les chats en frappant
     myCat1.overlap(mami.stick, function() {
         if (isShooting) {
@@ -478,6 +545,12 @@ function draw() {
             myCat3.setVelocity(50, 50);
         }
     });
+    myCat4.overlap(mami.stick, function() {
+        if (isShooting) {
+            myCat4.maxSpeed = 100;
+            myCat4.setVelocity(50, 50);
+        }
+    });
     //éloigner le boss en frappant
     myDragonBoss.overlap(mami.stick, function() {
         if (isShooting) {
@@ -486,10 +559,43 @@ function draw() {
         }
     });
 
+    //Items disparaissent et remettent de la vie quand mami les mange
+    // if ((mami.position.x == 400)&&(mami.position.y == 350)) {
+    //   myCake.remove();
+    // }
+    mami.overlap(myCake, function() {
+      myCake.remove();
+      //mamiLife += 10;
+    });
+
+    mami.overlap(myWine, function() {
+      myWine.remove();
+      //mamiLife += 10;
+    });
+
+    mami.overlap(myChicken, function() {
+      myChicken.remove();
+      //mamiLife += 10;
+    });
+
+    mami.overlap(myArmor, function() {
+      myArmor.remove();
+      //mamiLife += 10;
+    });
+
+    drawSprite(myCake);
+    drawSprite(myWine);
+    drawSprite(myChicken);
+
+    drawSprite(myArmor);
+
+
     drawSprites(houses);
     drawSprites(obstacles);
     drawSprite(mami);
     drawSprite(mami.stick);
+
+
 
     spawnCat();
     spawnBoss();
