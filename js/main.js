@@ -255,7 +255,7 @@ function setup() {
     obstacles.add(haieY3);
 
     //sprite mami
-    mami = createSprite(150, 350);
+    mami = createSprite(150, 350);//150 350
     mami.addAnimation('stand', mamImage);
     mami.addAnimation('walkDown', mamiWalk);
     mami.addAnimation('walkUp', mamiWalkUp);
@@ -346,7 +346,7 @@ function draw() {
     background(220);
     //en cas de défaite : (life < 0)
     if (mamiLife <= 0) {
-        image(gameover, mami.position.x - 400, mami.position.y - 300, 800, 600);
+        image(gameover, camera.position.x - canvas.width/2, camera.position.y - canvas.height/2 , 800, 600);
     }
     //sinon, on execute le jeu
     else {
@@ -715,11 +715,14 @@ function draw() {
             dashCtx.drawImage(mamiFaceImg, 20, 120);
             //afficher la lifebar du dragon quand il apparait
             if (dragonspawn && dragonLife > 0) {
+                let dragonFaceImg = new Image();
+                dragonFaceImg.src = 'img/sprites_boss/dragon_face.png';
                 dashCtx.fillStyle = "#f00";
                 dashCtx.fillText("Dragon :  " + parseInt((dragonLife / 250) *100)+"%", 20, 285);
                 dashCtx.fillRect(20, 300, dragonLife, 30);
                 dashCtx.strokeStyle = "#900";
                 dashCtx.strokeRect(20, 300, 250, 30);
+                dashCtx.drawImage(dragonFaceImg, 200, 218);
             }
             //afficher l'état de l'armure quand elle est là
             if (mamiHasArmor === true) {
@@ -742,12 +745,7 @@ function draw() {
         drawSprites(houses);
         drawSprites(obstacles);
         
-        if (dragonLife > 0) {
-            spawnBoss();
-            updateBoss();
-        }
-        //le dragon n'est affiché que si sa vie est sup à 0.
-        else if(dragonLife <= 0) {
+        if(dragonLife <= 0) {
             killBoss();
         }
         
@@ -756,6 +754,14 @@ function draw() {
         
         spawnCat();
         updateCats();
+        
+        //le dragon n'est affiché que si sa vie est sup à 0.
+        if (dragonLife > 0) {
+            spawnBoss();
+            updateBoss();
+        }
+        
+        
 
         camera.off();
     }//fin du else de départ
