@@ -621,7 +621,7 @@ function draw() {
                 myDragonBoss.maxSpeed = 50;
                 myDragonBoss.setVelocity(50*coef, 50*coef);
                 mamiScore += 5;
-                dragonLife -=50;
+                dragonLife -= 2;
             }
             else {
                 if(mamiHasArmor === true) {
