@@ -60,15 +60,23 @@ let trashImage;
 let myCat1;
 let myCat2;
 let myCat3;
+let myCat4;
+let cat1Image;
+let cat2Image;
+let cat3Image;
+let cat4Image;
 
 let cats;
 
 let cat1spawn = false;
 let cat2spawn = false;
 let cat3spawn = false;
-let myDragonBoss;
-let dragonspawn = false;
+let cat4spawn =false;
 
+//BOSS !
+let myDragonBoss;
+let dragonBossImage;
+let dragonspawn = false;
 
 //barre de vie
 let mamiLife = 500;
@@ -99,8 +107,7 @@ function preload() {
     haieXRevimg = loadImage("img/haieXrev.png");
     haieYimg = loadImage('img/haieY.png');
     
-    //mamie et canne
-    stickImage = loadImage('img/stick.png');
+    //mamie
     mamiWalk = loadAnimation('img/mami_walk1.png', 'img/mami_walk2.png', 'img/mami_walk3.png', 'img/mami_walk2.png');
     mamiWalk.frameDelay = 8;
     
@@ -130,7 +137,21 @@ function preload() {
     mamiStopShootLeft.frameDelay = 6;
     
     gameover = loadImage('img/gameover.png');
+    
+    //cats
+    cat1Image = loadAnimation("img/sprites_cat/cat1_walk1.png", "img/sprites_cat/cat1_walk2.png", "img/sprites_cat/cat1_walk3.png");
+    cat2Image = loadAnimation("img/sprites_cat/cat2_walk1.png", "img/sprites_cat/cat2_walk2.png", "img/sprites_cat/cat2_walk3.png");
+    cat3Image = loadAnimation("img/sprites_cat/cat3_walk1.png", "img/sprites_cat/cat3_walk2.png", "img/sprites_cat/cat3_walk3.png");
+    cat4Image = loadAnimation("img/sprites_cat/cat4_walk1.png", "img/sprites_cat/cat4_walk2.png", "img/sprites_cat/cat4_walk3.png");
 
+    //BOSS
+    dragonBossImage = loadAnimation("img/sprites_boss/dragon_fly1.png","img/sprites_boss/dragon_fly2.png","img/sprites_boss/dragon_fly3.png");
+
+    //Items
+    cakeImage = loadImage('img/sprites_items/cake.png');
+    wineImage = loadImage('img/sprites_items/wine.png');
+    chickenImage = loadImage('img/sprites_items/chicken.png');
+    armorImage = loadImage('img/sprites_items/armor.png');
 }
 
 function setup() {
@@ -228,12 +249,11 @@ function setup() {
     //sprite pour la canne
     mami.stick = createSprite(stickPosX, stickPosY, 35, 2);
     mami.stick.shapeColor = color(0,0,0,0);
-    //mami.stick.addImage('stick', stickImage);
     
     /*tourner le sprite mami pour que sa direction corresponde à celle des flèches du clavier*/
     mami.rotation = -90;
     mami.stick.rotation = -90;
-    //pour que la canne soit plus puissante que le chat
+    //pour que la canne soit plus puissante que les chats
     mami.stick.mass = 100000;
 
     maisons = new Group();
@@ -252,21 +272,41 @@ function setup() {
 
     cats = new Group();
     
-    myCat1 = createSprite(500,300,20,20);
-    myCat1.addAnimation('normal', "img/sprites_cat/cat1_walk1.png", "img/sprites_cat/cat1_walk2.png", "img/sprites_cat/cat1_walk3.png");
+    myCat1 = createSprite(1280,480,20,20);
+    myCat1.addAnimation('walk', cat1Image);
     cats.add(myCat1);
-    
-    myCat2 = createSprite(50,10,20,20);
-    myCat2.addAnimation('normal', "img/sprites_cat/cat2_walk1.png", "img/sprites_cat/cat2_walk2.png", "img/sprites_cat/cat2_walk3.png");
+
+    myCat2 = createSprite(0,400,20,20);
+    myCat2.addAnimation('walk', cat2Image);
     cats.add(myCat2);
 
-    myCat3 = createSprite(800,500,20,20);
-    myCat3.addAnimation('normal', "img/sprites_cat/cat3_walk1.png", "img/sprites_cat/cat3_walk2.png", "img/sprites_cat/cat3_walk3.png");
-    cats.add(myCat3)
+    myCat3 = createSprite(700,580,20,20);
+    myCat3.addAnimation('walk', cat3Image);
+    cats.add(myCat3);
 
-    myDragonBoss = createSprite(800,600,100,100);
-    myDragonBoss.addAnimation('normal',"img/sprites_boss/dragon_fly1.png","img/sprites_boss/dragon_fly2.png","img/sprites_boss/dragon_fly3.png");
+    myCat4 = createSprite(480,1200,20,20);
+    myCat4.addAnimation('walk', cat4Image);
+    cats.add(myCat4);
+
+    //boss
+    myDragonBoss = createSprite(1600,1200,100,100);
+    myDragonBoss.addAnimation('fly', dragonBossImage);
     myDragonBoss.animation.frameDelay = 8;
+    
+        //Items
+    items = new Group();
+
+    myCake = createSprite(600,300);
+    myCake.addImage('life', cakeImage);
+
+    myWine = createSprite(880,780);
+    myWine.addImage('life', wineImage);
+
+    myChicken = createSprite(350,850);
+    myChicken.addImage('life', chickenImage);
+
+    myArmor = createSprite(1000,300);
+    myArmor.addImage('armor', armorImage);
 }
 
 function draw() {
@@ -277,7 +317,6 @@ function draw() {
     }
     //sinon, on execute le jeu
     else {
-        
         stickPosX = mami.position.x + stickOffsetX;
         stickPosY = mami.position.y + stickOffsetY;
 
@@ -429,13 +468,13 @@ function draw() {
         function drawCat(cat) {
             drawSprite(cat);
         }
-
+        //apparition du boss
         function drawBoss(dragon) {
           drawSprite(dragon);
         }
 
        function spawnCat() {
-            if ((mami.position.x == 200)) {
+            if ((mami.position.x == 980)) {
                 drawCat(myCat1);
                 cat1spawn = true;
 
@@ -444,9 +483,13 @@ function draw() {
                 drawCat(myCat2);
                 cat2spawn = true;
             }
-            if (mami.position.x == 500) {
+            if (mami.position.x == 600) {
                 drawCat(myCat3);
                 cat3spawn = true;
+            }
+            if (mami.position.y == 700) {
+                drawCat(myCat4);
+                cat4spawn = true;
             }
 
         }
@@ -466,26 +509,30 @@ function draw() {
           }
         }
 
-        function updateCats() {
-            if (cat1spawn) {
-                myCat1.maxSpeed = 2;
-                myCat1.attractionPoint(0.01, mami.position.x, mami.position.y);
-                drawSprite(myCat1);
-            }
-
-            if (cat2spawn) {
-                myCat2.maxSpeed = 2;
-                myCat2.attractionPoint(0.01, mami.position.x, mami.position.y);
-                drawSprite(myCat2);
-            }
-
-            if (cat3spawn) {
-            myCat3.maxSpeed = 2;
-            myCat3.attractionPoint(0.01, mami.position.x, mami.position.y);
-            drawSprite(myCat3);
-            }
-
+    function updateCats() {
+        if (cat1spawn) {
+            myCat1.maxSpeed = 2;
+            myCat1.attractionPoint(0.01, mami.position.x, mami.position.y);
+            drawSprite(myCat1);
         }
+
+        if (cat2spawn) {
+            myCat2.maxSpeed = 2;
+            myCat2.attractionPoint(0.01, mami.position.x, mami.position.y);
+            drawSprite(myCat2);
+        }
+
+        if (cat3spawn) {
+        myCat3.maxSpeed = 2;
+        myCat3.attractionPoint(0.01, mami.position.x, mami.position.y);
+        drawSprite(myCat3);
+        }
+        if (cat4spawn) {
+        myCat4.maxSpeed = 2;
+        myCat4.attractionPoint(0.01, mami.position.x, mami.position.y);
+        drawSprite(myCat4);
+        }
+    }
 
         //interactions mamie/chats :
         myCat1.overlap(mami.stick, function() {
@@ -530,9 +577,34 @@ function draw() {
                 mamiLife -= 2;
             }
         });
-        //afficher la barre de vie :
+        
+        //Items disparaissent et remettent de la vie quand mami les mange
+        mami.overlap(myCake, function() {
+          myCake.remove();
+          //mamiLife += 10;
+        });
+
+        mami.overlap(myWine, function() {
+          myWine.remove();
+          //mamiLife += 10;
+        });
+
+        mami.overlap(myChicken, function() {
+          myChicken.remove();
+          //mamiLife += 10;
+        });
+
+        mami.overlap(myArmor, function() {
+          myArmor.remove();
+          //mamiLife += 10;
+        });
+
+        
+        //afficher le tableau de bord :
         function showDashboard() {
             let mamiFaceImg = new Image();
+            //changer l'affichage du visage de la mamie en fonction
+            //de sa santé :
             if (((mamiLife / 500) *100) < 70 &&((mamiLife / 500) *100)>=50) mamiFaceImg.src ='img/mamiface-70.png';
             else if (((mamiLife / 500) *100) < 50 && ((mamiLife / 500) *100) >= 20) {
                 mamiFaceImg.src ='img/mamiface-50.png';
@@ -560,6 +632,13 @@ function draw() {
             }
         }
         showDashboard();
+        
+        
+        drawSprite(myCake);
+        drawSprite(myWine);
+        drawSprite(myChicken);
+
+        drawSprite(myArmor);
 
         drawSprites(houses);
         drawSprites(obstacles);
