@@ -110,6 +110,7 @@ let armorImage;
 let mamiHasArmor = false;
 let armorLife = 125;
 
+//variables en lien avec l'intro
 let introPlaying = true;
 let canvasIntro = document.createElement('canvas');
 let introParent = document.getElementById('introParent');
@@ -119,6 +120,7 @@ canvasIntro.height = 800;
 let introCtx = canvasIntro.getContext('2d');
 let introImg = new Image();
 introImg.src = 'img/introscreen.png';
+//fonction lancement de l'intro
 function launchIntro() {
     introCtx.clearRect(0,0, 1100,600);
     introCtx.drawImage(introImg, 0, 0, 1100, 600);
