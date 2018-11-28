@@ -459,6 +459,7 @@ function draw() {
         cats.collide(houses);
         mami.collide(obstacles);
         cats.collide(obstacles);
+        cats.collide(mami);
 
         //frapper avec la canne:
         let stickAngle = mami.stick.rotation * Math.PI / 180;
