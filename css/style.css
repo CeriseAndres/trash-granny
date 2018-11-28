@@ -12,3 +12,10 @@ body {
     position: relative;
     background-color: #111;
 }
+
+#introParent {
+    position: fixed;
+    width: 1100px;
+    height: 600px;
+    margin: 0 auto;
+}
