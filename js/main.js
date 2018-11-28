@@ -310,7 +310,7 @@ function setup() {
     myCat3.addAnimation('walk', cat3Image);
     cats.add(myCat3);
 
-    myCat4 = createSprite(480,1200,20,20);
+    myCat4 = createSprite(300,1200,20,20);
     myCat4.addAnimation('walk', cat4Image);
     cats.add(myCat4);
 
