@@ -157,6 +157,7 @@ function preload() {
     mamiStopShootLeft.frameDelay = 6;
 
     gameover = loadImage('img/gameover.png');
+    winscreen = loadImage('img/winscreen.png');
 
     //cats
     cat1Image = loadAnimation("img/sprites_cat/cat1_walk1.png", "img/sprites_cat/cat1_walk2.png", "img/sprites_cat/cat1_walk3.png");
@@ -347,6 +348,12 @@ function draw() {
     //en cas de défaite : (life < 0)
     if (mamiLife <= 0) {
         image(gameover, camera.position.x - canvas.width/2, camera.position.y - canvas.height/2 , 800, 600);
+        //animation(gameover...)
+    }
+    //en cas de victoire:
+    else if (mami.position.x > 1250 && mami.position.y > 1020) {
+        image(winscreen, camera.position.x - canvas.width/2, camera.position.y - canvas.height/2, 800, 600);
+        //animation(winscreen...);
     }
     //sinon, on execute le jeu
     else {
@@ -359,7 +366,7 @@ function draw() {
         if(keyDown(LEFT_ARROW)){
               stickOffsetX = -22;
               coef = -1;
-              mami.position.x -= 0.5;
+              mami.position.x -= 2;
               mami.stick.position.x = mami.position.x + stickOffsetX;
               mami.changeAnimation('walkLeft');
               mami.animation.play();
@@ -367,7 +374,7 @@ function draw() {
         if(keyDown(RIGHT_ARROW)){
               stickOffsetX = 22;
               coef = 1;
-              mami.position.x += 0.5;
+              mami.position.x += 2;
               mami.stick.position.x = mami.position.x + stickOffsetX;
               mami.changeAnimation('walkRight');
               mami.animation.play();
@@ -375,7 +382,7 @@ function draw() {
         if(keyDown(UP_ARROW)){
             coef = -1;
             stickOffsetX = -22;
-            mami.position.y -= 0.5;
+            mami.position.y -= 2;
             mami.stick.position.x = mami.position.x + stickOffsetX;
             mami.stick.position.y = mami.position.y + stickOffsetY;
             mami.changeAnimation('walkUp');
@@ -384,7 +391,7 @@ function draw() {
         if(keyDown(DOWN_ARROW)) {
                 coef = 1;
                 stickOffsetX = 22;
-                mami.position.y += 0.5;
+                mami.position.y += 2;
                 mami.stick.position.x = mami.position.x + stickOffsetX;
                 mami.stick.position.y = mami.position.y + stickOffsetY;
                 mami.changeAnimation('walkDown');
