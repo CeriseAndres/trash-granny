@@ -77,6 +77,7 @@ let cat4spawn =false;
 let myDragonBoss;
 let dragonBossImage;
 let dragonspawn = false;
+let dragonDead = false;
 
 //barre de vie
 let mamiLife = 500;
@@ -351,7 +352,7 @@ function draw() {
         //animation(gameover...)
     }
     //en cas de victoire:
-    else if (mami.position.x > 1250 && mami.position.y > 1020) {
+    else if (mami.position.x > 1250 && mami.position.y > 1020 && dragonDead === true) {
         image(winscreen, camera.position.x - canvas.width/2, camera.position.y - canvas.height/2, 800, 600);
         //animation(winscreen...);
     }
@@ -647,6 +648,7 @@ function draw() {
             myDragonDead = createSprite(myDragonBoss.position.x, myDragonBoss.position.y);
             myDragonDead.immovable = true;
             myDragonDead.addImage('dead', dragonDeadImage);
+            dragonDead = true;
             drawSprite(myDragonDead);
             myDragonBoss.remove();
             
@@ -720,6 +722,11 @@ function draw() {
             dashCtx.strokeStyle = "#090";
             dashCtx.strokeRect(20, 60, 250, 30);
             dashCtx.drawImage(mamiFaceImg, 20, 120);
+            //indications controles
+            dashCtx.fillStyle = "#ddd";
+            dashCtx.fillText("Contrôles clavier :", 20, 510);
+            dashCtx.fillText("Frapper > *ESPACE*", 20, 530);
+            dashCtx.fillText("Se déplacer > *FLECHES*", 20, 550);
             //afficher la lifebar du dragon quand il apparait
             if (dragonspawn && dragonLife > 0) {
                 let dragonFaceImg = new Image();
