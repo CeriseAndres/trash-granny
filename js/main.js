@@ -1,4 +1,5 @@
- //placement des canvas dans le dom par leur parent :
+'use strict';
+//placement des canvas dans le dom par leur parent :
 let canvasParent = document.getElementById('canvasParent');
 let dashboardParent = document.getElementById('dashboard');
 let dashboard = document.createElement('canvas');
@@ -11,8 +12,20 @@ dashCtx.font = "13px monospace";
 let myMap; //declaration de la map et de son image
 let mapImage;
 
+//screens
+let winscreen;
+
 let mami;//decl. mami et son image
 let mamImage;
+let mamiMad;
+let mamiWalk;
+let mamiWalkLeft;
+let mamiWalkUp;
+let mamiWalkRight;
+let mamiShoot;
+let mamiShootLeft;
+let mamiStopShoot;
+let mamiStopShootLeft;
 
 let stickImage;//canne de mami
 let isShooting = false;//vrai si un coup de canne est donné.
@@ -76,8 +89,10 @@ let cat4spawn =false;
 //BOSS !
 let myDragonBoss;
 let dragonBossImage;
+let dragonDeadImage;
 let dragonspawn = false;
 let dragonDead = false;
+let myDragonDead;
 
 //barre de vie
 let mamiLife = 500;
@@ -106,6 +121,9 @@ let chickenImage;
 
 let myArmor;
 let armorImage;
+
+let myCup;
+let cupImage;
 
 let mamiHasArmor = false;
 let armorLife = 125;
@@ -143,7 +161,7 @@ function launchIntro() {
 
     setTimeout(function() {
         introParent.removeChild(canvasIntro);
-        introPlaying = false}, 3000);
+        introPlaying = false}, 5000);
 }
 if (introPlaying === true) {
     launchIntro();
@@ -322,19 +340,19 @@ function setup() {
     //pour que la canne soit plus puissante que les chats
     mami.stick.mass = 100000;
 
-    maisons = new Group();
-    let maison1 = createSprite(80, 80, 100, 100);
-    maison1.shapeColor = color(0,0,255);
-    maisons.add(maison1);
-    let maison2 = createSprite(400, 150, 100, 100);
-    maison2.shapeColor = color(0,0,255);
-    maisons.add(maison2);
-    let maison3 = createSprite(80, 350, 100, 100);
-    maison3.shapeColor = color(0,0,255);
-    maisons.add(maison3);
-    let maison4 = createSprite(600, 300, 100, 100);
-    maison4.shapeColor = color(0,0,255);
-    maisons.add(maison4);
+//    maisons = new Group();
+//    let maison1 = createSprite(80, 80, 100, 100);
+//    maison1.shapeColor = color(0,0,255);
+//    maisons.add(maison1);
+//    let maison2 = createSprite(400, 150, 100, 100);
+//    maison2.shapeColor = color(0,0,255);
+//    maisons.add(maison2);
+//    let maison3 = createSprite(80, 350, 100, 100);
+//    maison3.shapeColor = color(0,0,255);
+//    maisons.add(maison3);
+//    let maison4 = createSprite(600, 300, 100, 100);
+//    maison4.shapeColor = color(0,0,255);
+//    maisons.add(maison4);
 
     //cats
     cats = new Group();
