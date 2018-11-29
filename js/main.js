@@ -130,6 +130,9 @@ function launchIntro() {
     }, 5000);
 }
 
+//sons
+let songCat;
+
 function preload() {
     //fond de la map
     mapImage = loadImage('img/map.png');
@@ -199,6 +202,10 @@ function preload() {
     chickenImage = loadImage('img/sprites_items/chicken.png');
     armorImage = loadImage('img/sprites_items/armor.png');
     cupImage = loadImage('img/sprites_items/cup.png');
+
+    //sons
+    soundFormats('mp3');
+    songCat = loadSound('sons/chat/fight_cat.mp3');
 }
 
 function setup() {
