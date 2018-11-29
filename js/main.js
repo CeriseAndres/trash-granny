@@ -119,7 +119,7 @@ canvasIntro.width = 1200;
 canvasIntro.height = 800;
 let introCtx = canvasIntro.getContext('2d');
 let introImg = new Image();
-introImg.src = 'img/introscreen.png';
+introImg.src = 'img/introscreen.gif';
 //fonction lancement de l'intro
 function launchIntro() {
     introCtx.clearRect(0,0, 1100,600);
