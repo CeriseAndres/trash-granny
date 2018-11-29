@@ -1,4 +1,5 @@
- //placement des canvas dans le dom par leur parent :
+'use strict';
+//placement des canvas dans le dom par leur parent :
 let canvasParent = document.getElementById('canvasParent');
 let dashboardParent = document.getElementById('dashboard');
 let dashboard = document.createElement('canvas');
@@ -11,8 +12,20 @@ dashCtx.font = "13px monospace";
 let myMap; //declaration de la map et de son image
 let mapImage;
 
+//screens
+let winscreen;
+
 let mami;//decl. mami et son image
 let mamImage;
+let mamiMad;
+let mamiWalk;
+let mamiWalkLeft;
+let mamiWalkUp;
+let mamiWalkRight;
+let mamiShoot;
+let mamiShootLeft;
+let mamiStopShoot;
+let mamiStopShootLeft;
 
 let stickImage;//canne de mami
 let isShooting = false;//vrai si un coup de canne est donné.
@@ -76,8 +89,10 @@ let cat4spawn =false;
 //BOSS !
 let myDragonBoss;
 let dragonBossImage;
+let dragonDeadImage;
 let dragonspawn = false;
 let dragonDead = false;
+let myDragonDead;
 
 //barre de vie
 let mamiLife = 500;
@@ -107,6 +122,9 @@ let chickenImage;
 let myArmor;
 let armorImage;
 
+let myCup;
+let cupImage;
+
 let mamiHasArmor = false;
 let armorLife = 125;
 
@@ -119,15 +137,34 @@ canvasIntro.width = 1200;
 canvasIntro.height = 800;
 let introCtx = canvasIntro.getContext('2d');
 let introImg = new Image();
-introImg.src = 'img/introscreen.gif';
+introImg.src = 'img/introframe1.png';
+let introImg2 = new Image();
+introImg2.src = 'img/introframe2.png';
+let introImg3 = new Image();
+introImg3.src = 'img/introframe3.png';
+
 //fonction lancement de l'intro
 function launchIntro() {
     introCtx.clearRect(0,0, 1100,600);
     introCtx.drawImage(introImg, 0, 0, 1100, 600);
+    let i = 1;
+    let factor = 1;
+        setInterval(function() {
+            introImg.src = 'img/introframe'+i+'.png';
+            introCtx.clearRect(0,0, 1100,600);
+            introCtx.drawImage(introImg, 0, 0, 1100, 600);
+            i = i+factor;
+            if (i == 1 || i == 3 ) {
+                factor *= -1;
+            }
+        }, 200);
+
     setTimeout(function() {
         introParent.removeChild(canvasIntro);
-        introPlaying = false;
-    }, 5000);
+        introPlaying = false}, 5000);
+}
+if (introPlaying === true) {
+    launchIntro();
 }
 
 //sons
@@ -215,7 +252,7 @@ function setup() {
 
     myMap = createSprite(800, 600);
     myMap.addImage('map', mapImage);
-    houses = new Group();launchIntro
+    houses = new Group();
     //initialisation des maisons :
     house1 = createSprite(190,120);
     house1.addImage('maison1', houseImage1);
@@ -310,20 +347,6 @@ function setup() {
     //pour que la canne soit plus puissante que les chats
     mami.stick.mass = 100000;
 
-    maisons = new Group();
-    let maison1 = createSprite(80, 80, 100, 100);
-    maison1.shapeColor = color(0,0,255);
-    maisons.add(maison1);
-    let maison2 = createSprite(400, 150, 100, 100);
-    maison2.shapeColor = color(0,0,255);
-    maisons.add(maison2);
-    let maison3 = createSprite(80, 350, 100, 100);
-    maison3.shapeColor = color(0,0,255);
-    maisons.add(maison3);
-    let maison4 = createSprite(600, 300, 100, 100);
-    maison4.shapeColor = color(0,0,255);
-    maisons.add(maison4);
-
     //cats
     cats = new Group();
 
@@ -385,7 +408,7 @@ function draw() {
     }
     //lancer l'intro au début
     else if(introPlaying === true) {
-        launchIntro();
+        //rien
     }
     //sinon, on execute le jeu
     else {
@@ -811,4 +834,4 @@ function draw() {
 
         camera.off();
     }//fin du else de départ
-}
+}//fin de draw()
