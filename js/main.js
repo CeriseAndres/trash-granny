@@ -119,15 +119,34 @@ canvasIntro.width = 1200;
 canvasIntro.height = 800;
 let introCtx = canvasIntro.getContext('2d');
 let introImg = new Image();
-introImg.src = 'img/introscreen.gif';
+introImg.src = 'img/introframe1.png';
+let introImg2 = new Image();
+introImg2.src = 'img/introframe2.png';
+let introImg3 = new Image();
+introImg3.src = 'img/introframe3.png';
+
 //fonction lancement de l'intro
 function launchIntro() {
     introCtx.clearRect(0,0, 1100,600);
     introCtx.drawImage(introImg, 0, 0, 1100, 600);
+    let i = 1;
+    let factor = 1;
+        setInterval(function() {
+            introImg.src = 'img/introframe'+i+'.png';
+            introCtx.clearRect(0,0, 1100,600);
+            introCtx.drawImage(introImg, 0, 0, 1100, 600);
+            i = i+factor;
+            if (i == 1 || i == 3 ) {
+                factor *= -1;
+            }
+        }, 200);
+
     setTimeout(function() {
         introParent.removeChild(canvasIntro);
-        introPlaying = false;
-    }, 5000);
+        introPlaying = false}, 3000);
+}
+if (introPlaying === true) {
+    launchIntro();
 }
 
 function preload() {
@@ -208,7 +227,7 @@ function setup() {
 
     myMap = createSprite(800, 600);
     myMap.addImage('map', mapImage);
-    houses = new Group();launchIntro
+    houses = new Group();
     //initialisation des maisons :
     house1 = createSprite(190,120);
     house1.addImage('maison1', houseImage1);
@@ -378,7 +397,7 @@ function draw() {
     }
     //lancer l'intro au début
     else if(introPlaying === true) {
-        launchIntro();
+        //rien
     }
     //sinon, on execute le jeu
     else {
