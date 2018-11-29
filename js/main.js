@@ -340,20 +340,6 @@ function setup() {
     //pour que la canne soit plus puissante que les chats
     mami.stick.mass = 100000;
 
-//    maisons = new Group();
-//    let maison1 = createSprite(80, 80, 100, 100);
-//    maison1.shapeColor = color(0,0,255);
-//    maisons.add(maison1);
-//    let maison2 = createSprite(400, 150, 100, 100);
-//    maison2.shapeColor = color(0,0,255);
-//    maisons.add(maison2);
-//    let maison3 = createSprite(80, 350, 100, 100);
-//    maison3.shapeColor = color(0,0,255);
-//    maisons.add(maison3);
-//    let maison4 = createSprite(600, 300, 100, 100);
-//    maison4.shapeColor = color(0,0,255);
-//    maisons.add(maison4);
-
     //cats
     cats = new Group();
 
@@ -841,4 +827,4 @@ function draw() {
 
         camera.off();
     }//fin du else de départ
-}
+}//fin de draw()
