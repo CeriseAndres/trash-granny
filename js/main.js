@@ -69,6 +69,9 @@ let houseImage4;
 let houseImage1rev;
 let trashImage;
 
+//SOUNDS
+let stickshotSnd;
+
 //let myCat;
 let myCat1;
 let myCat2;
@@ -242,6 +245,7 @@ function preload() {
     //sons
     soundFormats('mp3');
     songCat = loadSound('sons/chat/fight_cat.mp3');
+    stickshotSnd = loadSound('sons/coups/stickshot.mp3');
 }
 
 function setup() {
