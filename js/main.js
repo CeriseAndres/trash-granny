@@ -85,7 +85,6 @@ let cat1spawn = false;
 let cat2spawn = false;
 let cat3spawn = false;
 let cat4spawn =false;
-
 //BOSS !
 let myDragonBoss;
 let dragonBossImage;
@@ -444,13 +443,13 @@ function draw() {
             mami.animation.play();
         }
         if(keyDown(DOWN_ARROW)) {
-                coef = 1;
-                stickOffsetX = 22;
-                mami.position.y += 2;
-                mami.stick.position.x = mami.position.x + stickOffsetX;
-                mami.stick.position.y = mami.position.y + stickOffsetY;
-                mami.changeAnimation('walkDown');
-                mami.animation.play();
+            coef = 1;
+            stickOffsetX = 22;
+            mami.position.y += 2;
+            mami.stick.position.x = mami.position.x + stickOffsetX;
+            mami.stick.position.y = mami.position.y + stickOffsetY;
+            mami.changeAnimation('walkDown');
+            mami.animation.play();
         }
         if (keyWentUp(LEFT_ARROW) || keyWentUp(RIGHT_ARROW) || keyWentUp(UP_ARROW) || keyWentUp(DOWN_ARROW)) {
             mami.animation.stop();
@@ -630,58 +629,23 @@ function draw() {
     }
 
         //interactions mamie/chats :
-        myCat1.overlap(mami.stick, function() {
-            if (isShooting) {
-                myCat1.maxSpeed = 100;
-                myCat1.setVelocity(50*coef, 50*coef);
-                mamiScore ++;
-            }
-            else {
-                if(mamiHasArmor === true) {
-                    armorLife -= 1;
+        //(réécriture interactions chats dans une boucle)
+        for (let cat of cats) {
+           cat.overlap(mami.stick, function() {
+                if (isShooting) {
+                    cat.maxSpeed = 100;
+                    cat.setVelocity(50*coef, 50*coef);
+                    mamiScore ++;
                 }
-                else mamiLife -= 1;
-            }
-        });
-        myCat2.overlap(mami.stick, function() {
-            if (isShooting) {
-                myCat2.maxSpeed = 100;
-                myCat2.setVelocity(50*coef, 50*coef);
-                mamiScore ++;
-            }
-            else {
-                if(mamiHasArmor === true) {
-                    armorLife -=1;
+                else {
+                    if(mamiHasArmor === true) {
+                        armorLife -=1;
+                    }
+                    else mamiLife -= 1;
                 }
-                else mamiLife -= 1;
-            }
-        });
-        myCat3.overlap(mami.stick, function() {
-            if (isShooting) {
-                myCat3.maxSpeed = 100;
-                myCat3.setVelocity(50*coef, 50*coef);
-                mamiScore ++;
-            }
-            else {
-                if(mamiHasArmor === true) {
-                    armorLife -=1;
-                }
-                else mamiLife -= 1;
-            }
-        });
-        myCat4.overlap(mami.stick, function() {
-            if (isShooting) {
-                myCat4.maxSpeed = 100;
-                myCat4.setVelocity(50*coef, 50*coef);
-                mamiScore ++;
-            }
-            else {
-                if(mamiHasArmor === true) {
-                    armorLife -=1;
-                }
-                else mamiLife -= 1;
-            }
-        });
+            });
+        }
+        
         //éloigner le boss en frappant
         myDragonBoss.overlap(mami.stick, function() {
             if (isShooting) {
