@@ -443,7 +443,7 @@ function draw() {
     }
     //lancer l'intro au début
     else if(introPlaying === true) {
-        //rien
+        //ne rien faire, la fonction intro s'excute à l'extérieur de la boucle
     }
     //sinon, on execute le jeu
     else {
