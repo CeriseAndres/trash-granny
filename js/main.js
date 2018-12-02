@@ -184,26 +184,32 @@ let introImg3 = new Image();
 introImg3.src = 'img/introframe3.png';
 
 //fonction lancement de l'intro
+let startButton = document.getElementById('startButton');
+let startScreen = document.getElementById('startScreen');
 function launchIntro() {
-    introSnd.play();
-    introCtx.clearRect(0,0, 1100,600);
-    introCtx.drawImage(introImg, 0, 0, 1100, 600);
-    let i = 1;
-    let factor = 1;
-        setInterval(function() {
-            introImg.src = 'img/introframe'+i+'.png';
-            introCtx.clearRect(0,0, 1100,600);
-            introCtx.drawImage(introImg, 0, 0, 1100, 600);
-            i = i+factor;
-            if (i == 1 || i == 3 ) {
-                factor *= -1;
-            }
-        }, 200);
+    startButton.onclick = function() {
+        startScreen.style.display = "none";
+        introSnd.play();
+        introCtx.clearRect(0,0, 1100,600);
+        introCtx.drawImage(introImg, 0, 0, 1100, 600);
+        let i = 1;
+        let factor = 1;
+            setInterval(function() {
+                introImg.src = 'img/introframe'+i+'.png';
+                introCtx.clearRect(0,0, 1100,600);
+                introCtx.drawImage(introImg, 0, 0, 1100, 600);
+                i = i+factor;
+                if (i == 1 || i == 3 ) {
+                    factor *= -1;
+                }
+            }, 200);
 
-    setTimeout(function() {
-        introParent.removeChild(canvasIntro);
-        introPlaying = false;
-    }, 11000);
+        setTimeout(function() {
+            introParent.removeChild(canvasIntro);
+            introPlaying = false;
+        }, 11000);
+        
+    }
 }
 if (introPlaying === true) {
     launchIntro();
@@ -466,7 +472,7 @@ function draw() {
     else if(introPlaying === true) {
         //ne rien faire, la fonction intro s'excute à l'extérieur de la boucle
     }
-    //sinon, on execute le jeu
+    //sinon, on execute le jeu normalement
     else {
         gameSong.play();
         stickPosX = mami.position.x + stickOffsetX;
@@ -802,8 +808,8 @@ function draw() {
             //indications controles
             dashCtx.fillStyle = "#ddd";
             dashCtx.fillText("Contrôles clavier :", 20, 510);
-            dashCtx.fillText("Frapper > *ESPACE*", 20, 530);
-            dashCtx.fillText("Se déplacer > *FLECHES*", 20, 550);
+            dashCtx.fillText("Frapper: *ESPACE* | Pause: *ECHAP*", 20, 530);
+            dashCtx.fillText("Se déplacer: *FLECHES*", 20, 550);
             //afficher la lifebar du dragon quand il apparait
             if (dragonspawn && dragonLife > 0) {
                 let dragonFaceImg = new Image();

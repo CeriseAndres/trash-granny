@@ -1,3 +1,7 @@
+* {
+    box-sizing: border-box;
+    font-family: monospace;
+}
 #dashboard {
     position: absolute;
     left: 800px;
@@ -31,7 +35,7 @@ body {
     font-size: 5em;
     text-align: center;
     color: white;
-    font-family: monospace;
+    
     padding: 3em 0;
     display: none;
 }
@@ -42,4 +46,46 @@ body {
 #pauseScreen span {
     position: relative;
     left: -150px;
+}
+
+#startScreen {
+    background-color: black;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    color: #eee;
+}
+#startScreen .startInfos {
+    border: 1px solid #eee;
+    width: 300px;
+    text-align: center;
+    padding: 30px;
+    margin: 3em auto;
+}
+dt {
+    font-size: 1.2em;
+}
+dd {
+    font-size: .8em;
+}
+#startScreen .startInfos > dl {
+    text-align: left;
+}
+#startScreen #startButton {
+    position: relative;
+    display: block;
+    margin: 1em auto;
+    padding: 1em 2em;
+    background-color: #111;
+    color: #eee;
+    border: 1px solid #eee;
+    cursor: pointer;
+    font-size: 2em;
+}
+#startScreen #startButton:hover {
+    background-color: black;
+    color: white;
+    box-shadow: 0 0 10px #fff8;
 }
