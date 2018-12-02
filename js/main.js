@@ -928,6 +928,7 @@ function keyPressed() {
         youwinSong.currentTime = 0;
         gameSong.play();
         mamiLife = 500;
+        mamiScore = 0;
         
         setup();
         draw();
