@@ -127,6 +127,32 @@ let cupImage;
 let mamiHasArmor = false;
 let armorLife = 125;
 
+//SOUNDS
+let songCat;
+let introSnd = document.createElement("audio");
+introSnd.src = 'sons/intro.mp3';
+introSnd.loop = false;
+introSnd.preload = "auto";
+let gameSong = document.createElement("audio");
+gameSong.src = "sons/gameSong.mp3";
+gameSong.loop = true;
+gameSong.preload = "auto";
+let bossSong = document.createElement("audio");
+bossSong.src = "sons/bossSong.mp3";
+bossSong.loop = true;
+bossSong.preload = "auto";
+
+let stickshotSnd = document.createElement("audio");
+stickshotSnd.src = 'sons/coups/stickshot.mp3'; //coup de canne
+stickshotSnd.loop = false;
+stickshotSnd.preload = "auto";
+
+let missShotSnd = document.createElement("audio");
+missShotSnd.src = 'sons/coups/missShot.mp3'; //coup de canne dans le vent 
+missShotSnd.loop = false;
+missShotSnd.volume = 0.3;
+missShotSnd.preload = "auto";
+
 //variables en lien avec l'intro
 let introPlaying = true;
 let canvasIntro = document.createElement('canvas');
@@ -144,6 +170,7 @@ introImg3.src = 'img/introframe3.png';
 
 //fonction lancement de l'intro
 function launchIntro() {
+    introSnd.play();
     introCtx.clearRect(0,0, 1100,600);
     introCtx.drawImage(introImg, 0, 0, 1100, 600);
     let i = 1;
@@ -160,22 +187,13 @@ function launchIntro() {
 
     setTimeout(function() {
         introParent.removeChild(canvasIntro);
-        introPlaying = false}, 1000);
+        introPlaying = false;
+    }, 11000);
 }
 if (introPlaying === true) {
     launchIntro();
 }
 
-//SOUNDS
-let stickshotSnd = document.createElement("audio");
-stickshotSnd.src = 'sons/coups/stickshot.mp3';
-stickshotSnd.loop = false;
-
-let missShotSnd = document.createElement("audio");
-missShotSnd.src = 'sons/coups/missShot.mp3';
-missShotSnd.loop = false;
-missShotSnd.volume = 0.3;
-let songCat;
 function playStickSnd() {
     stickshotSnd.play();
 }
@@ -425,6 +443,7 @@ function draw() {
     }
     //sinon, on execute le jeu
     else {
+        gameSong.play();
         stickPosX = mami.position.x + stickOffsetX;
         stickPosY = mami.position.y + stickOffsetY;
 
@@ -434,7 +453,7 @@ function draw() {
         if(keyDown(LEFT_ARROW)){
               stickOffsetX = -22;
               coef = -1;
-              mami.position.x -= 0.5;
+              mami.position.x -= 2;
               mami.stick.position.x = mami.position.x + stickOffsetX;
               mami.changeAnimation('walkLeft');
               mami.animation.play();
@@ -442,7 +461,7 @@ function draw() {
         if(keyDown(RIGHT_ARROW)){
               stickOffsetX = 22;
               coef = 1;
-              mami.position.x += 0.5;
+              mami.position.x += 2;
               mami.stick.position.x = mami.position.x + stickOffsetX;
               mami.changeAnimation('walkRight');
               mami.animation.play();
@@ -450,7 +469,7 @@ function draw() {
         if(keyDown(UP_ARROW)){
             coef = -1;
             stickOffsetX = -22;
-            mami.position.y -= 0.5;
+            mami.position.y -= 2;
             mami.stick.position.x = mami.position.x + stickOffsetX;
             mami.stick.position.y = mami.position.y + stickOffsetY;
             mami.changeAnimation('walkUp');
@@ -459,7 +478,7 @@ function draw() {
         if(keyDown(DOWN_ARROW)) {
             coef = 1;
             stickOffsetX = 22;
-            mami.position.y += 0.5;
+            mami.position.y += 2;
             mami.stick.position.x = mami.position.x + stickOffsetX;
             mami.stick.position.y = mami.position.y + stickOffsetY;
             mami.changeAnimation('walkDown');
@@ -790,6 +809,20 @@ function draw() {
             else if (mami.stick.overlap(cat) === false && isShooting === true) {
                 playMissSnd();
             }
+        }
+        if (mami.stick.overlap(myDragonBoss) === true && isShooting === true) {
+            playStickSnd();
+        }
+        
+        //Musique du boss
+        if (dragonspawn === true) {
+            gameSong.pause();
+            bossSong.play();
+        }
+        //musique normale quand dragon mort
+        if (dragonDead === true) {
+            bossSong.pause();
+            gameSong.play();
         }
 
         
