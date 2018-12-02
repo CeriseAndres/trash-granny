@@ -85,7 +85,6 @@ let cat1spawn = false;
 let cat2spawn = false;
 let cat3spawn = false;
 let cat4spawn =false;
-
 //BOSS !
 let myDragonBoss;
 let dragonBossImage;
@@ -106,6 +105,13 @@ let bigUpCount = 0;
 let dragonLife = 250;
 
 let gameover;
+let gameisover = false;
+
+let gameiswon = false;
+
+//jeu en pause ou non
+let gamePaused = false;
+let pauseScreen = document.getElementById("pauseScreen");
 
 //Items
 let items;
@@ -128,6 +134,40 @@ let cupImage;
 let mamiHasArmor = false;
 let armorLife = 125;
 
+//SOUNDS
+let songCat;
+let introSnd = document.createElement("audio");
+introSnd.src = 'sons/intro.mp3';
+introSnd.loop = false;
+introSnd.preload = "auto";
+let gameSong = document.createElement("audio");
+gameSong.src = "sons/gameSong.mp3";
+gameSong.loop = true;
+gameSong.preload = "auto";
+let bossSong = document.createElement("audio");
+bossSong.src = "sons/bossSong.mp3";
+bossSong.loop = true;
+bossSong.preload = "auto";
+let gameoverSong = document.createElement("audio");
+gameoverSong.src = "sons/gameover.mp3";
+gameoverSong.loop = false;
+gameoverSong.preload = "auto";
+let youwinSong = document.createElement("audio");
+youwinSong.src = 'sons/youwin.mp3';
+youwinSong.loop = false;
+youwinSong.preload = "auto";
+
+let stickshotSnd = document.createElement("audio");
+stickshotSnd.src = 'sons/coups/stickshot.mp3'; //coup de canne
+stickshotSnd.loop = false;
+stickshotSnd.preload = "auto";
+
+let missShotSnd = document.createElement("audio");
+missShotSnd.src = 'sons/coups/missShot.mp3'; //coup de canne dans le vent 
+missShotSnd.loop = false;
+missShotSnd.volume = 0.3;
+missShotSnd.preload = "auto";
+
 //variables en lien avec l'intro
 let introPlaying = true;
 let canvasIntro = document.createElement('canvas');
@@ -144,31 +184,43 @@ let introImg3 = new Image();
 introImg3.src = 'img/introframe3.png';
 
 //fonction lancement de l'intro
+let startButton = document.getElementById('startButton');
+let startScreen = document.getElementById('startScreen');
 function launchIntro() {
-    introCtx.clearRect(0,0, 1100,600);
-    introCtx.drawImage(introImg, 0, 0, 1100, 600);
-    let i = 1;
-    let factor = 1;
-        setInterval(function() {
-            introImg.src = 'img/introframe'+i+'.png';
-            introCtx.clearRect(0,0, 1100,600);
-            introCtx.drawImage(introImg, 0, 0, 1100, 600);
-            i = i+factor;
-            if (i == 1 || i == 3 ) {
-                factor *= -1;
-            }
-        }, 200);
+    startButton.onclick = function() {
+        startScreen.style.display = "none";
+        introSnd.play();
+        introCtx.clearRect(0,0, 1100,600);
+        introCtx.drawImage(introImg, 0, 0, 1100, 600);
+        let i = 1;
+        let factor = 1;
+            setInterval(function() {
+                introImg.src = 'img/introframe'+i+'.png';
+                introCtx.clearRect(0,0, 1100,600);
+                introCtx.drawImage(introImg, 0, 0, 1100, 600);
+                i = i+factor;
+                if (i == 1 || i == 3 ) {
+                    factor *= -1;
+                }
+            }, 200);
 
-    setTimeout(function() {
-        introParent.removeChild(canvasIntro);
-        introPlaying = false}, 5000);
+        setTimeout(function() {
+            introParent.removeChild(canvasIntro);
+            introPlaying = false;
+        }, 11000);
+        
+    }
 }
 if (introPlaying === true) {
     launchIntro();
 }
 
-//sons
-let songCat;
+function playStickSnd() {
+    stickshotSnd.play();
+}
+function playMissSnd() {
+    missShotSnd.play();
+}
 
 function preload() {
     //fond de la map
@@ -398,20 +450,31 @@ function draw() {
     background(220);
     //en cas de défaite : (life < 0)
     if (mamiLife <= 0) {
+        gameisover = true;
+        gameSong.pause();
+        bossSong.pause();
+        gameoverSong.play();
         image(gameover, camera.position.x - canvas.width/2, camera.position.y - canvas.height/2 , 800, 600);
+        noLoop();
         //animation(gameover...)
     }
     //en cas de victoire:
     else if (mami.position.x > 1250 && mami.position.y > 1020 && dragonDead === true) {
+        gameiswon = true;
+        gameSong.pause();
+        bossSong.pause();
+        youwinSong.play();
         image(winscreen, camera.position.x - canvas.width/2, camera.position.y - canvas.height/2, 800, 600);
+        noLoop();
         //animation(winscreen...);
     }
     //lancer l'intro au début
     else if(introPlaying === true) {
-        //rien
+        //ne rien faire, la fonction intro s'excute à l'extérieur de la boucle
     }
-    //sinon, on execute le jeu
+    //sinon, on execute le jeu normalement
     else {
+        gameSong.play();
         stickPosX = mami.position.x + stickOffsetX;
         stickPosY = mami.position.y + stickOffsetY;
 
@@ -444,13 +507,13 @@ function draw() {
             mami.animation.play();
         }
         if(keyDown(DOWN_ARROW)) {
-                coef = 1;
-                stickOffsetX = 22;
-                mami.position.y += 2;
-                mami.stick.position.x = mami.position.x + stickOffsetX;
-                mami.stick.position.y = mami.position.y + stickOffsetY;
-                mami.changeAnimation('walkDown');
-                mami.animation.play();
+            coef = 1;
+            stickOffsetX = 22;
+            mami.position.y += 2;
+            mami.stick.position.x = mami.position.x + stickOffsetX;
+            mami.stick.position.y = mami.position.y + stickOffsetY;
+            mami.changeAnimation('walkDown');
+            mami.animation.play();
         }
         if (keyWentUp(LEFT_ARROW) || keyWentUp(RIGHT_ARROW) || keyWentUp(UP_ARROW) || keyWentUp(DOWN_ARROW)) {
             mami.animation.stop();
@@ -630,58 +693,23 @@ function draw() {
     }
 
         //interactions mamie/chats :
-        myCat1.overlap(mami.stick, function() {
-            if (isShooting) {
-                myCat1.maxSpeed = 100;
-                myCat1.setVelocity(50*coef, 50*coef);
-                mamiScore ++;
-            }
-            else {
-                if(mamiHasArmor === true) {
-                    armorLife -= 1;
+        //(réécriture interactions chats dans une boucle)
+        for (let cat of cats) {
+           cat.overlap(mami.stick, function() {
+                if (isShooting) {
+                    cat.maxSpeed = 100;
+                    cat.setVelocity(50*coef, 50*coef);
+                    mamiScore ++;
                 }
-                else mamiLife -= 1;
-            }
-        });
-        myCat2.overlap(mami.stick, function() {
-            if (isShooting) {
-                myCat2.maxSpeed = 100;
-                myCat2.setVelocity(50*coef, 50*coef);
-                mamiScore ++;
-            }
-            else {
-                if(mamiHasArmor === true) {
-                    armorLife -=1;
+                else {
+                    if(mamiHasArmor === true) {
+                        armorLife -=1;
+                    }
+                    else mamiLife -= 1;
                 }
-                else mamiLife -= 1;
-            }
-        });
-        myCat3.overlap(mami.stick, function() {
-            if (isShooting) {
-                myCat3.maxSpeed = 100;
-                myCat3.setVelocity(50*coef, 50*coef);
-                mamiScore ++;
-            }
-            else {
-                if(mamiHasArmor === true) {
-                    armorLife -=1;
-                }
-                else mamiLife -= 1;
-            }
-        });
-        myCat4.overlap(mami.stick, function() {
-            if (isShooting) {
-                myCat4.maxSpeed = 100;
-                myCat4.setVelocity(50*coef, 50*coef);
-                mamiScore ++;
-            }
-            else {
-                if(mamiHasArmor === true) {
-                    armorLife -=1;
-                }
-                else mamiLife -= 1;
-            }
-        });
+            });
+        }
+        
         //éloigner le boss en frappant
         myDragonBoss.overlap(mami.stick, function() {
             if (isShooting) {
@@ -780,8 +808,8 @@ function draw() {
             //indications controles
             dashCtx.fillStyle = "#ddd";
             dashCtx.fillText("Contrôles clavier :", 20, 510);
-            dashCtx.fillText("Frapper > *ESPACE*", 20, 530);
-            dashCtx.fillText("Se déplacer > *FLECHES*", 20, 550);
+            dashCtx.fillText("Frapper: *ESPACE* | Pause: *ECHAP*", 20, 530);
+            dashCtx.fillText("Se déplacer: *FLECHES*", 20, 550);
             //afficher la lifebar du dragon quand il apparait
             if (dragonspawn && dragonLife > 0) {
                 let dragonFaceImg = new Image();
@@ -802,6 +830,32 @@ function draw() {
                 dashCtx.strokeRect(20, 390, 125, 30);
             }
         }
+        
+        //DÉCLENCHEMENT DES SONS :
+        //coup de canne mamie
+        for (let cat of cats) {
+            if (mami.stick.overlap(cat) === true && isShooting === true) {
+                playStickSnd();
+            }
+            else if (mami.stick.overlap(cat) === false && isShooting === true) {
+                playMissSnd();
+            }
+        }
+        if (mami.stick.overlap(myDragonBoss) === true && isShooting === true) {
+            playStickSnd();
+        }
+        
+        //Musique du boss
+        if (dragonspawn === true) {
+            gameSong.pause();
+            bossSong.play();
+        }
+        //musique normale quand dragon mort
+        if (dragonDead === true) {
+            bossSong.pause();
+            gameSong.play();
+        }
+        
         showDashboard();
 
         drawSprite(myCake);
@@ -829,9 +883,55 @@ function draw() {
             spawnBoss();
             updateBoss();
         }
-
-
+        //pour mettre le jeu en pause (touche echap)
+        if (keyDown(ESCAPE)) {
+            if (gamePaused === false) {
+                noLoop();
+                gamePaused = true;
+                pauseScreen.style.display = "block";
+                console.log(gamePaused);
+            }
+        }
 
         camera.off();
     }//fin du else de départ
+
 }//fin de draw()
+
+//pour remettre le jeu en marche si il était sur pause
+function keyPressed() {
+    if (keyCode === ENTER && gamePaused === true) {
+        loop();
+        gamePaused = false;
+        pauseScreen.style.display = "none";
+    }
+    //réinitialiser le jeu sans recharger la page en appuyant sur entrée :
+    else if(keyCode === ENTER && (gameiswon === true || gameisover === true)) {
+        //remettre tout les booléens à l'état de départ
+        gameiswon = false;
+        gameisover = false;
+        dragonDead = false;
+        introPlaying = false;//ne pas repasser par le screen d'intro
+        gamePaused = false;
+        dragonspawn = false;
+        cat1spawn = false;
+        cat2spawn = false;
+        cat3spawn = false;
+        cat4spawn = false;
+        mami.changeAnimation("walkDown");
+        gameoverSong.pause();
+        youwinSong.pause();
+        //ramener toutes les tracks au début
+        gameSong.currentTime = 0;
+        bossSong.currentTime = 0;
+        gameoverSong.currentTime = 0;
+        youwinSong.currentTime = 0;
+        gameSong.play();
+        mamiLife = 500;
+        mamiScore = 0;
+        
+        setup();
+        draw();
+        loop();
+    }
+}
