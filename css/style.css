@@ -65,6 +65,10 @@ body {
     margin: 6em auto;
     box-shadow: 0 0 20px #fff3;
 }
+.startInfos > span#subtitle {
+    display: block;
+    margin-top: -1em;
+}
 dt {
     font-size: 1.2em;
 }
