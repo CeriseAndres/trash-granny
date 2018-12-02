@@ -163,7 +163,7 @@ function launchIntro() {
 
     setTimeout(function() {
         introParent.removeChild(canvasIntro);
-        introPlaying = false}, 5000);
+        introPlaying = false}, 10000);
 }
 if (introPlaying === true) {
     launchIntro();
@@ -424,7 +424,7 @@ function draw() {
         if(keyDown(LEFT_ARROW)){
               stickOffsetX = -22;
               coef = -1;
-              mami.position.x -= 2;
+              mami.position.x -= 0.5;
               mami.stick.position.x = mami.position.x + stickOffsetX;
               mami.changeAnimation('walkLeft');
               mami.animation.play();
@@ -432,7 +432,7 @@ function draw() {
         if(keyDown(RIGHT_ARROW)){
               stickOffsetX = 22;
               coef = 1;
-              mami.position.x += 2;
+              mami.position.x += 0.5;
               mami.stick.position.x = mami.position.x + stickOffsetX;
               mami.changeAnimation('walkRight');
               mami.animation.play();
@@ -440,7 +440,7 @@ function draw() {
         if(keyDown(UP_ARROW)){
             coef = -1;
             stickOffsetX = -22;
-            mami.position.y -= 2;
+            mami.position.y -= 0.5;
             mami.stick.position.x = mami.position.x + stickOffsetX;
             mami.stick.position.y = mami.position.y + stickOffsetY;
             mami.changeAnimation('walkUp');
@@ -449,7 +449,7 @@ function draw() {
         if(keyDown(DOWN_ARROW)) {
             coef = 1;
             stickOffsetX = 22;
-            mami.position.y += 2;
+            mami.position.y += 0.5;
             mami.stick.position.x = mami.position.x + stickOffsetX;
             mami.stick.position.y = mami.position.y + stickOffsetY;
             mami.changeAnimation('walkDown');
