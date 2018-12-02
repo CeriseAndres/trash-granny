@@ -106,6 +106,10 @@ let dragonLife = 250;
 
 let gameover;
 
+//jeu en pause ou non
+let gamePaused = false;
+let pauseScreen = document.getElementById("pauseScreen");
+
 //Items
 let items;
 
@@ -853,7 +857,25 @@ function draw() {
             spawnBoss();
             updateBoss();
         }
+        //pour mettre le jeu en pause (touche echap)
+        if (keyDown(ESCAPE)) {
+            if (gamePaused === false) {
+                noLoop();
+                gamePaused = true;
+                pauseScreen.style.display = "block";
+                console.log(gamePaused);
+            }
+        }
 
         camera.off();
     }//fin du else de départ
 }//fin de draw()
+
+//pour remettre le jeu en marche si il était sur pause
+function keyPressed() {
+    if (keyCode === ENTER && gamePaused === true) {
+        loop();
+        gamePaused = false;
+        pauseScreen.style.display = "none";
+    }
+}
