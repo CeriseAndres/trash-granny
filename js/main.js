@@ -169,9 +169,18 @@ if (introPlaying === true) {
 //SOUNDS
 let stickshotSnd = document.createElement("audio");
 stickshotSnd.src = 'sons/coups/stickshot.mp3';
+stickshotSnd.loop = false;
+
+let missShotSnd = document.createElement("audio");
+missShotSnd.src = 'sons/coups/missShot.mp3';
+missShotSnd.loop = false;
+missShotSnd.volume = 0.3;
 let songCat;
 function playStickSnd() {
     stickshotSnd.play();
+}
+function playMissSnd() {
+    missShotSnd.play();
 }
 
 function preload() {
@@ -247,7 +256,6 @@ function preload() {
     //sons
     soundFormats('mp3');
     songCat = loadSound('sons/chat/fight_cat.mp3');
-    //stickshotSnd = loadSound('sons/coups/stickshot.mp3');
 }
 
 function setup() {
@@ -778,7 +786,9 @@ function draw() {
         for (let cat of cats) {
             if (mami.stick.overlap(cat) === true && isShooting === true) {
                 playStickSnd();
-                console.log("shot");
+            }
+            else if (mami.stick.overlap(cat) === false && isShooting === true) {
+                playMissSnd();
             }
         }
 
