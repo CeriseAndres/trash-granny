@@ -69,9 +69,6 @@ let houseImage4;
 let houseImage1rev;
 let trashImage;
 
-//SOUNDS
-let stickshotSnd;
-
 //let myCat;
 let myCat1;
 let myCat2;
@@ -163,14 +160,19 @@ function launchIntro() {
 
     setTimeout(function() {
         introParent.removeChild(canvasIntro);
-        introPlaying = false}, 10000);
+        introPlaying = false}, 1000);
 }
 if (introPlaying === true) {
     launchIntro();
 }
 
-//sons
+//SOUNDS
+let stickshotSnd = document.createElement("audio");
+stickshotSnd.src = 'sons/coups/stickshot.mp3';
 let songCat;
+function playStickSnd() {
+    stickshotSnd.play();
+}
 
 function preload() {
     //fond de la map
@@ -245,7 +247,7 @@ function preload() {
     //sons
     soundFormats('mp3');
     songCat = loadSound('sons/chat/fight_cat.mp3');
-    stickshotSnd = loadSound('sons/coups/stickshot.mp3');
+    //stickshotSnd = loadSound('sons/coups/stickshot.mp3');
 }
 
 function setup() {
@@ -770,6 +772,17 @@ function draw() {
                 dashCtx.strokeRect(20, 390, 125, 30);
             }
         }
+        
+        //DÉCLENCHEMENT DES SONS :
+        //coup de canne mamie
+        for (let cat of cats) {
+            if (mami.stick.overlap(cat) === true && isShooting === true) {
+                playStickSnd();
+                console.log("shot");
+            }
+        }
+
+        
         showDashboard();
 
         drawSprite(myCake);
@@ -797,8 +810,6 @@ function draw() {
             spawnBoss();
             updateBoss();
         }
-
-
 
         camera.off();
     }//fin du else de départ
