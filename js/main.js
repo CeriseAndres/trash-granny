@@ -105,6 +105,9 @@ let bigUpCount = 0;
 let dragonLife = 250;
 
 let gameover;
+let gameisover = false;
+
+let gameiswon = false;
 
 //jeu en pause ou non
 let gamePaused = false;
@@ -145,6 +148,14 @@ let bossSong = document.createElement("audio");
 bossSong.src = "sons/bossSong.mp3";
 bossSong.loop = true;
 bossSong.preload = "auto";
+let gameoverSong = document.createElement("audio");
+gameoverSong.src = "sons/gameover.mp3";
+gameoverSong.loop = false;
+gameoverSong.preload = "auto";
+let youwinSong = document.createElement("audio");
+youwinSong.src = 'sons/youwin.mp3';
+youwinSong.loop = false;
+youwinSong.preload = "auto";
 
 let stickshotSnd = document.createElement("audio");
 stickshotSnd.src = 'sons/coups/stickshot.mp3'; //coup de canne
@@ -433,12 +444,22 @@ function draw() {
     background(220);
     //en cas de défaite : (life < 0)
     if (mamiLife <= 0) {
+        gameisover = true;
+        gameSong.pause();
+        bossSong.pause();
+        gameoverSong.play();
         image(gameover, camera.position.x - canvas.width/2, camera.position.y - canvas.height/2 , 800, 600);
+        noLoop();
         //animation(gameover...)
     }
     //en cas de victoire:
     else if (mami.position.x > 1250 && mami.position.y > 1020 && dragonDead === true) {
+        gameiswon = true;
+        gameSong.pause();
+        bossSong.pause();
+        youwinSong.play();
         image(winscreen, camera.position.x - canvas.width/2, camera.position.y - canvas.height/2, 800, 600);
+        noLoop();
         //animation(winscreen...);
     }
     //lancer l'intro au début
@@ -828,7 +849,6 @@ function draw() {
             bossSong.pause();
             gameSong.play();
         }
-
         
         showDashboard();
 
@@ -869,6 +889,7 @@ function draw() {
 
         camera.off();
     }//fin du else de départ
+
 }//fin de draw()
 
 //pour remettre le jeu en marche si il était sur pause
