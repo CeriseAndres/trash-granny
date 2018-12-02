@@ -62,7 +62,8 @@ body {
     width: 300px;
     text-align: center;
     padding: 30px;
-    margin: 3em auto;
+    margin: 6em auto;
+    box-shadow: 0 0 20px #fff3;
 }
 dt {
     font-size: 1.2em;

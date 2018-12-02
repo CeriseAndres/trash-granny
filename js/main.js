@@ -905,4 +905,32 @@ function keyPressed() {
         gamePaused = false;
         pauseScreen.style.display = "none";
     }
+    //réinitialiser le jeu sans recharger la page en appuyant sur entrée :
+    else if(keyCode === ENTER && (gameiswon === true || gameisover === true)) {
+        //remettre tout les booléens à l'état de départ
+        gameiswon = false;
+        gameisover = false;
+        dragonDead = false;
+        introPlaying = false;//ne pas repasser par le screen d'intro
+        gamePaused = false;
+        dragonspawn = false;
+        cat1spawn = false;
+        cat2spawn = false;
+        cat3spawn = false;
+        cat4spawn = false;
+        mami.changeAnimation("walkDown");
+        gameoverSong.pause();
+        youwinSong.pause();
+        //ramener toutes les tracks au début
+        gameSong.currentTime = 0;
+        bossSong.currentTime = 0;
+        gameoverSong.currentTime = 0;
+        youwinSong.currentTime = 0;
+        gameSong.play();
+        mamiLife = 500;
+        
+        setup();
+        draw();
+        loop();
+    }
 }
