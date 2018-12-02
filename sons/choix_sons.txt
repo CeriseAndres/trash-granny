@@ -1,0 +1,8 @@
+Musique ambiance : 
+mrKey big boss.
+Au moment du boss : Tension
+
+coup de canne : retoucher Hit
+coup de canne dans le vide : retoucher tomahawk
+
+chat : retoucher fight cat
