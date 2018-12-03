@@ -158,7 +158,7 @@ youwinSong.loop = false;
 youwinSong.preload = "auto";
 
 let songSpawnCat = document.createElement("audio");
-songSpawnCat.src ='sons/chat/miaulement.mp3';
+songSpawnCat.src ='sons/chat/Miaulement.mp3';
 songSpawnCat.loop = false;
 songSpawnCat.preload = "auto";
 let songFightCat = document.createElement("audio");
@@ -230,7 +230,6 @@ function playStickSnd() {
 function playMissSnd() {
     missShotSnd.play();
 }
-//Sons chats 
 function playFightCat() {
     songFightCat.play();
 }
@@ -645,28 +644,23 @@ function draw() {
        function spawnCat() {
             if (mami.position.x > 980 && mami.position.y < 600) {
                 drawCat(myCat1);
-                songSpawnCat.play();
                 cat1spawn = true;
-
             }
             if (mami.position.x > 300) {
                 drawCat(myCat2);
-                songSpawnCat.play();
                 cat2spawn = true;
-
+                songSpawnCat.play();
             }
             if (mami.position.x > 600) {
                 drawCat(myCat3);
-                songSpawnCat.play();
                 cat3spawn = true;
 
             }
             if (mami.position.y > 600) {
                 drawCat(myCat4);
-                songSpawnCat.play();
                 cat4spawn = true;
-
             }
+
           }
 
         function spawnBoss() {
@@ -863,7 +857,7 @@ function draw() {
             playStickSnd();
         }
 
-        //chats attaquent mamie
+        //sons chats attaquent mamie
         for (let cat of cats) {
           if (mami.overlap(cat) === true && isShooting === true) {
             playFightCat();
