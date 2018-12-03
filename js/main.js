@@ -135,7 +135,6 @@ let mamiHasArmor = false;
 let armorLife = 125;
 
 //SOUNDS
-
 let introSnd = document.createElement("audio");
 introSnd.src = 'sons/intro.mp3';
 introSnd.loop = false;
@@ -156,6 +155,7 @@ let youwinSong = document.createElement("audio");
 youwinSong.src = 'sons/youwin.mp3';
 youwinSong.loop = false;
 youwinSong.preload = "auto";
+let songCat;
 
 let songSpawnCat = document.createElement("audio");
 songSpawnCat.src ='sons/chat/Miaulement.mp3';
@@ -909,7 +909,6 @@ function draw() {
                 noLoop();
                 gamePaused = true;
                 pauseScreen.style.display = "block";
-                console.log(gamePaused);
             }
         }
 
@@ -918,8 +917,9 @@ function draw() {
 
 }//fin de draw()
 
-//pour remettre le jeu en marche si il était sur pause
+
 function keyPressed() {
+    //remettre le jeu en marche si il était sur pause
     if (keyCode === ENTER && gamePaused === true) {
         loop();
         gamePaused = false;
@@ -928,6 +928,7 @@ function keyPressed() {
     //réinitialiser le jeu sans recharger la page en appuyant sur entrée :
     else if(keyCode === ENTER && (gameiswon === true || gameisover === true)) {
         //remettre tout les booléens à l'état de départ
+        myDragonDead.remove();
         gameiswon = false;
         gameisover = false;
         dragonDead = false;
@@ -938,6 +939,7 @@ function keyPressed() {
         cat2spawn = false;
         cat3spawn = false;
         cat4spawn = false;
+        dragonLife = 250;
         mami.changeAnimation("walkDown");
         gameoverSong.pause();
         youwinSong.pause();
