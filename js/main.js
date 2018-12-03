@@ -135,7 +135,6 @@ let mamiHasArmor = false;
 let armorLife = 125;
 
 //SOUNDS
-let songCat;
 let introSnd = document.createElement("audio");
 introSnd.src = 'sons/intro.mp3';
 introSnd.loop = false;
@@ -156,6 +155,16 @@ let youwinSong = document.createElement("audio");
 youwinSong.src = 'sons/youwin.mp3';
 youwinSong.loop = false;
 youwinSong.preload = "auto";
+let songCat;
+
+let songSpawnCat = document.createElement("audio");
+songSpawnCat.src ='sons/chat/Miaulement.mp3';
+songSpawnCat.loop = false;
+songSpawnCat.preload = "auto";
+let songFightCat = document.createElement("audio");
+songFightCat.src ='sons/chat/fight_cat.mp3';
+songFightCat.loop = false;
+songFightCat.preload = "auto";
 
 let stickshotSnd = document.createElement("audio");
 stickshotSnd.src = 'sons/coups/stickshot.mp3'; //coup de canne
@@ -163,7 +172,7 @@ stickshotSnd.loop = false;
 stickshotSnd.preload = "auto";
 
 let missShotSnd = document.createElement("audio");
-missShotSnd.src = 'sons/coups/missShot.mp3'; //coup de canne dans le vent 
+missShotSnd.src = 'sons/coups/missShot.mp3'; //coup de canne dans le vent
 missShotSnd.loop = false;
 missShotSnd.volume = 0.3;
 missShotSnd.preload = "auto";
@@ -208,7 +217,7 @@ function launchIntro() {
             introParent.removeChild(canvasIntro);
             introPlaying = false;
         }, 11000);
-        
+
     }
 }
 if (introPlaying === true) {
@@ -220,6 +229,9 @@ function playStickSnd() {
 }
 function playMissSnd() {
     missShotSnd.play();
+}
+function playFightCat() {
+    songFightCat.play();
 }
 
 function preload() {
@@ -292,9 +304,6 @@ function preload() {
     armorImage = loadImage('img/sprites_items/armor.png');
     cupImage = loadImage('img/sprites_items/cup.png');
 
-    //sons
-    soundFormats('mp3');
-    songCat = loadSound('sons/chat/fight_cat.mp3');
 }
 
 function setup() {
@@ -640,15 +649,18 @@ function draw() {
             if (mami.position.x > 300) {
                 drawCat(myCat2);
                 cat2spawn = true;
+                songSpawnCat.play();
             }
             if (mami.position.x > 600) {
                 drawCat(myCat3);
                 cat3spawn = true;
+
             }
             if (mami.position.y > 600) {
                 drawCat(myCat4);
                 cat4spawn = true;
             }
+
           }
 
         function spawnBoss() {
@@ -709,7 +721,7 @@ function draw() {
                 }
             });
         }
-        
+
         //éloigner le boss en frappant
         myDragonBoss.overlap(mami.stick, function() {
             if (isShooting) {
@@ -830,7 +842,7 @@ function draw() {
                 dashCtx.strokeRect(20, 390, 125, 30);
             }
         }
-        
+
         //DÉCLENCHEMENT DES SONS :
         //coup de canne mamie
         for (let cat of cats) {
@@ -844,7 +856,14 @@ function draw() {
         if (mami.stick.overlap(myDragonBoss) === true && isShooting === true) {
             playStickSnd();
         }
-        
+
+        //sons chats attaquent mamie
+        for (let cat of cats) {
+          if (mami.overlap(cat) === true && isShooting === true) {
+            playFightCat();
+          }
+        }
+
         //Musique du boss
         if (dragonspawn === true) {
             gameSong.pause();
@@ -855,7 +874,8 @@ function draw() {
             bossSong.pause();
             gameSong.play();
         }
-        
+
+
         showDashboard();
 
         drawSprite(myCake);
@@ -889,7 +909,6 @@ function draw() {
                 noLoop();
                 gamePaused = true;
                 pauseScreen.style.display = "block";
-                console.log(gamePaused);
             }
         }
 
@@ -898,8 +917,9 @@ function draw() {
 
 }//fin de draw()
 
-//pour remettre le jeu en marche si il était sur pause
+
 function keyPressed() {
+    //remettre le jeu en marche si il était sur pause
     if (keyCode === ENTER && gamePaused === true) {
         loop();
         gamePaused = false;
@@ -908,6 +928,7 @@ function keyPressed() {
     //réinitialiser le jeu sans recharger la page en appuyant sur entrée :
     else if(keyCode === ENTER && (gameiswon === true || gameisover === true)) {
         //remettre tout les booléens à l'état de départ
+        myDragonDead.remove();
         gameiswon = false;
         gameisover = false;
         dragonDead = false;
@@ -918,6 +939,7 @@ function keyPressed() {
         cat2spawn = false;
         cat3spawn = false;
         cat4spawn = false;
+        dragonLife = 250;
         mami.changeAnimation("walkDown");
         gameoverSong.pause();
         youwinSong.pause();
@@ -929,7 +951,7 @@ function keyPressed() {
         gameSong.play();
         mamiLife = 500;
         mamiScore = 0;
-        
+
         setup();
         draw();
         loop();
