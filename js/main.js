@@ -84,7 +84,11 @@ let cats;
 let cat1spawn = false;
 let cat2spawn = false;
 let cat3spawn = false;
-let cat4spawn =false;
+let cat4spawn = false;
+let cat1spawnPlayed = false;
+let cat2spawnPlayed = false;
+let cat3spawnPlayed = false;
+let cat4spawnPlayed = false;
 //BOSS !
 let myDragonBoss;
 let dragonBossImage;
@@ -161,10 +165,15 @@ let songSpawnCat = document.createElement("audio");
 songSpawnCat.src ='sons/chat/Miaulement.mp3';
 songSpawnCat.loop = false;
 songSpawnCat.preload = "auto";
+songSpawnCat.volume = 0.6;
 let songFightCat = document.createElement("audio");
-songFightCat.src ='sons/chat/fight_cat.mp3';
+songFightCat.src ='sons/chat/attack_cat.mp3';
 songFightCat.loop = false;
 songFightCat.preload = "auto";
+let hittedCatSnd = document.createElement('audio');
+hittedCatSnd.src = "sons/chat/hitted_cat.mp3";
+hittedCatSnd.loop = false;
+hittedCatSnd.preload = "auto";
 
 let stickshotSnd = document.createElement("audio");
 stickshotSnd.src = 'sons/coups/stickshot.mp3'; //coup de canne
@@ -233,6 +242,13 @@ function playMissSnd() {
 function playFightCat() {
     songFightCat.play();
 }
+function playSpawnCat() {
+    songSpawnCat.play();
+}
+function playHittedCat() {
+    hittedCatSnd.play();
+}
+
 
 function preload() {
     //fond de la map
@@ -493,7 +509,7 @@ function draw() {
         if(keyDown(LEFT_ARROW)){
               stickOffsetX = -22;
               coef = -1;
-              mami.position.x -= 2;
+              mami.position.x -= 0.5;
               mami.stick.position.x = mami.position.x + stickOffsetX;
               mami.changeAnimation('walkLeft');
               mami.animation.play();
@@ -501,7 +517,7 @@ function draw() {
         if(keyDown(RIGHT_ARROW)){
               stickOffsetX = 22;
               coef = 1;
-              mami.position.x += 2;
+              mami.position.x += 0.5;
               mami.stick.position.x = mami.position.x + stickOffsetX;
               mami.changeAnimation('walkRight');
               mami.animation.play();
@@ -509,7 +525,7 @@ function draw() {
         if(keyDown(UP_ARROW)){
             coef = -1;
             stickOffsetX = -22;
-            mami.position.y -= 2;
+            mami.position.y -= 0.5;
             mami.stick.position.x = mami.position.x + stickOffsetX;
             mami.stick.position.y = mami.position.y + stickOffsetY;
             mami.changeAnimation('walkUp');
@@ -518,7 +534,7 @@ function draw() {
         if(keyDown(DOWN_ARROW)) {
             coef = 1;
             stickOffsetX = 22;
-            mami.position.y += 2;
+            mami.position.y += 0.5;
             mami.stick.position.x = mami.position.x + stickOffsetX;
             mami.stick.position.y = mami.position.y + stickOffsetY;
             mami.changeAnimation('walkDown');
@@ -645,20 +661,35 @@ function draw() {
             if (mami.position.x > 980 && mami.position.y < 600) {
                 drawCat(myCat1);
                 cat1spawn = true;
+                if (cat1spawnPlayed === false) {
+                    playSpawnCat();
+                    cat1spawnPlayed = true;
+                }
             }
             if (mami.position.x > 300) {
                 drawCat(myCat2);
                 cat2spawn = true;
-                songSpawnCat.play();
+                if (cat2spawnPlayed === false) {
+                    playSpawnCat();
+                    cat2spawnPlayed = true;
+                }
             }
             if (mami.position.x > 600) {
                 drawCat(myCat3);
                 cat3spawn = true;
+                if (cat3spawnPlayed === false) {
+                    playSpawnCat();
+                    cat3spawnPlayed = true;
+                }
 
             }
             if (mami.position.y > 600) {
                 drawCat(myCat4);
                 cat4spawn = true;
+                if (cat4spawnPlayed === false) {
+                    playSpawnCat();
+                    cat4spawnPlayed = true;
+                }
             }
 
           }
@@ -859,9 +890,12 @@ function draw() {
 
         //sons chats attaquent mamie
         for (let cat of cats) {
-          if (mami.overlap(cat) === true && isShooting === true) {
+            if (mami.overlap(cat) === true) {
             playFightCat();
           }
+            else if(mami.stick.overlap(cat) === true && isShooting === true) {
+                playHittedCat();
+            }
         }
 
         //Musique du boss
