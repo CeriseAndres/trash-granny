@@ -278,7 +278,7 @@ function playHittedCat() {
 function playMamiCroc() {
     mamiCroc.play();
 }
-let counterMamiPain = 0;
+let counterMamiPain = 0;//pour ne jouer le sons qu'un fois de tps en tps
 function playMamiPain() {
     counterMamiPain ++;
     if (counterMamiPain === 100) {
@@ -296,8 +296,13 @@ function playDragonSpawn() {
 function playDragonDead() {
     dragonDeadSnd.play();
 }
+let counterDragonPain = 0;//pour ne jouer le son qu'une fois de temps en temsp
 function playDragonPain() {
-    dragonPainSnd.play();
+    counterDragonPain++;
+    if (counterDragonPain === 15) {
+        dragonPainSnd.play();
+        counterDragonPain = 0;
+    }
 }
 
 function preload() {
