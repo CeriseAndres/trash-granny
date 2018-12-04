@@ -153,6 +153,7 @@ let gameSong = document.createElement("audio");
 gameSong.src = "sons/gameSong.mp3";
 gameSong.loop = true;
 gameSong.preload = "auto";
+gameSong.volume = 0.8;
 let bossSong = document.createElement("audio");
 bossSong.src = "sons/bossSong.mp3";
 bossSong.loop = true;
@@ -569,7 +570,7 @@ function draw() {
         if(keyDown(LEFT_ARROW)){
               stickOffsetX = -22;
               coef = -1;
-              mami.position.x -= 2;
+              mami.position.x -= 0.5;
               mami.stick.position.x = mami.position.x + stickOffsetX;
               mami.changeAnimation('walkLeft');
               mami.animation.play();
@@ -577,7 +578,7 @@ function draw() {
         if(keyDown(RIGHT_ARROW)){
               stickOffsetX = 22;
               coef = 1;
-              mami.position.x += 2;
+              mami.position.x += 0.5;
               mami.stick.position.x = mami.position.x + stickOffsetX;
               mami.changeAnimation('walkRight');
               mami.animation.play();
@@ -585,7 +586,7 @@ function draw() {
         if(keyDown(UP_ARROW)){
             coef = -1;
             stickOffsetX = -22;
-            mami.position.y -= 2;
+            mami.position.y -= 0.5;
             mami.stick.position.x = mami.position.x + stickOffsetX;
             mami.stick.position.y = mami.position.y + stickOffsetY;
             mami.changeAnimation('walkUp');
@@ -594,7 +595,7 @@ function draw() {
         if(keyDown(DOWN_ARROW)) {
             coef = 1;
             stickOffsetX = 22;
-            mami.position.y += 2;
+            mami.position.y += 0.5;
             mami.stick.position.x = mami.position.x + stickOffsetX;
             mami.stick.position.y = mami.position.y + stickOffsetY;
             mami.changeAnimation('walkDown');
@@ -1053,6 +1054,7 @@ function keyPressed() {
         cat4spawnPlayed = false;
         dragonSpawnPlayed = false;
         dragonLife = 250;
+        armorLife = 125;
         mami.changeAnimation("walkDown");
         gameoverSong.pause();
         youwinSong.pause();
