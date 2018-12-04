@@ -96,6 +96,8 @@ let dragonDeadImage;
 let dragonspawn = false;
 let dragonDead = false;
 let myDragonDead;
+let dragonSpawnPlayed = false;
+let dragonDeadPlayed = false;
 
 //barre de vie
 let mamiLife = 500;
@@ -186,6 +188,31 @@ missShotSnd.loop = false;
 missShotSnd.volume = 0.3;
 missShotSnd.preload = "auto";
 
+let mamiCroc = document.createElement("audio");
+mamiCroc.src = 'sons/mamie/croque.mp3';
+mamiCroc.loop = false;
+mamiCroc.preload = "auto";
+
+let mamiPain = document.createElement("audio");
+mamiPain.src = "sons/mamie/mamiPain.mp3";
+mamiPain.loop = false;
+mamiPain.preload = "auto";
+
+let dragonSpawnSnd = document.createElement("audio");
+dragonSpawnSnd.src = "sons/dragonSpawn.mp3";
+dragonSpawnSnd.loop = false;
+dragonSpawnSnd.preload = "auto";
+
+let dragonDeadSnd = document.createElement("audio");
+dragonDeadSnd.src = "sons/dragonDead.mp3";
+dragonDeadSnd.loop = false;
+dragonDeadSnd.preload = "auto";
+
+let dragonPainSnd = document.createElement("audio");
+dragonPainSnd.src = "sons/dragonPain.mp3";
+dragonPainSnd.loop = false;
+dragonPainSnd.preload = "auto";
+
 //variables en lien avec l'intro
 let introPlaying = true;
 let canvasIntro = document.createElement('canvas');
@@ -248,7 +275,30 @@ function playSpawnCat() {
 function playHittedCat() {
     hittedCatSnd.play();
 }
-
+function playMamiCroc() {
+    mamiCroc.play();
+}
+let counterMamiPain = 0;
+function playMamiPain() {
+    counterMamiPain ++;
+    if (counterMamiPain === 100) {
+        mamiPain.play();
+        counterMamiPain = 0;
+    } 
+}
+function playDragonSpawn() {
+    setTimeout(function() {
+        dragonSpawnSnd.play();
+        dragonSpawnPlayed = true;
+    }, 2000);
+    
+}
+function playDragonDead() {
+    dragonDeadSnd.play();
+}
+function playDragonPain() {
+    dragonPainSnd.play();
+}
 
 function preload() {
     //fond de la map
@@ -509,7 +559,7 @@ function draw() {
         if(keyDown(LEFT_ARROW)){
               stickOffsetX = -22;
               coef = -1;
-              mami.position.x -= 0.5;
+              mami.position.x -= 2;
               mami.stick.position.x = mami.position.x + stickOffsetX;
               mami.changeAnimation('walkLeft');
               mami.animation.play();
@@ -517,7 +567,7 @@ function draw() {
         if(keyDown(RIGHT_ARROW)){
               stickOffsetX = 22;
               coef = 1;
-              mami.position.x += 0.5;
+              mami.position.x += 2;
               mami.stick.position.x = mami.position.x + stickOffsetX;
               mami.changeAnimation('walkRight');
               mami.animation.play();
@@ -525,7 +575,7 @@ function draw() {
         if(keyDown(UP_ARROW)){
             coef = -1;
             stickOffsetX = -22;
-            mami.position.y -= 0.5;
+            mami.position.y -= 2;
             mami.stick.position.x = mami.position.x + stickOffsetX;
             mami.stick.position.y = mami.position.y + stickOffsetY;
             mami.changeAnimation('walkUp');
@@ -534,7 +584,7 @@ function draw() {
         if(keyDown(DOWN_ARROW)) {
             coef = 1;
             stickOffsetX = 22;
-            mami.position.y += 0.5;
+            mami.position.y += 2;
             mami.stick.position.x = mami.position.x + stickOffsetX;
             mami.stick.position.y = mami.position.y + stickOffsetY;
             mami.changeAnimation('walkDown');
@@ -698,6 +748,10 @@ function draw() {
           if (mami.position.x >= 920 && mami.position.y >= 550 && mami.position.x <= 1250 && mami.position.y <= 850) {
             drawBoss(myDragonBoss);
             dragonspawn = true;
+              if (dragonSpawnPlayed === false) {
+                    playDragonSpawn();
+//                    dragonSpawnPlayed = true;
+                }
           }
         }
 
@@ -792,6 +846,7 @@ function draw() {
                 function() {
                     mamiLife +=100;
                     item.remove();
+                    playMamiCroc();//son mamiCroc
                 });
         }
         //traitement à part pour l'armure
@@ -891,11 +946,16 @@ function draw() {
         //sons chats attaquent mamie
         for (let cat of cats) {
             if (mami.overlap(cat) === true) {
-            playFightCat();
+                playFightCat();
+                playMamiPain();
           }
             else if(mami.stick.overlap(cat) === true && isShooting === true) {
                 playHittedCat();
             }
+        }
+        
+        if (mami.stick.overlap(myDragonBoss) === true && isShooting === true) {
+            playDragonPain();
         }
 
         //Musique du boss
@@ -905,6 +965,11 @@ function draw() {
         }
         //musique normale quand dragon mort
         if (dragonDead === true) {
+            if (dragonDeadPlayed === false) {
+                playDragonDead();//+bruit du dragon qui meurt
+                dragonDeadPlayed = true;
+            }
+            
             bossSong.pause();
             gameSong.play();
         }
@@ -962,7 +1027,9 @@ function keyPressed() {
     //réinitialiser le jeu sans recharger la page en appuyant sur entrée :
     else if(keyCode === ENTER && (gameiswon === true || gameisover === true)) {
         //remettre tout les booléens à l'état de départ
-        myDragonDead.remove();
+        if (dragonDead) {
+            myDragonDead.remove();
+        }
         gameiswon = false;
         gameisover = false;
         dragonDead = false;
@@ -973,6 +1040,11 @@ function keyPressed() {
         cat2spawn = false;
         cat3spawn = false;
         cat4spawn = false;
+        cat1spawnPlayed = false;
+        cat2spawnPlayed = false;
+        cat3spawnPlayed = false;
+        cat4spawnPlayed = false;
+        dragonSpawnPlayed = false;
         dragonLife = 250;
         mami.changeAnimation("walkDown");
         gameoverSong.pause();
