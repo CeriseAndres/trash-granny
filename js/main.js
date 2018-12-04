@@ -264,6 +264,7 @@ if (introPlaying === true) {
     launchIntro();
 }
 
+//fonctions de déclenchement des sons
 function playStickSnd() {
     stickshotSnd.play();
 }
@@ -308,7 +309,7 @@ function playDragonPain() {
         counterDragonPain = 0;
     }
 }
-
+//fonction preload - P5JS
 function preload() {
     //fond de la map
     mapImage = loadImage('img/map.png');
@@ -380,7 +381,7 @@ function preload() {
     cupImage = loadImage('img/sprites_items/cup.png');
 
 }
-
+//fonction setup - P5JS
 function setup() {
     //initialisation de la map :
     let canvas = createCanvas(800, 600);
@@ -529,7 +530,7 @@ function setup() {
     myArmor = createSprite(1050,350);
     myArmor.addImage('armor', armorImage);
 }
-
+//fonction draw - P5JS
 function draw() {
     background(220);
     //en cas de défaite : (life < 0)
@@ -1025,7 +1026,7 @@ function draw() {
 
 }//fin de draw()
 
-
+//fonction keyPressed - P5JS
 function keyPressed() {
     //remettre le jeu en marche si il était sur pause
     if (keyCode === ENTER && gamePaused === true) {
