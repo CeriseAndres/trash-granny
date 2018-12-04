@@ -15,7 +15,8 @@ let mapImage;
 //screens
 let winscreen;
 
-let mami;//decl. mami et son image
+//decl. mami et son image
+let mami;
 let mamImage;
 let mamiMad;
 let mamiWalk;
@@ -34,6 +35,7 @@ let stickPosY;
 let stickOffsetX;
 let stickOffsetY;
 let coef; //1 ou -1 selon rotation canne a droite ou a gauche
+
 //decl. maisons
 let house1;
 let house2;
@@ -45,6 +47,7 @@ let house7;
 let house8;
 let houseTrash; //local poubelle
 
+//haies
 let haieXimg;
 let haieYimg;
 let haieXRevimg;
@@ -78,9 +81,9 @@ let cat1Image;
 let cat2Image;
 let cat3Image;
 let cat4Image;
+let cats;//groupe chats
 
-let cats;
-
+//booléens pour savoir si les chats ont déjà spawné ou pas
 let cat1spawn = false;
 let cat2spawn = false;
 let cat3spawn = false;
@@ -89,6 +92,7 @@ let cat1spawnPlayed = false;
 let cat2spawnPlayed = false;
 let cat3spawnPlayed = false;
 let cat4spawnPlayed = false;
+
 //BOSS !
 let myDragonBoss;
 let dragonBossImage;
@@ -110,7 +114,7 @@ let bigUpCount = 0;
 //vie du boss(dragon)
 let dragonLife = 250;
 
-let gameover;
+let gameoverScreen;//screen gameover
 let gameisover = false;
 
 let gameiswon = false;
@@ -296,10 +300,10 @@ function playDragonSpawn() {
 function playDragonDead() {
     dragonDeadSnd.play();
 }
-let counterDragonPain = 0;//pour ne jouer le son qu'une fois de temps en temsp
+let counterDragonPain = 0;//pour ne jouer le son qu'une fois de temps en temps
 function playDragonPain() {
     counterDragonPain++;
-    if (counterDragonPain === 15) {
+    if (counterDragonPain === 18) {
         dragonPainSnd.play();
         counterDragonPain = 0;
     }
@@ -352,7 +356,7 @@ function preload() {
     mamiStopShootLeft.looping = false;
     mamiStopShootLeft.frameDelay = 6;
 
-    gameover = loadImage('img/gameover.png');
+    gameoverScreen = loadImage('img/gameover.png');
     winscreen = loadImage('img/winscreen.png');
 
     //cats
@@ -534,7 +538,7 @@ function draw() {
         gameSong.pause();
         bossSong.pause();
         gameoverSong.play();
-        image(gameover, camera.position.x - canvas.width/2, camera.position.y - canvas.height/2 , 800, 600);
+        image(gameoverScreen, camera.position.x - canvas.width/2, camera.position.y - canvas.height/2 , 800, 600);
         noLoop();
         //animation(gameover...)
     }
