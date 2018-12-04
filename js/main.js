@@ -1032,9 +1032,6 @@ function keyPressed() {
     //réinitialiser le jeu sans recharger la page en appuyant sur entrée :
     else if(keyCode === ENTER && (gameiswon === true || gameisover === true)) {
         //remettre tout les booléens à l'état de départ
-        if (dragonDead) {
-            myDragonDead.remove();
-        }
         gameiswon = false;
         gameisover = false;
         dragonDead = false;
@@ -1062,6 +1059,9 @@ function keyPressed() {
         gameSong.play();
         mamiLife = 500;
         mamiScore = 0;
+        if (dragonDead) {
+            myDragonDead.remove();
+        }
 
         setup();
         draw();
