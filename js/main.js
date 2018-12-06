@@ -27,6 +27,9 @@ let mamiShoot;
 let mamiShootLeft;
 let mamiStopShoot;
 let mamiStopShootLeft;
+let mamiWalkDownArmor;
+let mamiShootArmor;
+let mamiStopShootArmor;
 
 let stickImage;//canne de mami
 let isShooting = false;//vrai si un coup de canne est donné.
@@ -343,11 +346,9 @@ function preload() {
     mamiWalkLeft.frameDelay = 8;
 
     mamiShoot = loadAnimation('img/mami_shoot1.png', 'img/mami_shoot2.png','img/mami_shoot3.png');
-    //mamiShoot.looping = false;
     mamiShoot.frameDelay = 6;
 
     mamiShootLeft = loadAnimation('img/mami_shootLeft2.png', 'img/mami_shootLeft3.png');
-    //mamiShootLeft.looping = false;
     mamiShootLeft.frameDelay = 6;
 
     mamiStopShoot = loadAnimation('img/mami_shoot3.png', 'img/mami_shoot2.png', 'img/mami_shoot1.png');
@@ -357,6 +358,16 @@ function preload() {
     mamiStopShootLeft = loadAnimation('img/mami_shootLeft3.png', 'img/mami_shootLeft2.png', 'img/mami_walkLeft2.png');
     mamiStopShootLeft.looping = false;
     mamiStopShootLeft.frameDelay = 6;
+    
+    mamiWalkDownArmor = loadAnimation('img/mami_walk1-armor.png', 'img/mami_walk2-armor.png', 'img/mami_walk3-armor.png', 'img/mami_walk2-armor.png');
+    mamiWalkDownArmor.frameDelay = 8;
+    
+    mamiShootArmor = loadAnimation('img/mami_shoot1-armor.png', 'img/mami_shoot2-armor.png', 'img/mami_shoot3-armor.png');
+    mamiShootArmor.frameDelay = 6;
+    
+    mamiStopShootArmor = loadAnimation('img/mami_shoot3-armor.png', 'img/mami_shoot2-armor.png', 'img/mami_shoot1-armor.png');
+    mamiStopShootArmor.looping = false;
+    mamiStopShootArmor.frameDelay = 6;
 
     gameoverScreen = loadImage('img/gameover.png');
     winscreen = loadImage('img/winscreen.png');
@@ -470,6 +481,9 @@ function setup() {
     mami.addAnimation('stopShoot', mamiStopShoot);
     mami.addAnimation('stopShootLeft', mamiStopShootLeft);
     mami.addAnimation('standMad', mamiMad);
+    mami.addAnimation('walkDownArmor', mamiWalkDownArmor);
+    mami.addAnimation('shootingArmor', mamiShootArmor);
+    mami.addAnimation('stopShootArmor', mamiStopShootArmor);
     mami.setCollider('rectangle', 0, 25, 25, 49);
     stickOffsetX = 22;
     stickOffsetY = 23;
@@ -600,6 +614,10 @@ function draw() {
             mami.stick.position.y = mami.position.y + stickOffsetY;
             mami.changeAnimation('walkDown');
             mami.animation.play();
+            if (mamiHasArmor) {
+                mami.changeAnimation('walkDownArmor');
+                mami.animation.play();
+            }
         }
         if (keyWentUp(LEFT_ARROW) || keyWentUp(RIGHT_ARROW) || keyWentUp(UP_ARROW) || keyWentUp(DOWN_ARROW)) {
             mami.animation.stop();
