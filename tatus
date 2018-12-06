@@ -1,0 +1,101 @@
+[33m94ffb4a[m[33m ([m[1;36mHEAD -> [m[1;32mmaster[m[33m, [m[1;31morigin/master[m[33m, [m[1;31morigin/HEAD[m[33m)[m fichier winscreen xcf
+[33m0558a5d[m modif son mamiPain
+[33mccc9f3c[m ajout commentaires
+[33mc7c271d[m changement de nom variable gameover en gameoverScreen
+[33m588e9dd[m ajustement fonction keypressed
+[33mecef938[m[33m ([m[1;31morigin/sounds[m[33m)[m reglage sons dragon
+[33m5437333[m[33m ([m[1;31morigin/soundsBis[m[33m)[m ajout sons item, dragon, etc
+[33ma6a428e[m Merge branch 'soundsBis' of https://github.com/Codnpix/trash-granny into soundsBis
+[33m8d7af60[m son dragon
+[33mdcaeef4[m réglage sons chats
+[33mf66f46e[m Merge branch 'sounds' of https://github.com/Codnpix/trash-granny into sounds
+[33m86fc3fd[m rien
+[33me6d808f[m audio chat
+[33mb876739[m probleme loop audio chat
+[33m4ba57ff[m sons chats
+[33m2d9ee78[m correction rescussit dragon
+[33m1883a62[m màj sounds
+[33m99a50be[m rien
+[33medc69b5[m rien*
+[33md339237[m reglage musique youwin
+[33m6dd7371[m ajout sous titre startscreen
+[33m14747c7[m ajout fonction pour recharger le jeu après gameover ou youwin
+[33m5e1cecb[m ajout startscreen
+[33mf7d6736[m ajout musique gameover et youwin
+[33m447ff1e[m ajout commentaire
+[33mbd7b342[m ajout fonction pause
+[33madee892[m[33m ([m[1;31morigin/stickshot[m[33m)[m musiques intro, game, boss
+[33m17c5f5a[m missShot sound added
+[33m81e9256[m sitckshot sound added
+[33mf9b5140[m création son coup de canne
+[33md629a42[m desactive cat collide mami
+[33mcb3773b[m essai stickshotSnd
+[33m754868a[m correction JS (loop for pour overlap cats)
+[33m05d41b9[m debut retouche sons
+[33m6a8e2e5[m ajout texte introscreen
+[33m2ec8eb3[m Merge branch 'introscreen'
+[33mf71188c[m[33m ([m[1;31morigin/introscreen[m[33m)[m nettoyage code
+[33m17dbcd5[m deboggage strict mode
+[33m27d6dc6[m animation introscreen fonctionnelle !
+[33mddc506e[m creaton fichier frames intro
+[33m39aa178[m Merge branch 'collect_item' of https://github.com/Codnpix/trash-granny into collect_item
+[33m06e5b2e[m gif pour intro (marche pas)
+[33m4bfd2eb[m[33m ([m[1;31morigin/collect_item[m[33m)[m sons
+[33ma1d736b[m reglage niveau gris dragon intro
+[33m7c15e74[m travail image intro + cats collide mami
+[33m2e4d3a7[m ajout image intro(pas finie)
+[33m010314f[m essais fullscreen - abandonné
+[33mf68de83[m fonction intro OP, manque faire screen
+[33me9d4aa6[m debut introscreen, structure fonction
+[33m609112b[m[33m ([m[1;31morigin/winscreen[m[33m)[m ajout condition victoire : tuer boss d'abord
+[33m7af3fca[m ajout winscreen basique quand arrivée localpoub
+[33m6054f5e[m essai reglage coordonnée spawncat
+[33m19dbccc[m ajout image dragonFace dashboard
+[33m0a549ae[m correction, chat passent devant mami
+[33mc830e77[m debug items
+[33m04ff3d4[m correction dragon/canne
+[33m2c45faa[m fix conflict ok
+[33mb7f15b1[m fix conflict1
+[33m496eaf1[m[33m ([m[1;31morigin/dragon_mort[m[33m)[m ajout mort du dragon
+[33mdbdeff5[m fix items/cats/boss
+[33mcc476ce[m positions items/cats/boss
+[33m293050b[m fix items bis
+[33m79ea2fb[m ajout des image collectibles
+[33m98cc793[m ajout manuel de items
+[33me962339[m ajout barre de vie du dragon et disparition quand mort
+[33m2fcc045[m animation canne mieux, ajout screen gameover, lifebar op, score op
+[33ma5282f3[m fix items
+[33m82ee707[m items
+[33m29c5ee2[m Merge branch 'master' of https://github.com/Codnpix/trash-granny
+[33m1ab6179[m dragon + grand
+[33m0d9856f[m ajout img items
+[33maf7c5fe[m[33m ([m[1;31morigin/cat_move[m[33m)[m ajout dragon boss
+[33m14700e7[m pull catmove
+[33m99fcb16[m maj dragonBoss
+[33md63a13f[m ajout des haies
+[33m9e51a8e[m maj1 cat_move
+[33m8c37187[m animation mami shoot left
+[33m9aff7e0[m travail sur anim coup de canne
+[33ma351ec9[m fix conflict stickshot
+[33m45a223f[m rien
+[33ma9eb322[m ajout de la fonction pour frapper à gauche
+[33m99f0089[m placement canne dans 4 animations mami
+[33mf31e543[m ajout animations mami walk up down left right
+[33mf229dd4[m amelioration collision chat/canne
+[33m14b719b[m amelioration anim coup de canne
+[33mfa95a12[m coup de canne mieux
+[33m7726105[m ajout coup de canne et animation walkDown
+[33m97fccfb[m reglage vitesse mami et collision chat/maison
+[33mbc25e94[m fix merge cat_move
+[33mdc6cdb3[m[33m ([m[1;31morigin/problemMap[m[33m)[m mise en place des maisons
+[33m9772410[m spawnCats OK
+[33m97f73e2[m multi cats
+[33m1c87862[m image chat
+[33me201d8f[m attraction chat/mamie
+[33m2fb12e1[m ajout images maisons et local poub
+[33mc6844c3[m mise à jour dimension map et canvas
+[33mb0c3ffc[m ajout du groupe maisons et gestion de la collision avec le sprite principal (mamy), pas encore d'images)
+[33m85de42d[m limitation des mouvements du sprite au limites de la map
+[33m1cbe77b[m limitation du mouvement de la camera aux limites de la map
+[33m6282961[m premiers essais map/camera  avec p5play.js
+[33m6baffb3[m preparation fichiers
