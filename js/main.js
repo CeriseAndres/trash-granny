@@ -555,6 +555,7 @@ function draw() {
         bossSong.pause();
         gameoverSong.play();
         image(gameoverScreen, camera.position.x - canvas.width/2, camera.position.y - canvas.height/2 , 800, 600);
+        showReplayMsg();
         noLoop();
         //animation(gameover...)
     }
@@ -565,6 +566,7 @@ function draw() {
         bossSong.pause();
         youwinSong.play();
         image(winscreen, camera.position.x - canvas.width/2, camera.position.y - canvas.height/2, 800, 600);
+        showReplayMsg();
         noLoop();
         //animation(winscreen...);
     }
@@ -991,7 +993,7 @@ function draw() {
             }
         }
         
-        if (mami.stick.overlap(myDragonBoss) === true && isShooting === true) {
+        if (mami.stick.overlap(myDragonBoss) === true && isShooting === true && dragonDead === false) {
             playDragonPain();
         }
 
@@ -1052,6 +1054,13 @@ function draw() {
     }//fin du else de départ
 
 }//fin de draw()
+
+function showReplayMsg() {
+    if (gameisover || gameiswon) {
+        dashCtx.fillStyle = "#ff0";
+        dashCtx.fillText("[[Rejouer : *ENTREE*]]", 20, 410 );
+    }
+}
 
 //fonction keyPressed - P5JS
 function keyPressed() {
