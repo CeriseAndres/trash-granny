@@ -30,6 +30,8 @@ let mamiStopShootLeft;
 let mamiWalkDownArmor;
 let mamiShootArmor;
 let mamiStopShootArmor;
+let mamiWalkRightArmor;
+let mamiWalkLeftArmor;
 
 let stickImage;//canne de mami
 let isShooting = false;//vrai si un coup de canne est donné.
@@ -368,6 +370,12 @@ function preload() {
     mamiStopShootArmor = loadAnimation('img/mami_shoot3-armor.png', 'img/mami_shoot2-armor.png', 'img/mami_shoot1-armor.png');
     mamiStopShootArmor.looping = false;
     mamiStopShootArmor.frameDelay = 6;
+    
+    mamiWalkLeftArmor = loadAnimation("img/mami_walkLeft1-armor.png", "img/mami_walkLeft2-armor.png", "img/mami_walkLeft3-armor.png", "img/mami_walkLeft2-armor.png");
+    mamiWalkLeftArmor.frameDelay = 8;
+    
+    mamiWalkRightArmor = loadAnimation("img/mami_walkRight1-armor.png", "img/mami_walkRight2-armor.png", "img/mami_walkRight3-armor.png", "img/mami_walkRight2-armor.png");
+    mamiWalkRightArmor.frameDelay = 8;
 
     gameoverScreen = loadImage('img/gameover.png');
     winscreen = loadImage('img/winscreen.png');
@@ -484,6 +492,8 @@ function setup() {
     mami.addAnimation('walkDownArmor', mamiWalkDownArmor);
     mami.addAnimation('shootingArmor', mamiShootArmor);
     mami.addAnimation('stopShootArmor', mamiStopShootArmor);
+    mami.addAnimation('walkLeftArmor', mamiWalkLeftArmor);
+    mami.addAnimation('walkRightArmor', mamiWalkRightArmor);
     mami.setCollider('rectangle', 0, 25, 25, 49);
     stickOffsetX = 22;
     stickOffsetY = 23;
@@ -1055,6 +1065,8 @@ function draw() {
 
 }//fin de draw()
 
+//afficher le message "rejouer: entree" une fois le jeu fini 
+// (donc hors loop)
 function showReplayMsg() {
     if (gameisover || gameiswon) {
         dashCtx.fillStyle = "#ff0";
