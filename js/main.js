@@ -32,6 +32,8 @@ let mamiShootArmor;
 let mamiStopShootArmor;
 let mamiWalkRightArmor;
 let mamiWalkLeftArmor;
+let mamiShootLeftArmor;
+let mamiStopShootLeftArmor;
 
 let stickImage;//canne de mami
 let isShooting = false;//vrai si un coup de canne est donné.
@@ -376,6 +378,12 @@ function preload() {
     
     mamiWalkRightArmor = loadAnimation("img/mami_walkRight1-armor.png", "img/mami_walkRight2-armor.png", "img/mami_walkRight3-armor.png", "img/mami_walkRight2-armor.png");
     mamiWalkRightArmor.frameDelay = 8;
+    
+    mamiShootLeftArmor = loadAnimation("'img/mami_shootLeft2-armor.png', 'img/mami_shootLeft3-armor.png'");
+    mamiShootLeftArmor.frameDelay = 6;
+    
+    mamiStopShootLeftArmor = loadAnimation('img/mami_shootLeft3-armor.png', 'img/mami_shootLeft2-armor.png', 'img/mami_walkLeft2-armor.png');
+    mamiStopShootLeftArmor.frameDelay = 6;
 
     gameoverScreen = loadImage('img/gameover.png');
     winscreen = loadImage('img/winscreen.png');
@@ -494,6 +502,8 @@ function setup() {
     mami.addAnimation('stopShootArmor', mamiStopShootArmor);
     mami.addAnimation('walkLeftArmor', mamiWalkLeftArmor);
     mami.addAnimation('walkRightArmor', mamiWalkRightArmor);
+    mami.addAnimation('stopShootLeftArmor', mamiStopShootLeftArmor);
+    mami.addAnimation('shootLeftArmor', mamiShootLeftArmor);
     mami.setCollider('rectangle', 0, 25, 25, 49);
     stickOffsetX = 22;
     stickOffsetY = 23;
@@ -600,6 +610,10 @@ function draw() {
               mami.stick.position.x = mami.position.x + stickOffsetX;
               mami.changeAnimation('walkLeft');
               mami.animation.play();
+            if (mamiHasArmor) {
+                mami.changeAnimation('walkLeftArmor');
+                mami.animation.play();
+            }
           }
         if(keyDown(RIGHT_ARROW)){
               stickOffsetX = 22;
@@ -608,6 +622,10 @@ function draw() {
               mami.stick.position.x = mami.position.x + stickOffsetX;
               mami.changeAnimation('walkRight');
               mami.animation.play();
+            if (mamiHasArmor) {
+                mami.changeAnimation('walkRightArmor');
+                mami.animation.play();
+            }
           }
         if(keyDown(UP_ARROW)){
             coef = -1;
@@ -698,6 +716,10 @@ function draw() {
         function shootStickLeft() {
             mami.changeAnimation('shootLeft');
             mami.animation.play();
+            if (mamiHasArmor) {
+                mami.changeAnimation('shootLeftArmor');
+                mami.animation.play();
+            }
             mami.stick.rotation += 10;
             YplusVal += 10;
             mami.stick.position.x = stickPosX - (Math.cos(stickAngle) * 15);
@@ -706,6 +728,10 @@ function draw() {
                 isShooting =  false;
                 mami.changeAnimation('stopShootLeft');
                 mami.animation.play();
+                if (mamiHasArmor) {
+                    mami.changeAnimation('stopShootLeftArmor');
+                    mami.animation.play();
+                }
             }
         }
 
