@@ -379,7 +379,7 @@ function preload() {
     mamiWalkRightArmor = loadAnimation("img/mami_walkRight1-armor.png", "img/mami_walkRight2-armor.png", "img/mami_walkRight3-armor.png", "img/mami_walkRight2-armor.png");
     mamiWalkRightArmor.frameDelay = 8;
     
-    mamiShootLeftArmor = loadAnimation("'img/mami_shootLeft2-armor.png', 'img/mami_shootLeft3-armor.png'");
+    mamiShootLeftArmor = loadAnimation('img/mami_shootLeft2-armor.png', 'img/mami_shootLeft3-armor.png');
     mamiShootLeftArmor.frameDelay = 6;
     
     mamiStopShootLeftArmor = loadAnimation('img/mami_shootLeft3-armor.png', 'img/mami_shootLeft2-armor.png', 'img/mami_walkLeft2-armor.png');
@@ -398,8 +398,6 @@ function preload() {
     dragonBossImage = loadAnimation("img/sprites_boss/dragon_fly1.png","img/sprites_boss/dragon_fly2.png","img/sprites_boss/dragon_fly3.png");
     dragonBossImage.frameDelay = 8;
     dragonDeadImage = loadImage("img/sprites_boss/dragon_dead.png");
-    //dragonDeadImage.frameDelay = 50;
-    //dragonDeadImage.looping = false;
 
     //Items
     cakeImage = loadImage('img/sprites_items/cake.png');
@@ -707,9 +705,9 @@ function draw() {
                 mami.changeAnimation('stopShoot');
                 mami.animation.play();
                 if (mamiHasArmor) {
-                mami.changeAnimation('stopShootArmor');
-                mami.animation.play();
-            }
+                    mami.changeAnimation('stopShootArmor');
+                    mami.animation.play();
+                }
             }
         }
         //frapper à gauche
