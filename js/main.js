@@ -664,6 +664,10 @@ function draw() {
         function shootStick() {
             mami.changeAnimation('shooting');
             mami.animation.play();
+            if (mamiHasArmor) {
+                mami.changeAnimation('shootingArmor');
+                mami.animation.play();
+            }
             mami.stick.rotation -= 10;
             YplusVal += 10;
             mami.stick.position.x = stickPosX - (Math.cos(stickAngle) * 15);
@@ -672,6 +676,10 @@ function draw() {
                 isShooting =  false;
                 mami.changeAnimation('stopShoot');
                 mami.animation.play();
+                if (mamiHasArmor) {
+                mami.changeAnimation('stopShootArmor');
+                mami.animation.play();
+            }
             }
         }
         //frapper à gauche
