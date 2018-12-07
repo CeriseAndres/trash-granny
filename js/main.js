@@ -34,6 +34,7 @@ let mamiWalkRightArmor;
 let mamiWalkLeftArmor;
 let mamiShootLeftArmor;
 let mamiStopShootLeftArmor;
+let mamiScreaming = false;
 
 let stickImage;//canne de mami
 let isShooting = false;//vrai si un coup de canne est donné.
@@ -296,6 +297,7 @@ function playMamiPain() {
     counterMamiPain ++;
     if (counterMamiPain === 100) {
         mamiPain.play();
+        mamiScream();
         counterMamiPain = 0;
     } 
 }
@@ -317,14 +319,19 @@ function playDragonPain() {
         counterDragonPain = 0;
     }
 }
+
+function mamiScream() {
+    mamiScreaming = true;
+    setTimeout(function() {
+        mamiScreaming = false;
+    }, 550);
+}
 //fonction preload - P5JS
 function preload() {
     //fond de la map
     mapImage = loadImage('img/map.png');
 
-    //image de la mamie
-    mamImage = loadAnimation('img/mami_walk2.png');
-    mamiMad = loadAnimation('img/mami_stand_mad.png');
+
     //images des maisons
     houseImage1 = loadImage('img/maison1.png');
     houseImage2 = loadImage('img/maison2.png');
@@ -337,6 +344,10 @@ function preload() {
     haieYimg = loadImage('img/haieY.png');
 
     //mamie
+    
+    mamImage = loadAnimation('img/mami_walk2.png');
+    mamiMad = loadAnimation('img/mami_stand_mad.png');
+    
     mamiWalk = loadAnimation('img/mami_walk1.png', 'img/mami_walk2.png', 'img/mami_walk3.png', 'img/mami_walk2.png');
     mamiWalk.frameDelay = 8;
 
@@ -945,11 +956,17 @@ function draw() {
                 if (isShooting === true && (((mamiLife / 500) *100) < 70 &&((mamiLife / 500) *100)>=50)) {
                     mamiFaceImg.src = "img/mamiface-mad70.png";
                 }
+                if (mamiScreaming) {
+                    mamiFaceImg.src = "img/mamiface-scream70.png";
+                }
             }
             else if (((mamiLife / 500) *100) < 50 && ((mamiLife / 500) *100) >= 20) {
                 mamiFaceImg.src ='img/mamiface-50.png';
                 if (isShooting === true && (((mamiLife / 500) *100) < 50 && ((mamiLife / 500) *100) >= 20)) {
                     mamiFaceImg.src = "img/mamiface-mad50.png";
+                }
+                if (mamiScreaming) {
+                    mamiFaceImg.src = "img/mamiface-scream50.png";
                 }
             }
             else if (((mamiLife / 500) *100) < 20) {
@@ -957,11 +974,17 @@ function draw() {
                 if (isShooting === true && (((mamiLife / 500) *100) < 20)) {
                     mamiFaceImg.src = "img/mamiface-mad20.png";
                 }
+                if (mamiScreaming) {
+                    mamiFaceImg.src = "img/mamiface-scream20.png";
+                }
             }
             else {
                 mamiFaceImg.src ='img/mamiface-normal.png';
                 if (isShooting === true) {
                     mamiFaceImg.src = "img/mamiface-mad.png";
+                }
+                if (mamiScreaming) {
+                    mamiFaceImg.src = "img/mamiface-scream.png";
                 }
             }
             //afficher un fond noir
