@@ -254,7 +254,6 @@ function launchIntro() {
         let factor = 1;
             setInterval(function() {
                 introImg.src = 'img/introframe'+i+'.png';
-                introCtx.clearRect(0,0, 1100,600);
                 introCtx.drawImage(introImg, 0, 0, 1100, 600);
                 i = i+factor;
                 if (i == 1 || i == 3 ) {
@@ -609,7 +608,7 @@ function draw() {
         stickPosX = mami.position.x + stickOffsetX;
         stickPosY = mami.position.y + stickOffsetY;
 
-        drawSprite(myMap);
+        
 
         /*faire bouger le sprite (mamie) avec les fleches*/
         if(keyDown(LEFT_ARROW)){
@@ -988,8 +987,7 @@ function draw() {
                 }
             }
             //afficher un fond noir
-            dashCtx.fillStyle = "#000";
-            dashCtx.fillRect(0,0,dashboard.width,dashboard.height);
+            dashCtx.fillStyle = "#000"; dashCtx.fillRect(0,0,dashboard.width,dashboard.height);
             //afficher la lifebar de mamie
             dashCtx.fillStyle = "#0f0";
             dashCtx.fillText("Vie mamie :  " + parseInt((mamiLife / 500) *100)+"%", 20, 45);
@@ -1069,31 +1067,40 @@ function draw() {
             bossSong.pause();
             gameSong.play();
         }
+        
+        drawSprite(myMap);//dessiner la map de base
 
-
-        showDashboard();
-
+        showDashboard();//dessiner le tableau de bord
+        
+        //dessiner le items
         drawSprite(myCake);
         drawSprite(myWine);
         drawSprite(myChicken);
         drawSprite(myCup);
 
-        drawSprite(myArmor);
+        drawSprite(myArmor);//armure
 
+        //dessiner les obstacles : maisons, haies
         drawSprites(houses);
         drawSprites(obstacles);
 
+        //dessiner le dragon mort avant la mamie
+        //(pour qu'elle apparraisse par dessus lui)
         if(dragonLife <= 0) {
             killBoss();
         }
 
+        //dessiner la mamie
         drawSprite(mami);
         drawSprite(mami.stick);
 
+        //dessiner les chats
         spawnCat();
         updateCats();
 
         //le dragon n'est affiché que si sa vie est sup à 0.
+        //dessiner le dragon après tous les autres sprites pour
+        //qu'ils soit au dessus d'eux tout le temps
         if (dragonLife > 0) {
             spawnBoss();
             updateBoss();
