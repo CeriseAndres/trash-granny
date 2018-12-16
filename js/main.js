@@ -1,330 +1,9 @@
 'use strict';
-//placement des canvas dans le dom par leur parent :
-let canvasParent = document.getElementById('canvasParent');
-let dashboardParent = document.getElementById('dashboard');
-let dashboard = document.createElement('canvas');
-dashboardParent.appendChild(dashboard);
-dashboard.width = 300;
-dashboard.height = 600;
-let dashCtx = dashboard.getContext('2d');
-dashCtx.font = "13px monospace";
 
-let myMap; //declaration de la map et de son image
-let mapImage;
-
-//screens
-let winscreen;
-
-//decl. mami et son image
-let mami;
-let mamImage;
-let mamiMad;
-let mamiWalk;
-let mamiWalkLeft;
-let mamiWalkUp;
-let mamiWalkRight;
-let mamiShoot;
-let mamiShootLeft;
-let mamiStopShoot;
-let mamiStopShootLeft;
-let mamiWalkDownArmor;
-let mamiShootArmor;
-let mamiStopShootArmor;
-let mamiWalkRightArmor;
-let mamiWalkLeftArmor;
-let mamiShootLeftArmor;
-let mamiStopShootLeftArmor;
-let mamiScreaming = false;
-
-let stickImage;//canne de mami
-let isShooting = false;//vrai si un coup de canne est donné.
-let stickPosX;
-let stickPosY;
-let stickOffsetX;
-let stickOffsetY;
-let coef; //1 ou -1 selon rotation canne a droite ou a gauche
-
-//decl. maisons
-let house1;
-let house2;
-let house3;
-let house4;
-let house5;
-let house6;
-let house7;
-let house8;
-let houseTrash; //local poubelle
-
-//haies
-let haieXimg;
-let haieYimg;
-let haieXRevimg;
-let haieX1;
-let haieX2;
-let haieX3;
-let haieX4;
-let haieX5;
-let haieY1;
-let haieY2;
-let haieY3;
-let haieY4;
-let obstacles;
-
-let houses;  //groupe de toutes les maisons pour traitement de groupe
-
-//decl. images maison
-let houseImage1;
-let houseImage2;
-let houseImage3;
-let houseImage4;
-let houseImage1rev;
-let trashImage;
-
-//let myCat;
-let myCat1;
-let myCat2;
-let myCat3;
-let myCat4;
-let cat1Image;
-let cat2Image;
-let cat3Image;
-let cat4Image;
-let cats;//groupe chats
-
-//booléens pour savoir si les chats ont déjà spawné ou pas
-let cat1spawn = false;
-let cat2spawn = false;
-let cat3spawn = false;
-let cat4spawn = false;
-let cat1spawnPlayed = false;
-let cat2spawnPlayed = false;
-let cat3spawnPlayed = false;
-let cat4spawnPlayed = false;
-
-//BOSS !
-let myDragonBoss;
-let dragonBossImage;
-let dragonDeadImage;
-let dragonspawn = false;
-let dragonDead = false;
-let myDragonDead;
-let dragonSpawnPlayed = false;
-let dragonDeadPlayed = false;
-
-//barre de vie
-let mamiLife = 500;
-
-//comptage de points
-let mamiScore = 0;
-//compteur pour fixer limite score dans killBoss
-let bigUpCount = 0;
-
-//vie du boss(dragon)
-let dragonLife = 250;
-
-let gameoverScreen;//screen gameover
-let gameisover = false;
-
-let gameiswon = false;
-
-//jeu en pause ou non
-let gamePaused = false;
-let pauseScreen = document.getElementById("pauseScreen");
-
-//Items
-let items;
-
-let myCake;
-let cakeImage;
-
-let myWine;
-let wineImage;
-
-let myChicken;
-let chickenImage;
-
-let myArmor;
-let armorImage;
-
-let myCup;
-let cupImage;
-
-let mamiHasArmor = false;
-let armorLife = 125;
-
-//SOUNDS
-let introSnd = document.createElement("audio");
-introSnd.src = 'sons/intro.mp3';
-introSnd.loop = false;
-introSnd.preload = "auto";
-let gameSong = document.createElement("audio");
-gameSong.src = "sons/gameSong.mp3";
-gameSong.loop = true;
-gameSong.preload = "auto";
-gameSong.volume = 0.8;
-let bossSong = document.createElement("audio");
-bossSong.src = "sons/bossSong.mp3";
-bossSong.loop = true;
-bossSong.preload = "auto";
-let gameoverSong = document.createElement("audio");
-gameoverSong.src = "sons/gameover.mp3";
-gameoverSong.loop = false;
-gameoverSong.preload = "auto";
-let youwinSong = document.createElement("audio");
-youwinSong.src = 'sons/youwin.mp3';
-youwinSong.loop = false;
-youwinSong.preload = "auto";
-let songCat;
-
-let songSpawnCat = document.createElement("audio");
-songSpawnCat.src ='sons/chat/Miaulement.mp3';
-songSpawnCat.loop = false;
-songSpawnCat.preload = "auto";
-songSpawnCat.volume = 0.6;
-let songFightCat = document.createElement("audio");
-songFightCat.src ='sons/chat/attack_cat.mp3';
-songFightCat.loop = false;
-songFightCat.preload = "auto";
-let hittedCatSnd = document.createElement('audio');
-hittedCatSnd.src = "sons/chat/hitted_cat.mp3";
-hittedCatSnd.loop = false;
-hittedCatSnd.preload = "auto";
-
-let stickshotSnd = document.createElement("audio");
-stickshotSnd.src = 'sons/coups/stickshot.mp3'; //coup de canne
-stickshotSnd.loop = false;
-stickshotSnd.preload = "auto";
-
-let missShotSnd = document.createElement("audio");
-missShotSnd.src = 'sons/coups/missShot.mp3'; //coup de canne dans le vent
-missShotSnd.loop = false;
-missShotSnd.volume = 0.3;
-missShotSnd.preload = "auto";
-
-let mamiCroc = document.createElement("audio");
-mamiCroc.src = 'sons/mamie/croque.mp3';
-mamiCroc.loop = false;
-mamiCroc.preload = "auto";
-
-let mamiPain = document.createElement("audio");
-mamiPain.src = "sons/mamie/mamiPain.mp3";
-mamiPain.loop = false;
-mamiPain.preload = "auto";
-
-let dragonSpawnSnd = document.createElement("audio");
-dragonSpawnSnd.src = "sons/dragonSpawn.mp3";
-dragonSpawnSnd.loop = false;
-dragonSpawnSnd.preload = "auto";
-
-let dragonDeadSnd = document.createElement("audio");
-dragonDeadSnd.src = "sons/dragonDead.mp3";
-dragonDeadSnd.loop = false;
-dragonDeadSnd.preload = "auto";
-
-let dragonPainSnd = document.createElement("audio");
-dragonPainSnd.src = "sons/dragonPain.mp3";
-dragonPainSnd.loop = false;
-dragonPainSnd.preload = "auto";
-
-//variables en lien avec l'intro
-let introPlaying = true;
-let canvasIntro = document.createElement('canvas');
-let introParent = document.getElementById('introParent');
-introParent.appendChild(canvasIntro);
-canvasIntro.width = 1200;
-canvasIntro.height = 800;
-let introCtx = canvasIntro.getContext('2d');
-let introImg = new Image();
-introImg.src = 'img/introframe1.png';
-let introImg2 = new Image();
-introImg2.src = 'img/introframe2.png';
-let introImg3 = new Image();
-introImg3.src = 'img/introframe3.png';
-
-//fonction lancement de l'intro
-let startButton = document.getElementById('startButton');
-let startScreen = document.getElementById('startScreen');
-function launchIntro() {
-    startButton.onclick = function() {
-        startScreen.style.display = "none";
-        introSnd.play();
-        introCtx.clearRect(0,0, 1100,600);
-        introCtx.drawImage(introImg, 0, 0, 1100, 600);
-        let i = 1;
-        let factor = 1;
-            setInterval(function() {
-                introImg.src = 'img/introframe'+i+'.png';
-                introCtx.drawImage(introImg, 0, 0, 1100, 600);
-                i = i+factor;
-                if (i == 1 || i == 3 ) {
-                    factor *= -1;
-                }
-            }, 200);
-
-        setTimeout(function() {
-            introParent.removeChild(canvasIntro);
-            introPlaying = false;
-        }, 11000);
-
-    }
-}
 if (introPlaying === true) {
     launchIntro();
 }
 
-//fonctions de déclenchement des sons
-function playStickSnd() {
-    stickshotSnd.play();
-}
-function playMissSnd() {
-    missShotSnd.play();
-}
-function playFightCat() {
-    songFightCat.play();
-}
-function playSpawnCat() {
-    songSpawnCat.play();
-}
-function playHittedCat() {
-    hittedCatSnd.play();
-}
-function playMamiCroc() {
-    mamiCroc.play();
-}
-let counterMamiPain = 0;//pour ne jouer le sons qu'un fois de tps en tps
-function playMamiPain() {
-    counterMamiPain ++;
-    if (counterMamiPain === 100) {
-        mamiPain.play();
-        mamiScream();
-        counterMamiPain = 0;
-    } 
-}
-function playDragonSpawn() {
-    setTimeout(function() {
-        dragonSpawnSnd.play();
-        dragonSpawnPlayed = true;
-    }, 2000);
-    
-}
-function playDragonDead() {
-    dragonDeadSnd.play();
-}
-let counterDragonPain = 0;//pour ne jouer le son qu'une fois de temps en temps
-function playDragonPain() {
-    counterDragonPain++;
-    if (counterDragonPain === 18) {
-        dragonPainSnd.play();
-        counterDragonPain = 0;
-    }
-}
-
-function mamiScream() {
-    mamiScreaming = true;
-    setTimeout(function() {
-        mamiScreaming = false;
-    }, 550);
-}
 //fonction preload - P5JS
 function preload() {
     //fond de la map
@@ -343,10 +22,10 @@ function preload() {
     haieYimg = loadImage('img/haieY.png');
 
     //mamie
-    
+
     mamImage = loadAnimation('img/mami_walk2.png');
     mamiMad = loadAnimation('img/mami_stand_mad.png');
-    
+
     mamiWalk = loadAnimation('img/mami_walk1.png', 'img/mami_walk2.png', 'img/mami_walk3.png', 'img/mami_walk2.png');
     mamiWalk.frameDelay = 8;
 
@@ -372,26 +51,26 @@ function preload() {
     mamiStopShootLeft = loadAnimation('img/mami_shootLeft3.png', 'img/mami_shootLeft2.png', 'img/mami_walkLeft2.png');
     mamiStopShootLeft.looping = false;
     mamiStopShootLeft.frameDelay = 6;
-    
+
     mamiWalkDownArmor = loadAnimation('img/mami_walk1-armor.png', 'img/mami_walk2-armor.png', 'img/mami_walk3-armor.png', 'img/mami_walk2-armor.png');
     mamiWalkDownArmor.frameDelay = 8;
-    
+
     mamiShootArmor = loadAnimation('img/mami_shoot1-armor.png', 'img/mami_shoot2-armor.png', 'img/mami_shoot3-armor.png');
     mamiShootArmor.frameDelay = 6;
-    
+
     mamiStopShootArmor = loadAnimation('img/mami_shoot3-armor.png', 'img/mami_shoot2-armor.png', 'img/mami_shoot1-armor.png');
     mamiStopShootArmor.looping = false;
     mamiStopShootArmor.frameDelay = 6;
-    
+
     mamiWalkLeftArmor = loadAnimation("img/mami_walkLeft1-armor.png", "img/mami_walkLeft2-armor.png", "img/mami_walkLeft3-armor.png", "img/mami_walkLeft2-armor.png");
     mamiWalkLeftArmor.frameDelay = 8;
-    
+
     mamiWalkRightArmor = loadAnimation("img/mami_walkRight1-armor.png", "img/mami_walkRight2-armor.png", "img/mami_walkRight3-armor.png", "img/mami_walkRight2-armor.png");
     mamiWalkRightArmor.frameDelay = 8;
-    
+
     mamiShootLeftArmor = loadAnimation('img/mami_shootLeft2-armor.png', 'img/mami_shootLeft3-armor.png');
     mamiShootLeftArmor.frameDelay = 6;
-    
+
     mamiStopShootLeftArmor = loadAnimation('img/mami_shootLeft3-armor.png', 'img/mami_shootLeft2-armor.png', 'img/mami_walkLeft2-armor.png');
     mamiStopShootLeftArmor.frameDelay = 6;
 
@@ -420,7 +99,7 @@ function preload() {
 //fonction setup - P5JS
 function setup() {
     //initialisation de la map :
-    let canvas = createCanvas(800, 600);
+    const canvas = createCanvas(800, 600);
     canvas.parentElement = canvasParent;
 
     myMap = createSprite(800, 600);
@@ -608,7 +287,7 @@ function draw() {
         stickPosX = mami.position.x + stickOffsetX;
         stickPosY = mami.position.y + stickOffsetY;
 
-        
+
 
         /*faire bouger le sprite (mamie) avec les fleches*/
         if(keyDown(LEFT_ARROW)){
@@ -696,73 +375,6 @@ function draw() {
         cats.collide(obstacles);
         //cats.collide(mami); //(?)
 
-        //frapper avec la canne:
-        let stickAngle = mami.stick.rotation * Math.PI / 180;
-        let YplusVal = 0;
-        function shootStick() {
-            mami.changeAnimation('shooting');
-            mami.animation.play();
-            if (mamiHasArmor) {
-                mami.changeAnimation('shootingArmor');
-                mami.animation.play();
-            }
-            mami.stick.rotation -= 10;
-            YplusVal += 10;
-            mami.stick.position.x = stickPosX - (Math.cos(stickAngle) * 15);
-            mami.stick.position.y = (stickPosY - 30) - Math.sin(stickAngle) * (30+YplusVal);
-            if (mami.stick.rotation < -190 ) {
-                isShooting =  false;
-                mami.changeAnimation('stopShoot');
-                mami.animation.play();
-                if (mamiHasArmor) {
-                    mami.changeAnimation('stopShootArmor');
-                    mami.animation.play();
-                }
-            }
-        }
-        //frapper à gauche
-        function shootStickLeft() {
-            mami.changeAnimation('shootLeft');
-            mami.animation.play();
-            if (mamiHasArmor) {
-                mami.changeAnimation('shootLeftArmor');
-                mami.animation.play();
-            }
-            mami.stick.rotation += 10;
-            YplusVal += 10;
-            mami.stick.position.x = stickPosX - (Math.cos(stickAngle) * 15);
-            mami.stick.position.y = (stickPosY - 30) - Math.sin(stickAngle) * (30+YplusVal);
-            if (mami.stick.rotation > 10) {
-                isShooting =  false;
-                mami.changeAnimation('stopShootLeft');
-                mami.animation.play();
-                if (mamiHasArmor) {
-                    mami.changeAnimation('stopShootLeftArmor');
-                    mami.animation.play();
-                }
-            }
-        }
-
-        //ramener la canne:
-        function stopStick() {
-            if (mami.stick.rotation <= -90) {
-                mami.stick.rotation += 10;
-                YplusVal = 0;
-                mami.stick.position.x = (stickPosX) - Math.cos(stickAngle) * 30;
-                mami.stick.position.y = (stickPosY - 30) - Math.sin(stickAngle) * (30);
-            }
-        }
-        //ramener la canne quand frappé à gauche
-        function stopStickLeft() {
-            if (mami.stick.rotation >= -90) {
-                mami.stick.rotation -= 10;
-                YplusVal = 0;
-                mami.stick.position.x = (stickPosX) - Math.cos(stickAngle) * 30;
-                mami.stick.position.y = (stickPosY - 30) - Math.sin(stickAngle) * (30);
-            }
-
-        }
-
         if (isShooting) {
             if (coef === 1) shootStick();
             if (coef === -1) shootStickLeft();
@@ -773,6 +385,9 @@ function draw() {
             if (coef === -1) stopStickLeft();
         }
 
+        //frapper avec la canne:
+        stickAngle = mami.stick.rotation * Math.PI / 180;
+        YplusVal = 0;
 
         //déclencher coup de canne
         window.onkeydown = function(e) {
@@ -781,96 +396,6 @@ function draw() {
             }
         };
 
-        /*Apparition des chats à une ordonnée précise de la mamie*/
-        function drawCat(cat) {
-            drawSprite(cat);
-        }
-        //apparition du boss
-        function drawBoss(dragon) {
-          drawSprite(dragon);
-        }
-
-       function spawnCat() {
-            if (mami.position.x > 980 && mami.position.y < 600) {
-                drawCat(myCat1);
-                cat1spawn = true;
-                if (cat1spawnPlayed === false) {
-                    playSpawnCat();
-                    cat1spawnPlayed = true;
-                }
-            }
-            if (mami.position.x > 300) {
-                drawCat(myCat2);
-                cat2spawn = true;
-                if (cat2spawnPlayed === false) {
-                    playSpawnCat();
-                    cat2spawnPlayed = true;
-                }
-            }
-            if (mami.position.x > 600) {
-                drawCat(myCat3);
-                cat3spawn = true;
-                if (cat3spawnPlayed === false) {
-                    playSpawnCat();
-                    cat3spawnPlayed = true;
-                }
-
-            }
-            if (mami.position.y > 600) {
-                drawCat(myCat4);
-                cat4spawn = true;
-                if (cat4spawnPlayed === false) {
-                    playSpawnCat();
-                    cat4spawnPlayed = true;
-                }
-            }
-
-          }
-
-        function spawnBoss() {
-          if (mami.position.x >= 920 && mami.position.y >= 550 && mami.position.x <= 1250 && mami.position.y <= 850) {
-            drawBoss(myDragonBoss);
-            dragonspawn = true;
-              if (dragonSpawnPlayed === false) {
-                    playDragonSpawn();
-//                    dragonSpawnPlayed = true;
-                }
-          }
-        }
-
-        function updateBoss() {
-          if (dragonspawn) {
-            myDragonBoss.maxSpeed = 3;
-            myDragonBoss.attractionPoint(0.04, mami.position.x, mami.position.y);
-            drawSprite(myDragonBoss);
-          }
-        }
-
-    function updateCats() {
-        if (cat1spawn) {
-            myCat1.maxSpeed = 2;
-            myCat1.attractionPoint(0.01, mami.position.x, mami.position.y);
-            drawSprite(myCat1);
-        }
-
-        if (cat2spawn) {
-            myCat2.maxSpeed = 2;
-            myCat2.attractionPoint(0.01, mami.position.x, mami.position.y);
-            drawSprite(myCat2);
-        }
-
-        if (cat3spawn) {
-            myCat3.maxSpeed = 2;
-            myCat3.attractionPoint(0.01, mami.position.x, mami.position.y);
-            drawSprite(myCat3);
-        }
-
-        if (cat4spawn) {
-            myCat4.maxSpeed = 2;
-            myCat4.attractionPoint(0.01, mami.position.x, mami.position.y);
-            drawSprite(myCat4);
-        }
-    }
 
         //interactions mamie/chats :
         //(réécriture interactions chats dans une boucle)
@@ -906,22 +431,6 @@ function draw() {
             }
         });
 
-        //mort du dragon
-        function killBoss() {
-            myDragonDead = createSprite(myDragonBoss.position.x, myDragonBoss.position.y);
-            myDragonDead.immovable = true;
-            myDragonDead.addImage('dead', dragonDeadImage);
-            dragonDead = true;
-            drawSprite(myDragonDead);
-            myDragonBoss.remove();
-
-            //augmenter le score
-            bigUpCount++;
-            if (bigUpCount < 100) {
-                mamiScore +=10;
-            }
-        }
-
         //Items disparaissent et remettent de la vie quand mami les mange
 
         for (let item of items) {
@@ -943,84 +452,6 @@ function draw() {
         //limiter l'augmentation de la vie à son max normal 100%
         if (mamiLife >= 500) {
             mamiLife = 500;
-        }
-
-        //afficher le tableau de bord :
-        function showDashboard() {
-            let mamiFaceImg = new Image();
-            //changer l'affichage du visage de la mamie en fonction
-            //de sa santé :
-            if (((mamiLife / 500) *100) < 70 &&((mamiLife / 500) *100)>=50) {
-                mamiFaceImg.src ='img/mamiface-70.png';
-                if (isShooting === true && (((mamiLife / 500) *100) < 70 &&((mamiLife / 500) *100)>=50)) {
-                    mamiFaceImg.src = "img/mamiface-mad70.png";
-                }
-                if (mamiScreaming) {
-                    mamiFaceImg.src = "img/mamiface-scream70.png";
-                }
-            }
-            else if (((mamiLife / 500) *100) < 50 && ((mamiLife / 500) *100) >= 20) {
-                mamiFaceImg.src ='img/mamiface-50.png';
-                if (isShooting === true && (((mamiLife / 500) *100) < 50 && ((mamiLife / 500) *100) >= 20)) {
-                    mamiFaceImg.src = "img/mamiface-mad50.png";
-                }
-                if (mamiScreaming) {
-                    mamiFaceImg.src = "img/mamiface-scream50.png";
-                }
-            }
-            else if (((mamiLife / 500) *100) < 20) {
-                mamiFaceImg.src ='img/mamiface-20.png';
-                if (isShooting === true && (((mamiLife / 500) *100) < 20)) {
-                    mamiFaceImg.src = "img/mamiface-mad20.png";
-                }
-                if (mamiScreaming) {
-                    mamiFaceImg.src = "img/mamiface-scream20.png";
-                }
-            }
-            else {
-                mamiFaceImg.src ='img/mamiface-normal.png';
-                if (isShooting === true) {
-                    mamiFaceImg.src = "img/mamiface-mad.png";
-                }
-                if (mamiScreaming) {
-                    mamiFaceImg.src = "img/mamiface-scream.png";
-                }
-            }
-            //afficher un fond noir
-            dashCtx.fillStyle = "#000"; dashCtx.fillRect(0,0,dashboard.width,dashboard.height);
-            //afficher la lifebar de mamie
-            dashCtx.fillStyle = "#0f0";
-            dashCtx.fillText("Vie mamie :  " + parseInt((mamiLife / 500) *100)+"%", 20, 45);
-            //afficher le score de mamie:
-            dashCtx.fillText("Score :  " + mamiScore + " points", 20, 570);
-            dashCtx.fillRect(20,60, mamiLife /2, 30);
-            dashCtx.strokeStyle = "#090";
-            dashCtx.strokeRect(20, 60, 250, 30);
-            dashCtx.drawImage(mamiFaceImg, 20, 120);
-            //indications controles
-            dashCtx.fillStyle = "#ddd";
-            dashCtx.fillText("Contrôles clavier :", 20, 510);
-            dashCtx.fillText("Frapper: *ESPACE* | Pause: *ECHAP*", 20, 530);
-            dashCtx.fillText("Se déplacer: *FLECHES*", 20, 550);
-            //afficher la lifebar du dragon quand il apparait
-            if (dragonspawn && dragonLife > 0) {
-                let dragonFaceImg = new Image();
-                dragonFaceImg.src = 'img/sprites_boss/dragon_face.png';
-                dashCtx.fillStyle = "#f00";
-                dashCtx.fillText("Dragon :  " + parseInt((dragonLife / 250) *100)+"%", 20, 285);
-                dashCtx.fillRect(20, 300, dragonLife, 30);
-                dashCtx.strokeStyle = "#900";
-                dashCtx.strokeRect(20, 300, 250, 30);
-                dashCtx.drawImage(dragonFaceImg, 200, 218);
-            }
-            //afficher l'état de l'armure quand elle est là
-            if (mamiHasArmor === true) {
-                dashCtx.fillStyle = "#00f";
-                dashCtx.fillText("Armure : " + parseInt((armorLife / 125) * 100) + "%", 20, 375);
-                dashCtx.fillRect(20, 390, armorLife, 30);
-                dashCtx.strokeStyle = "#009";
-                dashCtx.strokeRect(20, 390, 125, 30);
-            }
         }
 
         //DÉCLENCHEMENT DES SONS :
@@ -1047,7 +478,7 @@ function draw() {
                 playHittedCat();
             }
         }
-        
+
         if (mami.stick.overlap(myDragonBoss) === true && isShooting === true && dragonDead === false) {
             playDragonPain();
         }
@@ -1063,15 +494,15 @@ function draw() {
                 playDragonDead();//+bruit du dragon qui meurt
                 dragonDeadPlayed = true;
             }
-            
+
             bossSong.pause();
             gameSong.play();
         }
-        
+
         drawSprite(myMap);//dessiner la map de base
 
         showDashboard();//dessiner le tableau de bord
-        
+
         //dessiner le items
         drawSprite(myCake);
         drawSprite(myWine);
@@ -1118,15 +549,6 @@ function draw() {
     }//fin du else de départ
 
 }//fin de draw()
-
-//afficher le message "rejouer: entree" une fois le jeu fini 
-// (donc hors loop)
-function showReplayMsg() {
-    if (gameisover || gameiswon) {
-        dashCtx.fillStyle = "#ff0";
-        dashCtx.fillText("[[Rejouer : *ENTREE*]]", 20, 410 );
-    }
-}
 
 //fonction keyPressed - P5JS
 function keyPressed() {
