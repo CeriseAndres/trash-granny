@@ -35,7 +35,6 @@ let mamiWalkLeftArmor;
 let mamiShootLeftArmor;
 let mamiStopShootLeftArmor;
 let mamiScreaming = false;
-const mamiFaceImg = new Image();
 
 let stickImage;//canne de mami
 let isShooting = false;//vrai si un coup de canne est donné.

@@ -255,7 +255,7 @@ function spawnCat() {
 
    //afficher le tableau de bord :
    function showDashboard() {
-       // const mamiFaceImg = new Image();
+       let mamiFaceImg = new Image();
        //changer l'affichage du visage de la mamie en fonction
        //de sa santé :
        if (((mamiLife / 500) *100) < 70 &&((mamiLife / 500) *100)>=50) {
